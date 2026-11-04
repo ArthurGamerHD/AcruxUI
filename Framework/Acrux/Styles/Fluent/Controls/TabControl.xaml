@@ -1,0 +1,62 @@
+<?xml version="1.0" encoding="utf-8"?>
+<Styles xmlns="https://github.com/ArthurGamerHD/AcruxUI"
+        xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml">
+  <Style Selector="TabControl">
+    <Setter Property="BorderBrush" Value="{DynamicResource borderVariantColor}" />
+    <Setter Property="BorderThickness" Value="0 1 0 0" />
+    <Setter Property="Padding" Value="0 8 0 0" />
+  </Style>
+  <Style Selector="TabItem">
+    <Setter Property="Template">
+      <ControlTemplate>
+        <Border Name="PART_LayoutRoot"
+                Background="{TemplateBinding Background}"
+                BorderBrush="{TemplateBinding BorderBrush}"
+                BorderThickness="{TemplateBinding BorderThickness}"
+                CornerRadius="{TemplateBinding CornerRadius}"
+                Padding="{TemplateBinding Padding}">
+          <ContentPresenter Name="PART_ContentPresenter" VerticalAlignment="Center" />
+        </Border>
+      </ControlTemplate>
+    </Setter>
+    <Setter Property="Cursor" Value="Hand" />
+    <Setter Property="MinHeight" Value="30" />
+    <Setter Property="Padding" Value="12 4 12 4" />
+    <Setter Property="BorderBrush" Value="{DynamicResource borderVariantColor}" />
+    <Setter Property="CornerRadius" Value="6 6 0 0" />
+  </Style>
+  <Style Selector="TabItem:pointerover">
+    <Setter Property="Background" Value="{DynamicResource surfaceContainerHighColor}" />
+  </Style>
+  <Style Selector="TabItem:selected">
+    <Setter Property="Background" Value="{DynamicResource surfaceContainerHighestColor}" />
+    <Setter Property="BorderThickness" Value="1 1 1 0" />
+  </Style>
+  <Style Selector="TabItem TextBlock">
+    <Setter Property="FontFamily" Value="{DynamicResource textFont}" />
+    <Setter Property="Foreground" Value="{DynamicResource onSurfaceVariantColor}" />
+    <Setter Property="VerticalAlignment" Value="Center" />
+  </Style>
+  <Style Selector="TabItem:selected TextBlock">
+    <Setter Property="Foreground" Value="{DynamicResource accentColor}" />
+  </Style>
+  <Style Selector="TabItem:disabled TextBlock">
+    <Setter Property="Foreground" Value="{DynamicResource disabledColor}" />
+  </Style>
+  <Style Selector="TabControl RepeatButton.tab-scroll">
+    <Setter Property="Width" Value="22" />
+    <Setter Property="MinWidth" Value="22" />
+    <Setter Property="Padding" Value="0" />
+    <Setter Property="Background" Value="#00000000" />
+    <Setter Property="BorderThickness" Value="0" />
+  </Style>
+  <Style Selector="TabControl RepeatButton.tab-scroll:pointerover">
+    <Setter Property="Background" Value="{DynamicResource surfaceContainerHighColor}" />
+  </Style>
+  <Style Selector="TabControl RepeatButton.tab-scroll Path">
+    <Setter Property="Stroke" Value="{DynamicResource fontColor}" />
+  </Style>
+  <Style Selector="TabControl RepeatButton.tab-scroll:disabled Path">
+    <Setter Property="Stroke" Value="{DynamicResource disabledColor}" />
+  </Style>
+</Styles>

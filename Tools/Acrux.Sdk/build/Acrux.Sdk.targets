@@ -1,0 +1,24 @@
+<Project>
+  <!--
+    Views: every .axaml / .xaml outside bin/, obj/ and Content/ (game data). .axaml is what the IDE previewer recognises;
+    plain .xaml works the same. This runs after the project, so views the project already lists are not added twice:
+    the compiler ignores a duplicate, but MDK's packing workspace does not, and the views would be missing from the
+    packed mod. Set AcruxSdkAddViews=false to list views yourself.
+  -->
+  <ItemGroup Condition="'$(AcruxSdkAddViews)' != 'false'">
+    <_AcruxSdkView Include="**\*.axaml;**\*.xaml" Exclude="bin\**;obj\**;Content\**;@(AdditionalFiles)" />
+    <AdditionalFiles Include="@(_AcruxSdkView)" />
+    <_AcruxSdkView Remove="@(_AcruxSdkView)" />
+  </ItemGroup>
+
+  <!-- The preview with the host from this package (see Acrux.Sdk.props); the checkout's AcruxPreview.props does this itself. -->
+  <Target Name="AcruxSdkWritePreviewSettings" AfterTargets="Build"
+          Condition="'$(AcruxPreviewFromCheckout)' != 'true' And '$(Configuration)' == 'Debug' And '$(DesignTimeBuild)' != 'true' And Exists('$(AcruxPreviewBundledHost)')">
+    <PropertyGroup>
+      <_AcruxPreviewDotnet>$(DOTNET_HOST_PATH)</_AcruxPreviewDotnet>
+      <_AcruxPreviewDotnet Condition="'$(_AcruxPreviewDotnet)' == ''">dotnet</_AcruxPreviewDotnet>
+    </PropertyGroup>
+    <WriteLinesToFile File="$(MSBuildProjectDirectory)/obj/acrux-preview.properties" Overwrite="true" WriteOnlyWhenDifferent="true"
+                      Lines="# Written by the Acrux.Sdk package for the Acrux Preview Rider plugin.;host=$([System.String]::Copy('$(AcruxPreviewBundledHost)').Replace('\','/'));dotnet=$([System.String]::Copy('$(_AcruxPreviewDotnet)').Replace('\','/'));assembly=$([System.String]::Copy('$(TargetPath)').Replace('\','/'));designResources=$(AcruxPreviewDesignResources);designHost=$(AcruxPreviewDesignHost);designStyles=$(AcruxPreviewDesignStyles)" />
+  </Target>
+</Project>

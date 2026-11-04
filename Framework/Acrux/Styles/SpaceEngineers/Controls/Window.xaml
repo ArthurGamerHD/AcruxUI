@@ -1,0 +1,14 @@
+<?xml version="1.0" encoding="utf-8"?>
+<!--
+  Windows as the game's own screens draw them (MyGuiScreenBase): Keen's screen background (screen_background.dds)
+  at Options > Interface > UI background opacity, the uiBackgroundOpacity resource. Screen-space windows get it from
+  the game (ScreenSpaceWindowPlatform, and any Window root of a ScreenSpaceRenderer tree); 1 when a host gives none.
+-->
+<Styles xmlns="https://github.com/ArthurGamerHD/AcruxUI"
+        xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml">
+  <Style Selector="Window">
+    <Setter Property="Background">
+      <ImageBrush Source="Acrux_SE_Screen_Background" Opacity="{DynamicResource uiBackgroundOpacity}" />
+    </Setter>
+  </Style>
+</Styles>

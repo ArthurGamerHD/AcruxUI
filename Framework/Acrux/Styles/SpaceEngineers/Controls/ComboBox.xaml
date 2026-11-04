@@ -1,0 +1,132 @@
+<?xml version="1.0" encoding="utf-8"?>
+<Styles xmlns="https://github.com/ArthurGamerHD/AcruxUI"
+        xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml">
+  <!-- Sizes in pixels at 1080p, as the rest of the theme (MessageBox.xaml): Keen's 1600x1200 reference pixels x 0.9. -->
+  <!-- Three-slice Space Engineers frame: native-width caps (authored for the 48 px
+       height) and a stretched center, drawn behind the interactive header. -->
+  <Style Selector="ComboBox">
+    <Setter Property="Template">
+      <ControlTemplate>
+        <Grid>
+          <Grid ColumnDefinitions="18,*,46">
+            <Border Grid.Column="0" Classes="se-combo-start" />
+            <Border Grid.Column="1" Classes="se-combo-center" />
+            <Border Grid.Column="2" Classes="se-combo-end" />
+          </Grid>
+          <Border Name="PART_Header"
+                  Background="{TemplateBinding Background}"
+                  BorderBrush="{TemplateBinding BorderBrush}"
+                  BorderThickness="{TemplateBinding BorderThickness}"
+                  Padding="{TemplateBinding Padding}"
+                  CornerRadius="{TemplateBinding CornerRadius}">
+            <Grid>
+              <TextBlock Name="PART_HeaderText"
+                         HorizontalAlignment="Left"
+                         VerticalAlignment="Center"
+                         FontSize="0.72"
+                         Foreground="{TemplateBinding Foreground}" />
+              <!-- Shows the selection through SelectionBoxItemTemplate / ItemTemplate when one is set. -->
+              <ContentPresenter Name="PART_ContentPresenter"
+                                VerticalAlignment="Center"
+                                IsVisible="False" />
+            </Grid>
+          </Border>
+        </Grid>
+      </ControlTemplate>
+    </Setter>
+    <Setter Property="Width" Value="409.5" />
+    <Setter Property="Height" Value="43" />
+    <Setter Property="CornerRadius" Value="0" />
+    <Setter Property="BorderThickness" Value="0" />
+    <Setter Property="Padding" Value="14.5 5.5 58.5 5.5" />
+    <Setter Property="HorizontalContentAlignment" Value="Left" />
+    <Setter Property="VerticalContentAlignment" Value="Center" />
+    <Setter Property="Background" Value="#00000000" />
+    <Setter Property="Foreground" Value="#ffffff" />
+    <Setter Property="BorderBrush" Value="#00000000" />
+  </Style>
+  <Style Selector="ComboBox Border.se-combo-start">
+    <Setter Property="Background"><ImageBrush Source="Acrux_SE_ComboBox_Normal_Left" /></Setter>
+  </Style>
+  <Style Selector="ComboBox Border.se-combo-center">
+    <Setter Property="Background"><ImageBrush Source="Acrux_SE_ComboBox_Normal" /></Setter>
+  </Style>
+  <Style Selector="ComboBox Border.se-combo-end">
+    <Setter Property="Background"><ImageBrush Source="Acrux_SE_ComboBox_Normal_Right" /></Setter>
+  </Style>
+
+  <Style Selector="ComboBox.settings-anchor">
+    <!-- The popup does not scroll, so it must be tall enough for every anchor option. -->
+    <Setter Property="MaxDropDownHeight" Value="360" />
+    <Setter Property="Width" Value="409.5" />
+    <Setter Property="Height" Value="43" />
+    <Setter Property="HorizontalAlignment" Value="Right" />
+    <Setter Property="VerticalAlignment" Value="Center" />
+  </Style>
+  <Style Selector="ComboBox:focus-visible">
+    <Setter Property="Foreground" Value="#21282d" />
+  </Style>
+  <Style Selector="ComboBox:focus-visible Border.se-combo-start">
+    <Setter Property="Background"><ImageBrush Source="Acrux_SE_ComboBox_Focus_Left" /></Setter>
+  </Style>
+  <Style Selector="ComboBox:focus-visible Border.se-combo-center">
+    <Setter Property="Background"><ImageBrush Source="Acrux_SE_ComboBox_Focus" /></Setter>
+  </Style>
+  <Style Selector="ComboBox:focus-visible Border.se-combo-end">
+    <Setter Property="Background"><ImageBrush Source="Acrux_SE_ComboBox_Focus_Right" /></Setter>
+  </Style>
+  <Style Selector="ComboBox:pointerover">
+    <Setter Property="Foreground" Value="#ffffff" />
+  </Style>
+  <Style Selector="ComboBox:pointerover Border.se-combo-start">
+    <Setter Property="Background"><ImageBrush Source="Acrux_SE_ComboBox_Highlight_Left" /></Setter>
+  </Style>
+  <Style Selector="ComboBox:pointerover Border.se-combo-center">
+    <Setter Property="Background"><ImageBrush Source="Acrux_SE_ComboBox_Highlight" /></Setter>
+  </Style>
+  <Style Selector="ComboBox:pointerover Border.se-combo-end">
+    <Setter Property="Background"><ImageBrush Source="Acrux_SE_ComboBox_Highlight_Right" /></Setter>
+  </Style>
+  <Style Selector="ComboBox:pressed">
+    <Setter Property="Foreground" Value="#ffffff" />
+  </Style>
+  <Style Selector="ComboBox:pressed Border.se-combo-start">
+    <Setter Property="Background"><ImageBrush Source="Acrux_SE_ComboBox_Active_Left" /></Setter>
+  </Style>
+  <Style Selector="ComboBox:pressed Border.se-combo-center">
+    <Setter Property="Background"><ImageBrush Source="Acrux_SE_ComboBox_Active" /></Setter>
+  </Style>
+  <Style Selector="ComboBox:pressed Border.se-combo-end">
+    <Setter Property="Background"><ImageBrush Source="Acrux_SE_ComboBox_Active_Right" /></Setter>
+  </Style>
+  <Style Selector="ComboBox:dropdownopen">
+    <Setter Property="Foreground" Value="#ffffff" />
+  </Style>
+  <Style Selector="ComboBox:dropdownopen Border.se-combo-start">
+    <Setter Property="Background"><ImageBrush Source="Acrux_SE_ComboBox_Active_Left" /></Setter>
+  </Style>
+  <Style Selector="ComboBox:dropdownopen Border.se-combo-center">
+    <Setter Property="Background"><ImageBrush Source="Acrux_SE_ComboBox_Active" /></Setter>
+  </Style>
+  <Style Selector="ComboBox:dropdownopen Border.se-combo-end">
+    <Setter Property="Background"><ImageBrush Source="Acrux_SE_ComboBox_Active_Right" /></Setter>
+  </Style>
+  <Style Selector="ComboBox:disabled">
+    <Setter Property="Foreground" Value="#676d7b" />
+  </Style>
+
+  <!-- Keen's drop-down fill. The popup is built in code, so its nine-slice frame cannot be
+       templated; the stretched center texture keeps the Keen fill without the edge pieces. -->
+  <Style Selector="Border.combo-box-popup">
+    <Setter Property="Background"><ImageBrush Source="Acrux_SE_ComboBox_Dropdown_Center" /></Setter>
+  </Style>
+  <Style Selector="Border.combo-box-item">
+    <Setter Property="Background" Value="#00000000" />
+  </Style>
+  <Style Selector="Border.combo-box-item:pointerover">
+    <Setter Property="Background"><ImageBrush Source="Acrux_SE_ComboBox_Item_Highlight" /></Setter>
+  </Style>
+  <Style Selector="Border.combo-box-item:pressed">
+    <Setter Property="Background"><ImageBrush Source="Acrux_SE_ComboBox_Item_Focus" /></Setter>
+  </Style>
+</Styles>

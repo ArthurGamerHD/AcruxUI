@@ -1,0 +1,137 @@
+<?xml version="1.0" encoding="utf-8"?>
+<Styles xmlns="https://github.com/ArthurGamerHD/AcruxUI"
+        xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml">
+  <Style Selector="Button">
+    <Setter Property="Template">
+      <ControlTemplate>
+        <Grid>
+          <Border Name="PART_Chrome"
+                  Background="{TemplateBinding Background}"
+                  BorderThickness="0"
+                  CornerRadius="{TemplateBinding CornerRadius}" />
+          <Border Name="PART_Outline"
+                  Background="#00000000"
+                  BorderBrush="{TemplateBinding BorderBrush}"
+                  BorderThickness="{TemplateBinding BorderThickness}"
+                  CornerRadius="{TemplateBinding CornerRadius}" />
+          <Viewbox Name="PART_ContentViewbox" StretchDirection="DownOnly"
+                   HorizontalAlignment="{TemplateBinding HorizontalContentAlignment}"
+                   VerticalAlignment="{TemplateBinding VerticalContentAlignment}">
+            <ContentPresenter Name="PART_ContentPresenter"
+                              HorizontalContentAlignment="{TemplateBinding HorizontalContentAlignment}"
+                              VerticalContentAlignment="{TemplateBinding VerticalContentAlignment}" />
+          </Viewbox>
+        </Grid>
+      </ControlTemplate>
+    </Setter>
+    <Setter Property="CornerRadius" Value="0" />
+    <Setter Property="Background">
+      <ImageBrush Source="Acrux_SE_Button_Normal" />
+    </Setter>
+    <Setter Property="Foreground" Value="#ffffff" />
+    <Setter Property="BorderBrush" Value="#3a434c" />
+    <Setter Property="BorderThickness" Value="1" />
+    <Setter Property="Padding" Value="8 4 8 4" />
+    <Setter Property="HorizontalContentAlignment" Value="Center" />
+    <Setter Property="VerticalContentAlignment" Value="Center" />
+  </Style>
+
+  <!-- Icon and preview content fills the button, so it stays out of the shrink-to-fit Viewbox. -->
+  <Style Selector="Button.circular">
+    <Setter Property="HorizontalContentAlignment" Value="Stretch" />
+    <Setter Property="VerticalContentAlignment" Value="Stretch" />
+  </Style>
+  <!-- Road visibility: road-cyan fill while roads are shown (the default). -->
+  <Style Selector="ToggleButton.circular.roads:checked">
+    <Setter Property="Background" Value="#55cdeb" />
+    <Setter Property="Foreground" Value="#06222b" />
+  </Style>
+  <Style Selector="Button.layer-preview">
+    <Setter Property="HorizontalContentAlignment" Value="Stretch" />
+    <Setter Property="VerticalContentAlignment" Value="Stretch" />
+    <Setter Property="Padding" Value="0" />
+  </Style>
+  <Style Selector="Button.context-menu-item">
+    <Setter Property="HorizontalContentAlignment" Value="Left" />
+    <Setter Property="Background" Value="#252e35" />
+    <Setter Property="Padding" Value="12 0 12 0" />
+  </Style>
+  <!-- The Space Engineers close texture already contains the X, so the icon is hidden. -->
+  <Style Selector="Button.close-button">
+    <Setter Property="Foreground" Value="#00000000" />
+    <Setter Property="HorizontalContentAlignment" Value="Stretch" />
+    <Setter Property="VerticalContentAlignment" Value="Stretch" />
+    <Setter Property="Width" Value="34" />
+    <Setter Property="Height" Value="31" />
+    <Setter Property="CornerRadius" Value="0" />
+    <Setter Property="Padding" Value="0" />
+    <Setter Property="BorderThickness" Value="0" />
+    <Setter Property="Background">
+      <ImageBrush Source="Acrux_SE_Close_Normal" />
+    </Setter>
+  </Style>
+
+  <!-- Content that fills the button (e.g. a Grid with * columns) cannot sit in the auto-scaling Viewbox, which measures
+       it at its natural size. -->
+  <Style Selector="Button[HorizontalContentAlignment=Stretch]">
+    <Setter Property="Template">
+      <ControlTemplate>
+        <Grid>
+          <Border Name="PART_Chrome"
+                  Background="{TemplateBinding Background}"
+                  BorderThickness="0"
+                  CornerRadius="{TemplateBinding CornerRadius}" />
+          <Border Name="PART_Outline"
+                  Background="#00000000"
+                  BorderBrush="{TemplateBinding BorderBrush}"
+                  BorderThickness="{TemplateBinding BorderThickness}"
+                  CornerRadius="{TemplateBinding CornerRadius}" />
+          <ContentPresenter Name="PART_ContentPresenter"
+                            HorizontalContentAlignment="{TemplateBinding HorizontalContentAlignment}"
+                            VerticalContentAlignment="{TemplateBinding VerticalContentAlignment}" />
+        </Grid>
+      </ControlTemplate>
+    </Setter>
+  </Style>
+
+  <Style Selector="Button:pointerover">
+    <Setter Property="Background">
+      <ImageBrush Source="Acrux_SE_Button_Highlight" />
+    </Setter>
+    <Setter Property="Foreground" Value="#ffffff" />
+  </Style>
+  <Style Selector="Button:pressed">
+    <Setter Property="Background">
+      <ImageBrush Source="Acrux_SE_Button_Active" />
+    </Setter>
+    <Setter Property="Foreground" Value="#21292d" />
+  </Style>
+  <Style Selector="Button:focus-visible">
+    <Setter Property="BorderBrush" Value="#8ebcce" />
+    <Setter Property="Background">
+      <ImageBrush Source="Acrux_SE_Button_Focus" />
+    </Setter>
+  </Style>
+  <Style Selector="Button:disabled">
+    <Setter Property="Foreground" Value="#676d7b" />
+  </Style>
+  <Style Selector="Button.close-button:pointerover">
+    <Setter Property="Foreground" Value="#00000000" />
+    <Setter Property="Background">
+      <ImageBrush Source="Acrux_SE_Close_Highlight" />
+    </Setter>
+  </Style>
+  <Style Selector="Button.close-button:pressed">
+    <Setter Property="Foreground" Value="#00000000" />
+    <Setter Property="Background">
+      <ImageBrush Source="Acrux_SE_Close_Highlight" />
+    </Setter>
+  </Style>
+  <Style Selector="Button.close-button:focus-visible">
+    <Setter Property="Foreground" Value="#00000000" />
+    <Setter Property="BorderThickness" Value="0" />
+    <Setter Property="Background">
+      <ImageBrush Source="Acrux_SE_Close_Highlight" />
+    </Setter>
+  </Style>
+</Styles>

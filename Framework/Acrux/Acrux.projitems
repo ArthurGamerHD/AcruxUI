@@ -1,0 +1,147 @@
+<?xml version="1.0" encoding="utf-8"?>
+<Project xmlns="http://schemas.microsoft.com/developer/msbuild/2003">
+  <PropertyGroup>
+    <MSBuildAllProjects Condition="'$(MSBuildVersion)' == '' Or '$(MSBuildVersion)' &lt; '16.0'">$(MSBuildAllProjects);$(MSBuildThisFileFullPath)</MSBuildAllProjects>
+    <HasSharedItems>true</HasSharedItems>
+    <SharedGUID>5d175573-c301-4cb0-b4b1-88cbe2d6a81e</SharedGUID>
+  </PropertyGroup>
+  <ItemGroup>
+    <Compile Include="$(MSBuildThisFileDirectory)Extensions\WindowDialogs.cs" />
+    <Compile Include="$(MSBuildThisFileDirectory)Toolkit\IRemotePeer.cs" />
+    <Compile Include="$(MSBuildThisFileDirectory)Toolkit\ExternalInterop.cs" />
+    <Compile Include="$(MSBuildThisFileDirectory)Toolkit\IExternalPeerHost.cs" />
+    <Compile Include="$(MSBuildThisFileDirectory)Toolkit\GeneratedTexturePool.cs" />
+    <Compile Include="$(MSBuildThisFileDirectory)Extensions\ContextValueConverter.cs" />
+    <Compile Include="$(MSBuildThisFileDirectory)Styling\ItemsPanelTemplate.cs" />
+    <Compile Include="$(MSBuildThisFileDirectory)Styling\ImageBrush.cs" />
+    <Compile Include="$(MSBuildThisFileDirectory)Styling\RelativeRect.cs" />
+    <Compile Include="$(MSBuildThisFileDirectory)Styling\Transform.cs" />
+    <Compile Include="$(MSBuildThisFileDirectory)Data\Converters\IValueConverter.cs" />
+    <Compile Include="$(MSBuildThisFileDirectory)Markup\BindingMarkup.cs" />
+    <AdditionalFiles Include="$(MSBuildThisFileDirectory)Styles\**\*.xaml" Link="Content\Data\Gui\Styles\Acrux\%(RecursiveDir)%(Filename)%(Extension)">
+      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+    </AdditionalFiles>
+    <!-- Definitions a theme needs (e.g. the Space Engineers theme's Acrux_SE_* transparent materials). -->
+    <AdditionalFiles Include="$(MSBuildThisFileDirectory)Styles\**\*.sbc" Link="Content\Data\%(Filename)%(Extension)">
+      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+    </AdditionalFiles>
+    <Compile Include="$(MSBuildThisFileDirectory)Animation\ActionKeyframe.cs" />
+    <Compile Include="$(MSBuildThisFileDirectory)Animation\AnimationConflict.cs" />
+    <Compile Include="$(MSBuildThisFileDirectory)Animation\AnimationController.cs" />
+    <Compile Include="$(MSBuildThisFileDirectory)Animation\StyleAnimation.cs" />
+    <Compile Include="$(MSBuildThisFileDirectory)Animation\AnimationHandle.cs" />
+    <Compile Include="$(MSBuildThisFileDirectory)Animation\AnimationInterpolator.cs" />
+    <Compile Include="$(MSBuildThisFileDirectory)Animation\AnimationState.cs" />
+    <Compile Include="$(MSBuildThisFileDirectory)Animation\AnimationServices.cs" />
+    <Compile Include="$(MSBuildThisFileDirectory)Animation\DelayKeyframe.cs" />
+    <Compile Include="$(MSBuildThisFileDirectory)Animation\EasingMode.cs" />
+    <Compile Include="$(MSBuildThisFileDirectory)Animation\Easings.cs" />
+    <Compile Include="$(MSBuildThisFileDirectory)Animation\IAnimationStep.cs" />
+    <Compile Include="$(MSBuildThisFileDirectory)Animation\Keyframe.cs" />
+    <Compile Include="$(MSBuildThisFileDirectory)Animation\PageSlide.cs" />
+    <Compile Include="$(MSBuildThisFileDirectory)Animation\RenderTransform.cs" />
+    <Compile Include="$(MSBuildThisFileDirectory)Animation\ScaleTransform.cs" />
+    <Compile Include="$(MSBuildThisFileDirectory)Animation\VisualElementAnimationExtensions.cs" />
+    <Compile Include="$(MSBuildThisFileDirectory)Gui.cs" />
+    <Compile Include="$(MSBuildThisFileDirectory)Controls\Border.cs" />
+    <Compile Include="$(MSBuildThisFileDirectory)Controls\Button.cs" />
+    <Compile Include="$(MSBuildThisFileDirectory)Controls\Carousel.cs" />
+    <Compile Include="$(MSBuildThisFileDirectory)Controls\ContextMenu.cs" />
+    <Compile Include="$(MSBuildThisFileDirectory)Controls\Menu.cs" />
+    <Compile Include="$(MSBuildThisFileDirectory)Controls\ToolTip.cs" />
+    <Compile Include="$(MSBuildThisFileDirectory)Controls\Shapes\Shape.cs" />
+    <Compile Include="$(MSBuildThisFileDirectory)Controls\Shapes\Arc.cs" />
+    <Compile Include="$(MSBuildThisFileDirectory)Controls\Shapes\Path.cs" />
+    <Compile Include="$(MSBuildThisFileDirectory)Media\Geometry.cs" />
+    <Compile Include="$(MSBuildThisFileDirectory)Controls\CheckBox.cs" />
+    <Compile Include="$(MSBuildThisFileDirectory)Controls\ComboBox.cs" />
+    <Compile Include="$(MSBuildThisFileDirectory)Controls\ContentPresenter.cs" />
+    <Compile Include="$(MSBuildThisFileDirectory)Controls\DropDownButton.cs" />
+    <Compile Include="$(MSBuildThisFileDirectory)Controls\Label.cs" />
+    <Compile Include="$(MSBuildThisFileDirectory)Controls\ItemsControl.cs" />
+    <Compile Include="$(MSBuildThisFileDirectory)Controls\ListBox.cs" />
+    <Compile Include="$(MSBuildThisFileDirectory)Controls\TabControl.cs" />
+    <Compile Include="$(MSBuildThisFileDirectory)Controls\SizeChangedEventArgs.cs" />
+    <Compile Include="$(MSBuildThisFileDirectory)Interactivity\RoutedEvent.cs" />
+    <Compile Include="$(MSBuildThisFileDirectory)Extensions\ClickEffect.cs" />
+    <Compile Include="$(MSBuildThisFileDirectory)Extensions\IVirtualizingItemsPanel.cs" />
+    <Compile Include="$(MSBuildThisFileDirectory)Extensions\VirtualizingUniformGrid.cs" />
+    <Compile Include="$(MSBuildThisFileDirectory)Controls\MessageBox.cs" />
+    <Compile Include="$(MSBuildThisFileDirectory)Controls\NumericUpDown.cs" />
+    <Compile Include="$(MSBuildThisFileDirectory)Controls\ProgressBar.cs" />
+    <Compile Include="$(MSBuildThisFileDirectory)Controls\RepeatButton.cs" />
+    <Compile Include="$(MSBuildThisFileDirectory)Controls\Slider.cs" />
+    <Compile Include="$(MSBuildThisFileDirectory)Controls\TextBlock.cs" />
+    <Compile Include="$(MSBuildThisFileDirectory)Controls\Documents\Inlines.cs" />
+    <Compile Include="$(MSBuildThisFileDirectory)Controls\TextBox.cs" />
+    <Compile Include="$(MSBuildThisFileDirectory)Controls\TextPresenter.cs" />
+    <Compile Include="$(MSBuildThisFileDirectory)Controls\ToggleSwitch.cs" />
+    <Compile Include="$(MSBuildThisFileDirectory)Controls\Image.cs" />
+    <Compile Include="$(MSBuildThisFileDirectory)Layout\Viewbox.cs" />
+    <Compile Include="$(MSBuildThisFileDirectory)Controls\UserControl.cs" />
+    <Compile Include="$(MSBuildThisFileDirectory)Controls\Window.cs" />
+    <Compile Include="$(MSBuildThisFileDirectory)Controls\Chrome\CaptionButton.cs" />
+    <Compile Include="$(MSBuildThisFileDirectory)Controls\Chrome\CaptionGlyphs.cs" />
+    <Compile Include="$(MSBuildThisFileDirectory)Controls\Primitives\ControlPrimitives.cs" />
+    <Compile Include="$(MSBuildThisFileDirectory)Controls\Primitives\RangeBase.cs" />
+    <Compile Include="$(MSBuildThisFileDirectory)Controls\Primitives\Popup.cs" />
+    <Compile Include="$(MSBuildThisFileDirectory)Controls\Primitives\ScrollBar.cs" />
+    <Compile Include="$(MSBuildThisFileDirectory)Controls\Primitives\Thumb.cs" />
+    <Compile Include="$(MSBuildThisFileDirectory)Controls\Primitives\Track.cs" />
+    <Compile Include="$(MSBuildThisFileDirectory)Controls\Primitives\ToggleButton.cs" />
+    <Compile Include="$(MSBuildThisFileDirectory)Core\Binding\Bindings.cs" />
+    <Compile Include="$(MSBuildThisFileDirectory)Core\Control.cs" />
+    <Compile Include="$(MSBuildThisFileDirectory)Core\TemplatedControl.cs" />
+    <Compile Include="$(MSBuildThisFileDirectory)Core\FrameworkElement.cs" />
+    <Compile Include="$(MSBuildThisFileDirectory)Core\IControlContainer.cs" />
+    <Compile Include="$(MSBuildThisFileDirectory)Core\IInputSource.cs" />
+    <Compile Include="$(MSBuildThisFileDirectory)Core\Orientation.cs" />
+    <Compile Include="$(MSBuildThisFileDirectory)Core\Input\Key.cs" />
+    <Compile Include="$(MSBuildThisFileDirectory)Core\Input\ICommand.cs" />
+    <Compile Include="$(MSBuildThisFileDirectory)Core\Input\PointerCursor.cs" />
+    <Compile Include="$(MSBuildThisFileDirectory)Core\Invalidation\UiInvalidation.cs" />
+    <Compile Include="$(MSBuildThisFileDirectory)Core\PropertySystem\PropertyStore.cs" />
+    <Compile Include="$(MSBuildThisFileDirectory)Core\PropertySystem\StyledProperty.cs" />
+    <Compile Include="$(MSBuildThisFileDirectory)Core\PropertySystem\StyledPropertyCatalog.cs" />
+    <Compile Include="$(MSBuildThisFileDirectory)Core\Visual.cs" />
+    <Compile Include="$(MSBuildThisFileDirectory)Core\VisualElement.cs" />
+    <Compile Include="$(MSBuildThisFileDirectory)Core\VisualTree.cs" />
+    <Compile Include="$(MSBuildThisFileDirectory)Layout\Decorator.cs" />
+    <Compile Include="$(MSBuildThisFileDirectory)Layout\GridLength.cs" />
+    <Compile Include="$(MSBuildThisFileDirectory)Layout\LayoutControls.cs" />
+    <Compile Include="$(MSBuildThisFileDirectory)Layout\Panel.cs" />
+    <Compile Include="$(MSBuildThisFileDirectory)Layout\ScrollViewer.cs" />
+    <Compile Include="$(MSBuildThisFileDirectory)Layout\WrapPanel.cs" />
+    <Compile Include="$(MSBuildThisFileDirectory)Layout\UniformGrid.cs" />
+    <Compile Include="$(MSBuildThisFileDirectory)Layout\VirtualizingCarouselPanel.cs" />
+    <Compile Include="$(MSBuildThisFileDirectory)Layout\VirtualizingStackPanel.cs" />
+    <Compile Include="$(MSBuildThisFileDirectory)Markup\BindingExtension.cs" />
+    <Compile Include="$(MSBuildThisFileDirectory)Markup\PropertyConverter.cs" />
+    <Compile Include="$(MSBuildThisFileDirectory)Markup\KnownColors.cs" />
+    <Compile Include="$(MSBuildThisFileDirectory)Markup\HotReload.cs" />
+    <Compile Include="$(MSBuildThisFileDirectory)Markup\TypeRegistry.cs" />
+    <Compile Include="$(MSBuildThisFileDirectory)Markup\UiXmlLoader.cs" />
+    <Compile Include="$(MSBuildThisFileDirectory)Markup\XamlNamespaceScope.cs" />
+    <Compile Include="$(MSBuildThisFileDirectory)Markup\GeneratedTypeCatalog.cs" />
+    <Compile Include="$(MSBuildThisFileDirectory)Rendering\BorderTextureCache.cs" />
+    <Compile Include="$(MSBuildThisFileDirectory)Rendering\DrawCommand.cs" />
+    <Compile Include="$(MSBuildThisFileDirectory)Rendering\IDynamicTexture.cs" />
+    <Compile Include="$(MSBuildThisFileDirectory)Rendering\ITextMetrics.cs" />
+    <Compile Include="$(MSBuildThisFileDirectory)Rendering\ITextureResolver.cs" />
+    <Compile Include="$(MSBuildThisFileDirectory)Rendering\IUiRenderer.cs" />
+    <Compile Include="$(MSBuildThisFileDirectory)Rendering\IWindowResourceSource.cs" />
+    <Compile Include="$(MSBuildThisFileDirectory)Rendering\PixelCanvas.cs" />
+    <Compile Include="$(MSBuildThisFileDirectory)Rendering\RenderContext.cs" />
+    <Compile Include="$(MSBuildThisFileDirectory)Rendering\TextureSource.cs" />
+    <Compile Include="$(MSBuildThisFileDirectory)Styling\ControlTemplate.cs" />
+    <Compile Include="$(MSBuildThisFileDirectory)Styling\BackgroundBrush.cs" />
+    <Compile Include="$(MSBuildThisFileDirectory)Styling\DataTemplate.cs" />
+    <Compile Include="$(MSBuildThisFileDirectory)Styling\IResourceProvider.cs" />
+    <Compile Include="$(MSBuildThisFileDirectory)Styling\ResourceDictionary.cs" />
+    <Compile Include="$(MSBuildThisFileDirectory)Styling\Style.cs" />
+    <Compile Include="$(MSBuildThisFileDirectory)Styling\StyleInclude.cs" />
+    <Compile Include="$(MSBuildThisFileDirectory)Styling\ResourceDependentValue.cs" />
+    <Compile Include="$(MSBuildThisFileDirectory)Styling\StylePropertyRegistry.cs" />
+    <Compile Include="$(MSBuildThisFileDirectory)Styling\PseudoClasses.cs" />
+  </ItemGroup>
+</Project>

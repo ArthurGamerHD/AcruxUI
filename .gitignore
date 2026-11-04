@@ -1,0 +1,25 @@
+# Build output
+bin/
+obj/
+/Tools/AcruxRiderPlugin/build/
+
+# IDE / user state
+.idea/
+.vs/
+*.user
+*.DotSettings.user
+.claude/
+
+# Local, machine-specific settings
+*.local.ini
+*.local.sh
+
+# Local-only tools
+/Tools/extract-avalonia-members.py
+
+# Acrux SDK packages and logs
+/Tools/Acrux.Sdk/out/
+/Tools/Acrux.Sdk/run.log
+
+# dotnet new template staging
+/Tools/Acrux.Templates/obj/

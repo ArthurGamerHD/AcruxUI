@@ -1,0 +1,24 @@
+<Project Sdk="Microsoft.NET.Sdk">
+  <!-- Carries ClientApi (embedded) and emits it into each client mod's compilation; see ClientApiGenerator.cs. -->
+  <PropertyGroup>
+    <TargetFramework>netstandard2.0</TargetFramework>
+    <AssemblyName>Acrux.ClientApi.Generator</AssemblyName>
+    <RootNamespace>Acrux.ClientApi.Generator</RootNamespace>
+    <LangVersion>latest</LangVersion>
+    <IsRoslynComponent>true</IsRoslynComponent>
+    <EnforceExtendedAnalyzerRules>true</EnforceExtendedAnalyzerRules>
+    <EnableDefaultEmbeddedResourceItems>false</EnableDefaultEmbeddedResourceItems>
+    <ClientApiRoot>$([System.IO.Path]::GetFullPath('$(MSBuildThisFileDirectory)..\..\..\ClientApi\'))</ClientApiRoot>
+  </PropertyGroup>
+
+  <ItemGroup>
+    <PackageReference Include="Microsoft.CodeAnalysis.CSharp" Version="4.12.0" PrivateAssets="all" />
+  </ItemGroup>
+
+  <ItemGroup>
+    <!-- LogicalName is the path under ClientApi/ with '/' separators; the generator turns it into the hint name.
+         WithCulture=false: MSBuild would read "Documents.Run.cs" as a resource for culture "run" (Rundi) and move it
+         into a satellite assembly. -->
+    <EmbeddedResource Include="$(ClientApiRoot)**\*.cs" WithCulture="false" LogicalName="ClientApi/$([System.String]::Copy('%(RecursiveDir)').Replace('\', '/'))%(Filename)%(Extension)" />
+  </ItemGroup>
+</Project>

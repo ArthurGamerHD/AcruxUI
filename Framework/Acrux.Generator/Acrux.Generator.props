@@ -1,0 +1,11 @@
+<Project>
+  <!-- Import into a project with Acrux XAML views (the Acrux UI Toolkit mod, its client mods, the preview host).
+       Adds the Acrux generators next to the ADK ones from Adk.CodeGeneration.props; both read the same adk.ini. -->
+  <ItemGroup>
+    <ProjectReference Include="$(MSBuildThisFileDirectory)Acrux.Generator.csproj"
+                      OutputItemType="Analyzer"
+                      ReferenceOutputAssembly="false">
+      <SetPlatform>Platform=AnyCPU</SetPlatform>
+    </ProjectReference>
+  </ItemGroup>
+</Project>

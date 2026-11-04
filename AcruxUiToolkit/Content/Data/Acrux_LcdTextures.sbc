@@ -1,0 +1,136 @@
+<?xml version="1.0" encoding="utf-8"?>
+<!-- Acrux's own sprites, as LCD textures (screen-space sprites resolve LCD texture names too).
+     Sources: Assets/Textures (256 px, from the 200 px Assets/Logo*.png), BC7 with premultiplied alpha. -->
+<Definitions xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+             xmlns:xsd="http://www.w3.org/2001/XMLSchema">
+    <LCDTextures>
+        <LCDTextureDefinition>
+            <Id Type="LCDTextureDefinition" Subtype="Acrux_Logo"/>
+            <SpritePath>Textures/Acrux/Logo.dds</SpritePath>
+            <Selectable>false</Selectable>
+        </LCDTextureDefinition>
+        <LCDTextureDefinition>
+            <Id Type="LCDTextureDefinition" Subtype="Acrux_Logo_White"/>
+            <SpritePath>Textures/Acrux/Logo_White.dds</SpritePath>
+            <Selectable>false</Selectable>
+        </LCDTextureDefinition>
+        <!-- LCD pointer styles (Acrux.Lcd.LcdCursor): one Acrux_Cursor<PointerCursor name> per style. Paths outside
+             Textures/Acrux are the game's own files. A style without art of its own is a copy of the arrow; give it
+             its own SpritePath to restyle it. AppStarting is the arrow, drawn with the Wait wheel beside it. -->
+        <LCDTextureDefinition> <!-- Vanilla cursor arrow -->
+            <Id Type="LCDTextureDefinition" Subtype="Acrux_CursorArrow"/>
+            <SpritePath>Textures/GUI/MouseCursor.dds</SpritePath>
+            <Selectable>false</Selectable>
+        </LCDTextureDefinition>
+        <LCDTextureDefinition> <!-- No art yet: copy of the arrow -->
+            <Id Type="LCDTextureDefinition" Subtype="Acrux_CursorIbeam"/>
+            <SpritePath>Textures/GUI/MouseCursor.dds</SpritePath>
+            <Selectable>false</Selectable>
+        </LCDTextureDefinition>
+        <LCDTextureDefinition> <!-- Vanilla loading wheel -->
+            <Id Type="LCDTextureDefinition" Subtype="Acrux_CursorWait"/>
+            <SpritePath>Textures/GUI/Icons/HUD 2017/RadialMenu.png</SpritePath>
+            <Selectable>false</Selectable>
+        </LCDTextureDefinition>
+        <LCDTextureDefinition> <!-- Vanilla cross sprite -->
+            <Id Type="LCDTextureDefinition" Subtype="Acrux_CursorCross"/>
+            <SpritePath>Textures/Sprites/Cross.dds</SpritePath>
+            <Selectable>false</Selectable>
+        </LCDTextureDefinition>
+        <LCDTextureDefinition> <!-- No art yet: copy of the arrow -->
+            <Id Type="LCDTextureDefinition" Subtype="Acrux_CursorUpArrow"/>
+            <SpritePath>Textures/GUI/MouseCursor.dds</SpritePath>
+            <Selectable>false</Selectable>
+        </LCDTextureDefinition>
+        <LCDTextureDefinition> <!-- No art yet: copy of the arrow -->
+            <Id Type="LCDTextureDefinition" Subtype="Acrux_CursorSizeWestEast"/>
+            <SpritePath>Textures/GUI/MouseCursor.dds</SpritePath>
+            <Selectable>false</Selectable>
+        </LCDTextureDefinition>
+        <LCDTextureDefinition> <!-- No art yet: copy of the arrow -->
+            <Id Type="LCDTextureDefinition" Subtype="Acrux_CursorSizeNorthSouth"/>
+            <SpritePath>Textures/GUI/MouseCursor.dds</SpritePath>
+            <Selectable>false</Selectable>
+        </LCDTextureDefinition>
+        <LCDTextureDefinition> <!-- No art yet: copy of the arrow -->
+            <Id Type="LCDTextureDefinition" Subtype="Acrux_CursorSizeAll"/>
+            <SpritePath>Textures/GUI/MouseCursor.dds</SpritePath>
+            <Selectable>false</Selectable>
+        </LCDTextureDefinition>
+        <LCDTextureDefinition> <!-- Vanilla no entry sprite -->
+            <Id Type="LCDTextureDefinition" Subtype="Acrux_CursorNo"/>
+            <SpritePath>Textures/Sprites/NoEntry.dds</SpritePath>
+            <Selectable>false</Selectable>
+        </LCDTextureDefinition>
+        <LCDTextureDefinition> <!-- Custom variant of the vanilla hand cursor -->
+            <Id Type="LCDTextureDefinition" Subtype="Acrux_CursorHand"/>
+            <SpritePath>Textures/Acrux/MouseCursorHand.dds</SpritePath>
+            <Selectable>false</Selectable>
+        </LCDTextureDefinition>
+        <LCDTextureDefinition> <!-- No art yet: copy of the arrow -->
+            <Id Type="LCDTextureDefinition" Subtype="Acrux_CursorAppStarting"/>
+            <SpritePath>Textures/GUI/MouseCursor.dds</SpritePath>
+            <Selectable>false</Selectable>
+        </LCDTextureDefinition>
+        <LCDTextureDefinition> <!-- Vanilla help icon -->
+            <Id Type="LCDTextureDefinition" Subtype="Acrux_CursorHelp"/>
+            <SpritePath>Textures/GUI/Controls/button_info_symbol_highlight.dds</SpritePath>
+            <Selectable>false</Selectable>
+        </LCDTextureDefinition>
+        <LCDTextureDefinition> <!-- No art yet: copy of the arrow -->
+            <Id Type="LCDTextureDefinition" Subtype="Acrux_CursorTopSide"/>
+            <SpritePath>Textures/GUI/MouseCursor.dds</SpritePath>
+            <Selectable>false</Selectable>
+        </LCDTextureDefinition>
+        <LCDTextureDefinition> <!-- No art yet: copy of the arrow -->
+            <Id Type="LCDTextureDefinition" Subtype="Acrux_CursorBottomSide"/>
+            <SpritePath>Textures/GUI/MouseCursor.dds</SpritePath>
+            <Selectable>false</Selectable>
+        </LCDTextureDefinition>
+        <LCDTextureDefinition> <!-- No art yet: copy of the arrow -->
+            <Id Type="LCDTextureDefinition" Subtype="Acrux_CursorLeftSide"/>
+            <SpritePath>Textures/GUI/MouseCursor.dds</SpritePath>
+            <Selectable>false</Selectable>
+        </LCDTextureDefinition>
+        <LCDTextureDefinition> <!-- No art yet: copy of the arrow -->
+            <Id Type="LCDTextureDefinition" Subtype="Acrux_CursorRightSide"/>
+            <SpritePath>Textures/GUI/MouseCursor.dds</SpritePath>
+            <Selectable>false</Selectable>
+        </LCDTextureDefinition>
+        <LCDTextureDefinition> <!-- No art yet: copy of the arrow -->
+            <Id Type="LCDTextureDefinition" Subtype="Acrux_CursorTopLeftCorner"/>
+            <SpritePath>Textures/GUI/MouseCursor.dds</SpritePath>
+            <Selectable>false</Selectable>
+        </LCDTextureDefinition>
+        <LCDTextureDefinition> <!-- No art yet: copy of the arrow -->
+            <Id Type="LCDTextureDefinition" Subtype="Acrux_CursorTopRightCorner"/>
+            <SpritePath>Textures/GUI/MouseCursor.dds</SpritePath>
+            <Selectable>false</Selectable>
+        </LCDTextureDefinition>
+        <LCDTextureDefinition> <!-- No art yet: copy of the arrow -->
+            <Id Type="LCDTextureDefinition" Subtype="Acrux_CursorBottomLeftCorner"/>
+            <SpritePath>Textures/GUI/MouseCursor.dds</SpritePath>
+            <Selectable>false</Selectable>
+        </LCDTextureDefinition>
+        <LCDTextureDefinition> <!-- No art yet: copy of the arrow -->
+            <Id Type="LCDTextureDefinition" Subtype="Acrux_CursorBottomRightCorner"/>
+            <SpritePath>Textures/GUI/MouseCursor.dds</SpritePath>
+            <Selectable>false</Selectable>
+        </LCDTextureDefinition>
+        <LCDTextureDefinition> <!-- Closed hand while dragging -->
+            <Id Type="LCDTextureDefinition" Subtype="Acrux_CursorDragMove"/>
+            <SpritePath>Textures/Acrux/MouseCursorHandGrab.dds</SpritePath>
+            <Selectable>false</Selectable>
+        </LCDTextureDefinition>
+        <LCDTextureDefinition> <!-- No art yet: copy of the arrow -->
+            <Id Type="LCDTextureDefinition" Subtype="Acrux_CursorDragCopy"/>
+            <SpritePath>Textures/GUI/MouseCursor.dds</SpritePath>
+            <Selectable>false</Selectable>
+        </LCDTextureDefinition>
+        <LCDTextureDefinition> <!-- No art yet: copy of the arrow -->
+            <Id Type="LCDTextureDefinition" Subtype="Acrux_CursorDragLink"/>
+            <SpritePath>Textures/GUI/MouseCursor.dds</SpritePath>
+            <Selectable>false</Selectable>
+        </LCDTextureDefinition>
+    </LCDTextures>
+</Definitions>

@@ -1,0 +1,66 @@
+<Project>
+  <!--
+    Imported by a mod project whose Acrux views (.axaml / .xaml) should get a live preview in Rider through the
+    toolkit's Acrux Preview plugin (Tools/AcruxRiderPlugin). Design-time tooling only: it adds nothing to the mod.
+
+    After each build it writes obj/acrux-preview.properties, which tells the plugin where the preview host, dotnet and
+    the mod's assembly are, and builds the preview host the first time.
+
+    Optional: AcruxPreviewDesignResources names a type of the mod (full name, public parameterless constructor) that
+    implements Acrux.Styling.IResourceProvider. The preview creates it, sets its Background / Foreground / Seed
+    (Color), FontId (string) and FontScale (float) properties from the preview toolbar when it has them, and uses it
+    as the view's data context, so {DynamicResource} resolves to the mod's real theme. It is created before the view
+    is built, so its static setup (what the mod's session would install) is in place for the view's design data.
+    It may also have a public DesignTextures() method returning IEnumerable<KeyValuePair<string, string>>: the LCD
+    textures the mod registers at run time (sprite name, then texture path in the mod's or the game's content),
+    which the preview cannot learn from the mod's .sbc files. Sprites resolve as in game: LCD texture definitions,
+    physical items and faction icons only, never a bare texture path.
+
+    Optional: AcruxPreviewDesignHost names a type of the mod (full name, public parameterless constructor) that hosts a
+    previewed view the way the mod does at run time (as Avalonia's previewer hosts a control in a Window): an app
+    shell with its title, background layer and footer, for example. For each preview the host is created and given,
+    when it has them, ViewClass (string: the view's x:Class, null without one), DesignContext (object: the view's
+    design data context), ViewRoot (the view's root element, e.g. a dialog's Window) and Content (the view's
+    content with its design data context and size, as the mod's control); its View property then gives the
+    control to show instead of the bare content, or null to show the content as it is. Mods that set nothing keep
+    the plain preview.
+
+    Optional: AcruxPreviewDesignStyles lists the mod's theme stylesheets (style sources, comma-separated, e.g.
+    /Data/Gui/Styles/MyMod/Fluent/FluentStyle.xaml): what the mod attaches to its roots at run time, applied over the
+    toolkit's Fluent theme. Without it the preview tries /Data/Gui/Styles/Fluent/FluentStyle.xaml.
+  -->
+  <PropertyGroup>
+    <AcruxPreviewHostProject>$(MSBuildThisFileDirectory)AcruxPreviewHost.csproj</AcruxPreviewHostProject>
+    <AcruxPreviewHostPath>$(MSBuildThisFileDirectory)bin/Debug/net9.0/AcruxPreviewHost.dll</AcruxPreviewHostPath>
+    <AcruxPreviewDotnet>$(DOTNET_HOST_PATH)</AcruxPreviewDotnet>
+    <AcruxPreviewDotnet Condition="'$(AcruxPreviewDotnet)' == ''">dotnet</AcruxPreviewDotnet>
+  </PropertyGroup>
+
+  <!-- The host compiles Acrux (Framework/) and the ADK itself: rebuild it whenever any of them is newer than the host,
+       or a host built against older framework types fails to load the mod ("cannot convert Acrux.X to Acrux.X"). -->
+  <Target Name="AcruxPreviewCollectHostInputs">
+    <PropertyGroup>
+      <_AcruxPreviewToolkitRoot>$([System.IO.Path]::GetFullPath('$(MSBuildThisFileDirectory)../../'))</_AcruxPreviewToolkitRoot>
+    </PropertyGroup>
+    <ItemGroup>
+      <_AcruxPreviewHostInput Include="$(MSBuildThisFileDirectory)*.cs;$(MSBuildThisFileDirectory)*.csproj;$(MSBuildThisFileDirectory)*.props" />
+      <_AcruxPreviewHostInput Include="$(_AcruxPreviewToolkitRoot)Framework/**/*.cs;$(_AcruxPreviewToolkitRoot)Framework/**/*.xaml;$(_AcruxPreviewToolkitRoot)Framework/**/*.projitems"
+                            Exclude="$(_AcruxPreviewToolkitRoot)Framework/**/bin/**;$(_AcruxPreviewToolkitRoot)Framework/**/obj/**" />
+      <_AcruxPreviewHostInput Include="$(_AcruxPreviewToolkitRoot)External/Adk/**/*.cs;$(_AcruxPreviewToolkitRoot)External/Adk/**/*.csproj;$(_AcruxPreviewToolkitRoot)External/Adk/**/*.projitems"
+                            Exclude="$(_AcruxPreviewToolkitRoot)External/Adk/**/bin/**;$(_AcruxPreviewToolkitRoot)External/Adk/**/obj/**" />
+    </ItemGroup>
+  </Target>
+
+  <Target Name="AcruxPreviewBuildHost" AfterTargets="Build" DependsOnTargets="AcruxPreviewCollectHostInputs"
+          Condition="'$(DesignTimeBuild)' != 'true'" Inputs="@(_AcruxPreviewHostInput)" Outputs="$(AcruxPreviewHostPath)">
+    <Exec Command="&quot;$(AcruxPreviewDotnet)&quot; build &quot;$(AcruxPreviewHostProject)&quot; -c Debug -nologo -v q"
+          ContinueOnError="true" />
+    <!-- An input the host does not compile leaves the DLL untouched; mark it current so this target settles. -->
+    <Touch Files="$(AcruxPreviewHostPath)" Condition="Exists('$(AcruxPreviewHostPath)')" ContinueOnError="true" />
+  </Target>
+
+  <Target Name="AcruxPreviewWriteSettings" AfterTargets="AcruxPreviewBuildHost" Condition="'$(DesignTimeBuild)' != 'true'">
+    <WriteLinesToFile File="$(MSBuildProjectDirectory)/obj/acrux-preview.properties" Overwrite="true" WriteOnlyWhenDifferent="true"
+                      Lines="# Written by Acrux UI AcruxPreview.props for the Acrux Preview Rider plugin.;host=$([System.String]::Copy('$(AcruxPreviewHostPath)').Replace('\','/'));dotnet=$([System.String]::Copy('$(AcruxPreviewDotnet)').Replace('\','/'));assembly=$([System.String]::Copy('$(TargetPath)').Replace('\','/'));designResources=$(AcruxPreviewDesignResources);designHost=$(AcruxPreviewDesignHost);designStyles=$(AcruxPreviewDesignStyles)" />
+  </Target>
+</Project>

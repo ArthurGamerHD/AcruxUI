@@ -1,0 +1,48 @@
+<?xml version="1.0" encoding="utf-8"?>
+<Styles xmlns="https://github.com/ArthurGamerHD/AcruxUI"
+        xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml">
+  <!-- Sizes in pixels at 1080p, as the rest of the theme (MessageBox.xaml): Keen's 1600x1200 reference pixels x 0.9. -->
+  <!-- Space Engineers draws this as a checkbox. The textures live on their own template
+       Border, since ToggleSwitch flattens its Background to a color for PART_MovingKnobs. -->
+  <Style Selector="ToggleSwitch">
+    <Setter Property="Template">
+      <ControlTemplate>
+        <Grid>
+          <Border Classes="se-checkbox"
+                  CornerRadius="0"
+                  BorderThickness="0" />
+        </Grid>
+      </ControlTemplate>
+    </Setter>
+    <Setter Property="Width" Value="51.5" />
+    <Setter Property="Height" Value="48.5" />
+    <Setter Property="Padding" Value="0" />
+    <Setter Property="Background" Value="#00000000" />
+  </Style>
+
+  <Style Selector="ToggleSwitch.settings-toggle">
+    <Setter Property="Width" Value="51.5" />
+    <Setter Property="Height" Value="48.5" />
+    <Setter Property="HorizontalAlignment" Value="Left" />
+    <Setter Property="VerticalAlignment" Value="Center" />
+  </Style>
+
+  <Style Selector="ToggleSwitch Border.se-checkbox">
+    <Setter Property="Background"><ImageBrush Source="Acrux_SE_CheckBox_Unchecked" /></Setter>
+  </Style>
+  <Style Selector="ToggleSwitch:focus-visible Border.se-checkbox">
+    <Setter Property="Background"><ImageBrush Source="Acrux_SE_CheckBox_Unchecked_Focus" /></Setter>
+  </Style>
+  <Style Selector="ToggleSwitch:checked Border.se-checkbox">
+    <Setter Property="Background"><ImageBrush Source="Acrux_SE_CheckBox_Checked" /></Setter>
+  </Style>
+  <Style Selector="ToggleSwitch:checked:focus-visible Border.se-checkbox">
+    <Setter Property="Background"><ImageBrush Source="Acrux_SE_CheckBox_Checked_Focus" /></Setter>
+  </Style>
+  <Style Selector="ToggleSwitch:pointerover Border.se-checkbox">
+    <Setter Property="Background"><ImageBrush Source="Acrux_SE_CheckBox_Unchecked_Highlight" /></Setter>
+  </Style>
+  <Style Selector="ToggleSwitch:checked:pointerover Border.se-checkbox">
+    <Setter Property="Background"><ImageBrush Source="Acrux_SE_CheckBox_Checked_Highlight" /></Setter>
+  </Style>
+</Styles>

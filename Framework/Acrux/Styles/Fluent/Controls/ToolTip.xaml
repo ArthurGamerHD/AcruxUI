@@ -1,0 +1,19 @@
+<?xml version="1.0" encoding="utf-8"?>
+<Styles xmlns="https://github.com/ArthurGamerHD/AcruxUI"
+        xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml">
+  <Style Selector="ToolTip">
+    <Setter Property="MaxWidth" Value="320" />
+  </Style>
+  <Style Selector="ToolTip Border.tooltip-chrome">
+    <Setter Property="Background" Value="{DynamicResource surfaceContainerHighestColor}" />
+    <Setter Property="BorderBrush" Value="{DynamicResource borderVariantColor}" />
+    <Setter Property="BorderThickness" Value="1" />
+    <Setter Property="CornerRadius" Value="6" />
+    <Setter Property="Padding" Value="8 5" />
+  </Style>
+  <Style Selector="ToolTip TextBlock.tooltip-text">
+    <Setter Property="FontFamily" Value="{DynamicResource textFont}" />
+    <Setter Property="Foreground" Value="{DynamicResource fontColor}" />
+    <Setter Property="FontSize" Value="0.55" />
+  </Style>
+</Styles>

@@ -1,0 +1,102 @@
+<?xml version="1.0" encoding="utf-8"?>
+<!--
+  The game's own message box (Sandbox MyGuiScreenMessageBox, Info style, Default buttons), in pixels at 1080p.
+  The game lays its GUI out in 1600x1200 reference pixels scaled by safeHeight/1200 (0.9 at 1080p), while its
+  text is scaled by screenHeight/1080, so these sizes match exactly at 1080p and the text at every resolution.
+
+  Game reference values, and the 1080p pixels below:
+    background  message_background_blue.dds, 1343x321, padding 20x25  ->  1209x289, padding 18x22.5
+    caption     InfoMessageBoxCaption (white), scale 0.8, 0.019 below the top padding (20.5 px)
+    separator   THEMED_GUI_LINE_COLOR, 0.072 below the top (78 px), 0.691 of the box width
+    text        InfoMessageBoxText (#DCF4FC), scale 0.8, centred
+    buttons     button_default.dds 281x62 -> 253x56, text 0.8 (Blue #DCF4FC, White when highlighted; Acrux's
+                Button text size, TextScale, is not styleable yet, so it stays at its 0.72 default),
+                padding 7/6/5/10 -> 6/5/4.5/9, bottom 0.013 above the bottom padding (14 px),
+                Yes/No 0.01275 either side of the centre (37 px apart)
+    caption     none: the message box never enables MyGuiScreenBase's close button, so its buttons are the only
+                interactive elements (no close, no maximize).
+    opacity     controls (text, buttons) at Options > UI opacity, the background image at UI background opacity:
+                the uiOpacity and uiBackgroundOpacity resources (screen-space windows get both from the game).
+  The padding below places those: title from 42 px, separator at 78 px (42 + 30 title bar + 5 + 1), a 108 px
+  text area, then the buttons, ending 36.5 px (22.5 + 14) above the bottom.
+-->
+<Styles xmlns="https://github.com/ArthurGamerHD/AcruxUI"
+        xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml">
+  <Style Selector="MessageBox">
+    <Setter Property="DialogWidth" Value="1209" />
+    <Setter Property="DialogHeight" Value="289" />
+    <Setter Property="Padding" Value="18 42 18 36.5" />
+    <Setter Property="ContentSpacing" Value="5" />
+    <Setter Property="MinimumDescriptionHeight" Value="108" />
+    <Setter Property="MaximumDescriptionHeight" Value="108" />
+    <Setter Property="ButtonSpacing" Value="37" />
+    <Setter Property="CornerRadius" Value="0" />
+    <Setter Property="BorderThickness" Value="0" />
+    <Setter Property="Background">
+      <ImageBrush Source="Acrux_SE_MessageBox_Background" Opacity="{DynamicResource uiBackgroundOpacity}" />
+    </Setter>
+    <!-- SCREEN_BACKGROUND_FADE_BLANK_DARK (0.03, 0.04, 0.05, 0.7) behind the box. -->
+    <Setter Property="OverlayColor" Value="#B3080A0D" />
+    <Setter Property="TitleColor" Value="#FFFFFF" />
+    <Setter Property="TitleScale" Value="0.8" />
+    <Setter Property="TitleHorizontalTextAlignment" Value="Center" />
+    <Setter Property="DescriptionColor" Value="#DCF4FC" />
+    <Setter Property="DescriptionScale" Value="0.8" />
+    <Setter Property="DescriptionHorizontalTextAlignment" Value="Center" />
+    <Setter Property="DescriptionVerticalTextAlignment" Value="Center" />
+    <Setter Property="SeparatorColor" Value="#4D6371" />
+    <Setter Property="SeparatorWidthFraction" Value="0.691" />
+  </Style>
+
+  <!-- Everything but the background image takes the game's UI opacity (1 when the host gives none). -->
+  <Style Selector="StackPanel.message-box-content">
+    <Setter Property="Opacity" Value="{DynamicResource uiOpacity}" />
+  </Style>
+  <Style Selector="Grid.message-box-title-bar">
+    <Setter Property="Height" Value="30" />
+  </Style>
+  <!-- The title sits in the bar's first column; the second (56 px, MessageBox's caption column) stays empty with
+       the caption buttons hidden, so an equal left margin centres the title on the box, as in the game. -->
+  <Style Selector="TextBlock.message-box-title">
+    <Setter Property="Height" Value="30" />
+    <Setter Property="Margin" Value="56 0 0 0" />
+  </Style>
+
+  <Style Selector="Button.message-box-button">
+    <Setter Property="Width" Value="253" />
+    <Setter Property="Height" Value="56" />
+    <Setter Property="Padding" Value="6 5 4.5 9" />
+    <Setter Property="Foreground" Value="#DCF4FC" />
+    <Setter Property="BorderThickness" Value="0" />
+  </Style>
+  <Style Selector="Button.message-box-button:pointerover">
+    <Setter Property="Foreground" Value="#FFFFFF" />
+  </Style>
+
+  <!-- No caption buttons, as in the game: zero-sized, they neither draw nor take clicks (Acrux has no styleable
+       IsVisible). The template keeps them off the generic SE Button sprite. -->
+  <Style Selector="Button.message-box-caption-button">
+    <Setter Property="Template">
+      <ControlTemplate>
+        <Border Background="#00000000" />
+      </ControlTemplate>
+    </Setter>
+    <Setter Property="Width" Value="0" />
+    <Setter Property="Height" Value="0" />
+    <Setter Property="Background" Value="#00000000" />
+    <Setter Property="Foreground" Value="#00000000" />
+    <Setter Property="BorderThickness" Value="0" />
+  </Style>
+  <Style Selector="Button.message-box-caption-button:pointerover">
+    <Setter Property="Background" Value="#00000000" />
+    <Setter Property="Foreground" Value="#00000000" />
+  </Style>
+  <Style Selector="Button.message-box-caption-button:pressed">
+    <Setter Property="Background" Value="#00000000" />
+    <Setter Property="Foreground" Value="#00000000" />
+  </Style>
+  <Style Selector="Button.message-box-caption-button:focus-visible">
+    <Setter Property="Background" Value="#00000000" />
+    <Setter Property="Foreground" Value="#00000000" />
+  </Style>
+</Styles>

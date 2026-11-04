@@ -1,0 +1,42 @@
+<Project Sdk="Microsoft.NET.Sdk">
+  <!-- Acrux source generators and analyzers: XAML views, runtime type tables, the base-member whitelist check and the
+       Acrux UI Toolkit client mirror. Consumers reference it through Acrux.Generator.props. -->
+  <PropertyGroup>
+    <TargetFramework>netstandard2.0</TargetFramework>
+    <RootNamespace>Acrux.Generator</RootNamespace>
+    <AssemblyName>Acrux.Generator</AssemblyName>
+    <LangVersion>latest</LangVersion>
+    <GenerateAssemblyInfo>false</GenerateAssemblyInfo>
+    <Configurations>Release;Debug;Experimental</Configurations>
+    <Platforms>x64</Platforms>
+    <IsRoslynComponent>true</IsRoslynComponent>
+    <EnforceExtendedAnalyzerRules>true</EnforceExtendedAnalyzerRules>
+    <AdkRoot Condition="'$(AdkRoot)' == ''">$(MSBuildThisFileDirectory)..\..\External\Adk</AdkRoot>
+  </PropertyGroup>
+  <PropertyGroup Condition="'$(Configuration)' == 'Debug'">
+    <DefineConstants>TRACE;EXPERIMENTAL</DefineConstants>
+  </PropertyGroup>
+  <PropertyGroup Condition="'$(Configuration)' == 'Experimental'">
+    <DefineConstants>TRACE;RELEASE;EXPERIMENTAL</DefineConstants>
+    <Optimize>true</Optimize>
+    <DebugSymbols>false</DebugSymbols>
+  </PropertyGroup>
+
+  <ItemGroup>
+    <PackageReference Include="Microsoft.CodeAnalysis.Common" Version="4.12.0" />
+    <PackageReference Include="Microsoft.CodeAnalysis.CSharp" Version="4.12.0" />
+  </ItemGroup>
+
+  <ItemGroup>
+    <!-- Markup helpers shared with the Acrux runtime. -->
+    <Compile Include="..\Acrux\Markup\BindingMarkup.cs" Link="Markup\BindingMarkup.cs" />
+    <Compile Include="..\Acrux\Markup\KnownColors.cs" Link="Markup\KnownColors.cs" />
+    <!-- adk.ini [generators] switches ("gui", ...), shared with the ADK generators. -->
+    <Compile Include="$(AdkRoot)\Adk.Analyzer\AdkGeneratorConfiguration.cs" Link="Adk\AdkGeneratorConfiguration.cs" />
+    <Compile Include="$(AdkRoot)\Adk.Analyzer\ObservablePropertyConventions.cs" Link="Adk\ObservablePropertyConventions.cs" />
+    <!-- Which files are design code (mdk.ini ignores), shared with the ADK generators and ADKDES00x. -->
+    <Compile Include="$(AdkRoot)\Adk.Analyzer\DesignSources.cs" Link="Adk\DesignSources.cs" />
+    <AdditionalFiles Include="AnalyzerReleases.Shipped.md" />
+    <AdditionalFiles Include="AnalyzerReleases.Unshipped.md" />
+  </ItemGroup>
+</Project>

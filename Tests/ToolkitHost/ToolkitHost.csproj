@@ -1,0 +1,20 @@
+<Project Sdk="Microsoft.NET.Sdk">
+  <PropertyGroup>
+    <AssemblyName>Harness.Toolkit</AssemblyName>
+    <CompilerGeneratedFilesOutputPath>obj/Generated</CompilerGeneratedFilesOutputPath>
+  </PropertyGroup>
+  <ItemGroup>
+    <ProjectReference Include="$(AdkRoot)/Adk.Analyzer/Adk.Analyzer.csproj" OutputItemType="Analyzer" ReferenceOutputAssembly="false">
+      <SetPlatform>Platform=AnyCPU</SetPlatform>
+    </ProjectReference>
+    <ProjectReference Include="$(AcruxRoot)/Acrux.Generator/Acrux.Generator.csproj" OutputItemType="Analyzer" ReferenceOutputAssembly="false">
+      <SetPlatform>Platform=AnyCPU</SetPlatform>
+    </ProjectReference>
+    <AdditionalFiles Include="../../AcruxUiToolkit/acrux-ui-toolkit-shared.txt" />
+    <Compile Include="$(AcruxRoot)/Acrux.Toolkit/Server/**/*.cs" />
+  </ItemGroup>
+  <Import Project="$(AdkRoot)/Adk.Mvvm/Adk.Mvvm.projitems" />
+  <Import Project="$(AcruxRoot)/Acrux/Acrux.projitems" />
+  <Import Project="$(AcruxRoot)/Acrux.Lcd/Acrux.Lcd.projitems" />
+  <Import Project="$(AcruxRoot)/Acrux.ScreenSpace/Acrux.ScreenSpace.projitems" />
+</Project>

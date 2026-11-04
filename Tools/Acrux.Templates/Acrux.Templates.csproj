@@ -1,0 +1,89 @@
+<Project Sdk="Microsoft.NET.Sdk">
+  <!--
+    `dotnet new acrux-mod` template package. Packs on every build (part of AcruxUiToolkit.sln, like MDK's template
+    project), after Acrux.Sdk has been built, packed and signed:
+      1. Acrux.Sdk builds the generators, packs Acrux.Sdk.<version>.nupkg and signs it (out/<package>.sig);
+      2. this project stages content/ with the update scripts (they carry the Acrux public key, checked here against
+         the signing key), that signed package and its version in the mod's .csproj, and the Rider preview plugin
+         (tools/acrux-preview.jar); the preview host itself is inside the SDK package;
+      3. packs Acrux.Templates.<same version>.nupkg and signs it.
+    Release vs development versions come from Acrux.Sdk (the Publish configuration, see its .csproj).
+  -->
+  <PropertyGroup>
+    <TargetFramework>netstandard2.0</TargetFramework>
+    <Configurations>Debug;Release;Publish</Configurations>
+    <PackageId>Acrux.Templates</PackageId>
+    <PackageType>Template</PackageType>
+    <Authors>ArthurGamerHD</Authors>
+    <Description>dotnet new templates for Acrux UI client mods for Space Engineers.</Description>
+    <PackageTags>dotnet-new;templates;space-engineers;acrux</PackageTags>
+    <PackageProjectUrl>https://github.com/ArthurGamerHD/AcruxUI</PackageProjectUrl>
+    <IncludeBuildOutput>false</IncludeBuildOutput>
+    <EnableDefaultItems>false</EnableDefaultItems>
+    <SuppressDependenciesWhenPacking>true</SuppressDependenciesWhenPacking>
+    <NoDefaultExcludes>true</NoDefaultExcludes>
+    <GeneratePackageOnBuild>true</GeneratePackageOnBuild>
+    <PackageOutputPath>$(MSBuildThisFileDirectory)..\Acrux.Sdk\out\</PackageOutputPath>
+    <NoWarn>$(NoWarn);NU5128;NU5100;NU5110;NU5111</NoWarn>
+    <AcruxSigningKey Condition="'$(AcruxSigningKey)' == ''">$(ACRUX_SDK_SIGNING_KEY)</AcruxSigningKey>
+    <AcruxSigningKey Condition="'$(AcruxSigningKey)' == ''">$(HOME)/.config/acrux/acrux-sdk-signing.pem</AcruxSigningKey>
+    <AcruxSdkDir>$(MSBuildThisFileDirectory)..\Acrux.Sdk\</AcruxSdkDir>
+    <AcruxTemplateStage>$(BaseIntermediateOutputPath)staging\</AcruxTemplateStage>
+  </PropertyGroup>
+
+  <ItemGroup>
+    <ProjectReference Include="..\Acrux.Sdk\Acrux.Sdk.csproj" ReferenceOutputAssembly="false" />
+  </ItemGroup>
+
+  <Target Name="AcruxTemplateStage" BeforeTargets="_GetPackageFiles" DependsOnTargets="ResolveProjectReferences">
+    <PropertyGroup>
+      <_AcruxSdkPackage>$([System.IO.File]::ReadAllText('$(AcruxSdkDir)obj\acrux-sdk-package.txt').Trim())</_AcruxSdkPackage>
+      <_AcruxSdkFile>$([System.IO.Path]::GetFileName('$(_AcruxSdkPackage)'))</_AcruxSdkFile>
+      <PackageVersion>$(_AcruxSdkFile.Substring(10).Replace('.nupkg', ''))</PackageVersion>
+      <_AcruxStageMod>$(AcruxTemplateStage)acrux-mod\</_AcruxStageMod>
+      <_AcruxModProject>$(_AcruxStageMod)AcruxAppTemplate\AcruxAppTemplate.csproj</_AcruxModProject>
+      <_AcruxScriptText>$([System.IO.File]::ReadAllText('$(AcruxSdkDir)template\update-acrux.sh'))</_AcruxScriptText>
+    </PropertyGroup>
+    <Error Condition="!Exists('$(_AcruxSdkPackage).sig')" Text="Acrux.Templates: $(_AcruxSdkPackage) is not signed; the template only ships signed SDK packages." />
+
+    <!-- The scripts in the template must accept packages signed with the key that signed this one. -->
+    <Exec Command="openssl pkey -in &quot;$(AcruxSigningKey)&quot; -pubout" ConsoleToMSBuild="true" StandardOutputImportance="low">
+      <Output TaskParameter="ConsoleOutput" ItemName="_AcruxPublicKeyLine" />
+    </Exec>
+    <Error Condition="!$(_AcruxScriptText.Contains('%(_AcruxPublicKeyLine.Identity)'))"
+           Text="Acrux.Templates: the public key in Tools/Acrux.Sdk/template/update-acrux.sh (and update-acrux.ps1) does not match $(AcruxSigningKey); update both scripts." />
+
+    <RemoveDir Directories="$(AcruxTemplateStage)" />
+    <ItemGroup>
+      <_AcruxContent Include="content\**\*" Exclude="content\**\bin\**;content\**\obj\**" />
+      <_AcruxScripts Include="$(AcruxSdkDir)template\*" />
+      <_AcruxSignedSdk Include="$(_AcruxSdkPackage);$(_AcruxSdkPackage).sig" />
+    </ItemGroup>
+    <Copy SourceFiles="@(_AcruxContent)" DestinationFiles="@(_AcruxContent->'$(AcruxTemplateStage)%(RecursiveDir)%(Filename)%(Extension)')" />
+    <Copy SourceFiles="@(_AcruxScripts)" DestinationFolder="$(_AcruxStageMod)" />
+    <Copy SourceFiles="@(_AcruxSignedSdk)" DestinationFolder="$(_AcruxStageMod)packages" />
+    <Copy Condition="Exists('$(AcruxSdkDir)obj\rider\acrux-preview.jar')" SourceFiles="$(AcruxSdkDir)obj\rider\acrux-preview.jar" DestinationFolder="$(_AcruxStageMod)tools" />
+    <WriteLinesToFile File="$(_AcruxModProject)" Overwrite="true"
+                      Lines="$([MSBuild]::Escape($([System.IO.File]::ReadAllText('$(_AcruxModProject)').Replace('ACRUX_SDK_VERSION', '$(PackageVersion)'))))" />
+
+    <ItemGroup>
+      <_AcruxStaged Include="$(AcruxTemplateStage)**\*" />
+      <None Include="@(_AcruxStaged)" Pack="true" PackagePath="content/$([MSBuild]::MakeRelative('$(AcruxTemplateStage)', '%(FullPath)').Replace('\', '/'))" />
+    </ItemGroup>
+  </Target>
+
+  <Target Name="AcruxTemplatesDropOldDevPackages" BeforeTargets="GenerateNuspec">
+    <ItemGroup>
+      <_AcruxOldDev Include="$(PackageOutputPath)$(PackageId).*-dev.*.nupkg;$(PackageOutputPath)$(PackageId).*-dev.*.nupkg.sig" />
+    </ItemGroup>
+    <Delete Files="@(_AcruxOldDev)" />
+  </Target>
+
+  <Target Name="AcruxTemplatesSign" AfterTargets="Pack">
+    <PropertyGroup>
+      <_AcruxTemplatesPackage>$(PackageOutputPath)$(PackageId).$(PackageVersion).nupkg</_AcruxTemplatesPackage>
+    </PropertyGroup>
+    <Exec Command="openssl dgst -sha256 -sign &quot;$(AcruxSigningKey)&quot; -out &quot;$(_AcruxTemplatesPackage).sig&quot; &quot;$(_AcruxTemplatesPackage)&quot;" />
+    <Message Importance="high" Text="Acrux.Templates -> $(_AcruxTemplatesPackage) (signed, with $(_AcruxSdkFile))" />
+  </Target>
+</Project>

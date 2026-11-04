@@ -1,0 +1,135 @@
+<Project Sdk="Microsoft.NET.Sdk">
+  <!--
+    The Acrux UI client SDK package: three generators. Acrux.ClientApi.Generator emits ClientApi (wrappers, bridge
+    runtime, shared types) as source into each client mod, because Space Engineers only loads mod source.
+
+    Packs on every build (part of AcruxUiToolkit.sln, like MDK's template project):
+      * Debug / Release: <Version>-dev.<UTC timestamp>, a new version every build, so NuGet never reuses a stale copy;
+      * Publish (the solution's Publish configuration): the release. Exactly <Version>, refused when that version was
+        packed before; the bridge harness must pass (it also refuses a break of the shipped API) and then records the
+        API this release ships in ClientApi/api.shipped.txt, to commit with the release.
+    The package is signed (RSA-SHA256, out/<package>.sig) when the signing key exists. Acrux.Templates reads the
+    produced package from obj/acrux-sdk-package.txt.
+
+    Besides the generators it carries the IDE preview: tools/preview/ (the preview host, published without any game
+    file; it finds the user's game at run time) and tools/rider/acrux-preview.jar (the Rider plugin, built against
+    the local Rider; also out/AcruxPreview.<version>.jar, signed, for the release).
+  -->
+  <Import Project="..\..\AcruxUiToolkit\Directory.Build.props" />
+
+  <PropertyGroup>
+    <TargetFramework>netstandard2.0</TargetFramework>
+    <Configurations>Debug;Release;Publish</Configurations>
+    <PackageId>Acrux.Sdk</PackageId>
+    <Authors>ArthurGamerHD</Authors>
+    <Description>Acrux UI client SDK for Space Engineers mods: ClientApi source and the Acrux / ADK generators.</Description>
+    <PackageProjectUrl>https://github.com/ArthurGamerHD/AcruxUI</PackageProjectUrl>
+    <DevelopmentDependency>true</DevelopmentDependency>
+    <IncludeBuildOutput>false</IncludeBuildOutput>
+    <EnableDefaultItems>false</EnableDefaultItems>
+    <SuppressDependenciesWhenPacking>true</SuppressDependenciesWhenPacking>
+    <GeneratePackageOnBuild>true</GeneratePackageOnBuild>
+    <PackageOutputPath>$(MSBuildThisFileDirectory)out\</PackageOutputPath>
+    <NoWarn>$(NoWarn);NU5128;NU5100</NoWarn>
+    <AcruxRelease Condition="'$(AcruxRelease)' == '' And '$(Configuration)' == 'Publish'">true</AcruxRelease>
+    <AcruxRelease Condition="'$(AcruxRelease)' == ''">false</AcruxRelease>
+    <AcruxSigningKey Condition="'$(AcruxSigningKey)' == ''">$(ACRUX_SDK_SIGNING_KEY)</AcruxSigningKey>
+    <AcruxSigningKey Condition="'$(AcruxSigningKey)' == ''">$(HOME)/.config/acrux/acrux-sdk-signing.pem</AcruxSigningKey>
+    <!-- <Version> stays numeric: the toolkit's generated constants parse it as System.Version. -->
+    <PackageVersion Condition="'$(AcruxRelease)' == 'true'">$(Version)</PackageVersion>
+    <PackageVersion Condition="'$(AcruxRelease)' != 'true'">$(Version)-dev.$([System.DateTime]::UtcNow.ToString('yyyyMMddHHmmss'))</PackageVersion>
+    <AcruxSdkPackage>$(PackageOutputPath)$(PackageId).$(PackageVersion).nupkg</AcruxSdkPackage>
+    <AcruxPreviewHostOut>$(BaseIntermediateOutputPath)preview-host\</AcruxPreviewHostOut>
+    <AcruxRiderPluginOut>$(BaseIntermediateOutputPath)rider\</AcruxRiderPluginOut>
+    <AcruxRiderHome Condition="'$(AcruxRiderHome)' == ''">$(RIDER_HOME)</AcruxRiderHome>
+    <AcruxRiderHome Condition="'$(AcruxRiderHome)' == ''">/opt/rider</AcruxRiderHome>
+    <AcruxDotnet>$(DOTNET_HOST_PATH)</AcruxDotnet>
+    <AcruxDotnet Condition="'$(AcruxDotnet)' == ''">dotnet</AcruxDotnet>
+  </PropertyGroup>
+
+  <ItemGroup>
+    <!-- Generators always ship as Release builds: Debug turns on EXPERIMENTAL features in Acrux.Generator. -->
+    <ProjectReference Include="..\..\Framework\Acrux.Generator\Acrux.Generator.csproj;..\..\External\Adk\Adk.Analyzer\Adk.Analyzer.csproj;Acrux.ClientApi.Generator\Acrux.ClientApi.Generator.csproj"
+                      ReferenceOutputAssembly="false" OutputItemType="AcruxSdkAnalyzer"
+                      SetConfiguration="Configuration=Release" SetPlatform="Platform=AnyCPU" />
+    <None Include="build\Acrux.Sdk.props;build\Acrux.Sdk.targets" Pack="true" PackagePath="build/" />
+  </ItemGroup>
+
+  <Target Name="AcruxSdkPackAnalyzers" BeforeTargets="_GetPackageFiles" DependsOnTargets="ResolveProjectReferences">
+    <ItemGroup>
+      <None Include="@(AcruxSdkAnalyzer)" Pack="true" PackagePath="analyzers/dotnet/cs/" />
+    </ItemGroup>
+    <Error Condition="'@(AcruxSdkAnalyzer->Count())' != '3'" Text="Acrux.Sdk expects 3 generator assemblies, got: @(AcruxSdkAnalyzer)" />
+  </Target>
+
+  <Target Name="AcruxSdkPackPreview" BeforeTargets="_GetPackageFiles">
+    <RemoveDir Directories="$(AcruxPreviewHostOut);$(AcruxRiderPluginOut)" />
+    <Exec Command="&quot;$(AcruxDotnet)&quot; publish &quot;$(MSBuildThisFileDirectory)..\AcruxPreviewHost\AcruxPreviewHost.csproj&quot; -c Release -nologo -v q -p:AcruxPreviewRedistributable=true -o &quot;$(AcruxPreviewHostOut.TrimEnd('\'))&quot;" />
+    <ItemGroup>
+      <_AcruxPreviewFile Include="$(AcruxPreviewHostOut)**\*" Exclude="$(AcruxPreviewHostOut)**\*.pdb" />
+      <!-- SkiaSharp's native libraries: only the platforms Space Engineers modding runs on. -->
+      <_AcruxPreviewFile Remove="$(AcruxPreviewHostOut)runtimes\**\*" />
+      <_AcruxPreviewFile Include="$(AcruxPreviewHostOut)runtimes\linux-x64\**\*;$(AcruxPreviewHostOut)runtimes\win-x64\**\*" />
+      <!-- Never redistribute the game's files: the host loads them from the user's install. -->
+      <_AcruxGameFile Include="@(_AcruxPreviewFile)" Condition="'%(Extension)' == '.dll' And $([System.Text.RegularExpressions.Regex]::IsMatch('%(Filename)', '(?i)^(VRage|Sandbox|SpaceEngineers|Havok|RecastDetour|EmptyKeys|ProtoBuf\.Net)'))" />
+      <None Include="@(_AcruxPreviewFile)" Pack="true" PackagePath="tools/preview/$([MSBuild]::MakeRelative('$(AcruxPreviewHostOut)', '%(FullPath)').Replace('\', '/'))" />
+    </ItemGroup>
+    <Error Condition="'@(_AcruxGameFile)' != ''" Text="Acrux.Sdk: the preview host publish contains game files: @(_AcruxGameFile)" />
+
+    <PropertyGroup>
+      <_AcruxHasRider Condition="Exists('$(AcruxRiderHome)/lib')">true</_AcruxHasRider>
+    </PropertyGroup>
+    <Exec Condition="'$(_AcruxHasRider)' == 'true'" Command="PLUGIN_VERSION=$(PackageVersion) bash ../AcruxRiderPlugin/build.sh &quot;$(AcruxRiderHome)&quot;" WorkingDirectory="$(MSBuildThisFileDirectory)" StandardOutputImportance="low" />
+    <Copy Condition="'$(_AcruxHasRider)' == 'true'" SourceFiles="$(MSBuildThisFileDirectory)..\AcruxRiderPlugin\build\acrux-preview.jar" DestinationFolder="$(AcruxRiderPluginOut)" />
+    <Warning Condition="'$(_AcruxHasRider)' != 'true' And '$(AcruxRelease)' != 'true'" Text="Acrux.Sdk: no Rider at $(AcruxRiderHome) (set RIDER_HOME); this development package has no Rider plugin." />
+    <Error Condition="'$(_AcruxHasRider)' != 'true' And '$(AcruxRelease)' == 'true'" Text="Acrux.Sdk: a release needs the Rider plugin; no Rider at $(AcruxRiderHome) (set RIDER_HOME)." />
+    <ItemGroup Condition="'$(_AcruxHasRider)' == 'true'">
+      <None Include="$(AcruxRiderPluginOut)acrux-preview.jar" Pack="true" PackagePath="tools/rider/" />
+    </ItemGroup>
+  </Target>
+
+  <!-- A release ships an API: the harness checks it against ClientApi/api.shipped.txt, then records it there. -->
+  <Target Name="AcruxSdkReleaseHarness" BeforeTargets="AcruxSdkPackPreview" Condition="'$(AcruxRelease)' == 'true'">
+    <PropertyGroup>
+      <_AcruxRunner>$(MSBuildThisFileDirectory)..\..\Tests\Runner\</_AcruxRunner>
+    </PropertyGroup>
+    <Exec Command="&quot;$(AcruxDotnet)&quot; build &quot;$(_AcruxRunner)Runner.csproj&quot; -c Debug -nologo -v q" StandardOutputImportance="low" />
+    <Exec Command="&quot;$(AcruxDotnet)&quot; &quot;$(_AcruxRunner)bin/Debug/net9.0/Harness.Runner.dll&quot;" WorkingDirectory="$(_AcruxRunner)"
+          ConsoleToMSBuild="true" StandardOutputImportance="low" IgnoreExitCode="true">
+      <Output TaskParameter="ConsoleOutput" ItemName="_AcruxHarnessLine" />
+      <Output TaskParameter="ExitCode" PropertyName="_AcruxHarnessExit" />
+    </Exec>
+    <Message Importance="high" Text="%(_AcruxHarnessLine.Identity)"
+             Condition="$([System.String]::Copy('%(_AcruxHarnessLine.Identity)').Contains('FAIL')) Or $([System.String]::Copy('%(_AcruxHarnessLine.Identity)').StartsWith('    - ')) Or $([System.String]::Copy('%(_AcruxHarnessLine.Identity)').StartsWith('api contract'))" />
+    <Error Condition="'$(_AcruxHarnessExit)' != '0'" Text="Acrux.Sdk: the bridge harness failed (Tests/Runner); not publishing. Lines starting with '-' are shipped API this build no longer provides." />
+    <Exec Command="&quot;$(AcruxDotnet)&quot; &quot;$(_AcruxRunner)bin/Debug/net9.0/Harness.Runner.dll&quot; --accept-api" WorkingDirectory="$(_AcruxRunner)" StandardOutputImportance="low" />
+    <Message Importance="high" Text="Acrux.Sdk: ClientApi/api.shipped.txt now records the API of release $(Version); commit it with the release." />
+  </Target>
+
+  <!-- Restore keeps the first copy of a version it extracted: a release version must never be packed twice. -->
+  <Target Name="AcruxSdkReleaseGuard" BeforeTargets="Build" Condition="'$(AcruxRelease)' == 'true' And Exists('$(AcruxSdkPackage)')">
+    <Error Text="$(AcruxSdkPackage) exists: release $(Version) was packed before. Bump &lt;Version&gt; in AcruxUiToolkit/Directory.Build.props." />
+  </Target>
+
+  <!-- Development packages pile up on every build; keep only the one this build makes. -->
+  <Target Name="AcruxSdkDropOldDevPackages" BeforeTargets="GenerateNuspec">
+    <ItemGroup>
+      <_AcruxOldDev Include="$(PackageOutputPath)$(PackageId).*-dev.*.nupkg;$(PackageOutputPath)$(PackageId).*-dev.*.nupkg.sig;$(PackageOutputPath)AcruxPreview.*-dev.*.jar;$(PackageOutputPath)AcruxPreview.*-dev.*.jar.sig" />
+    </ItemGroup>
+    <Delete Files="@(_AcruxOldDev)" />
+  </Target>
+
+  <Target Name="AcruxSdkSign" AfterTargets="Pack">
+    <Exec Condition="Exists('$(AcruxSigningKey)')"
+          Command="openssl dgst -sha256 -sign &quot;$(AcruxSigningKey)&quot; -out &quot;$(AcruxSdkPackage).sig&quot; &quot;$(AcruxSdkPackage)&quot;" />
+    <Warning Condition="!Exists('$(AcruxSigningKey)')" Text="Acrux.Sdk: no signing key at $(AcruxSigningKey); $(AcruxSdkPackage) is unsigned and update-acrux will refuse it." />
+    <Error Condition="'$(AcruxRelease)' == 'true' And !Exists('$(AcruxSdkPackage).sig')" Text="Acrux.Sdk: a release package must be signed." />
+    <PropertyGroup>
+      <_AcruxRiderRelease>$(PackageOutputPath)AcruxPreview.$(PackageVersion).jar</_AcruxRiderRelease>
+    </PropertyGroup>
+    <Copy Condition="Exists('$(AcruxRiderPluginOut)acrux-preview.jar')" SourceFiles="$(AcruxRiderPluginOut)acrux-preview.jar" DestinationFiles="$(_AcruxRiderRelease)" />
+    <Exec Condition="Exists('$(AcruxSigningKey)') And Exists('$(_AcruxRiderRelease)')"
+          Command="openssl dgst -sha256 -sign &quot;$(AcruxSigningKey)&quot; -out &quot;$(_AcruxRiderRelease).sig&quot; &quot;$(_AcruxRiderRelease)&quot;" />
+    <WriteLinesToFile File="$(BaseIntermediateOutputPath)acrux-sdk-package.txt" Lines="$(AcruxSdkPackage)" Overwrite="true" />
+  </Target>
+</Project>

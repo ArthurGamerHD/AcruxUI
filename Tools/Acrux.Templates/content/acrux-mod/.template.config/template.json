@@ -1,0 +1,92 @@
+{
+  "$schema": "http://json.schemastore.org/template",
+  "author": "ArthurGamerHD",
+  "classifications": [ "Space Engineers", "Mod", "Acrux UI" ],
+  "identity": "Acrux.Templates.Mod",
+  "name": "Acrux UI mod (Space Engineers)",
+  "description": "A Space Engineers mod with an Acrux UI LCD app (XAML view, view model, surface script), built with MDK2 and the Acrux.Sdk package.",
+  "shortName": "acrux-mod",
+  "sourceName": "AcruxAppTemplate",
+  "preferNameDirectory": true,
+  "tags": {
+    "language": "C#",
+    "type": "project"
+  },
+  "guids": [
+    "DFE9501D-5CDC-4FFD-A14F-491F6E83BE22"
+  ],
+  "symbols": {
+    "title": {
+      "type": "parameter",
+      "datatype": "text",
+      "description": "Title players see in the LCD script list and the app header. Defaults to the mod name."
+    },
+    "OS": {
+      "type": "bind",
+      "binding": "env:OS"
+    },
+    "titleOrName": {
+      "type": "generated",
+      "generator": "coalesce",
+      "parameters": {
+        "sourceVariableName": "title",
+        "fallbackVariableName": "name"
+      },
+      "replaces": "Acrux App Template"
+    },
+    "toolkitChannelHigh": { "type": "generated", "generator": "random", "parameters": { "low": 100000000, "high": 999999999 } },
+    "toolkitChannelLow": { "type": "generated", "generator": "random", "parameters": { "low": 100000000, "high": 999999999 } },
+    "eyeTrackingChannelHigh": { "type": "generated", "generator": "random", "parameters": { "low": 100000000, "high": 999999999 } },
+    "eyeTrackingChannelLow": { "type": "generated", "generator": "random", "parameters": { "low": 100000000, "high": 999999999 } },
+    "toolkitChannel": {
+      "type": "generated",
+      "generator": "join",
+      "parameters": {
+        "symbols": [
+          { "type": "ref", "value": "toolkitChannelHigh" },
+          { "type": "ref", "value": "toolkitChannelLow" }
+        ],
+        "separator": ""
+      },
+      "replaces": "4706349933472337921"
+    },
+    "eyeTrackingChannel": {
+      "type": "generated",
+      "generator": "join",
+      "parameters": {
+        "symbols": [
+          { "type": "ref", "value": "eyeTrackingChannelHigh" },
+          { "type": "ref", "value": "eyeTrackingChannelLow" }
+        ],
+        "separator": ""
+      },
+      "replaces": "4706349933472337922"
+    }
+  },
+  "sources": [
+    {
+      "modifiers": [
+        { "exclude": [ "**/[Bb]in/**", "**/[Oo]bj/**", ".template.config/**", "**/*.user", "**/.idea/**" ] },
+        { "copyOnly": [ "packages/**", "**/*.png" ] }
+      ]
+    }
+  ],
+  "postActions": [
+    {
+      "condition": "(OS != \"Windows_NT\")",
+      "description": "Make update-acrux.sh executable.",
+      "manualInstructions": [ { "text": "Run 'chmod +x update-acrux.sh'" } ],
+      "actionId": "cb9a6cf3-4f5c-4860-b9d2-03a574959774",
+      "args": { "+x": "update-acrux.sh" },
+      "continueOnError": true
+    },
+    {
+      "description": "Next steps.",
+      "manualInstructions": [
+        { "text": "1. Build: dotnet build (the matching Acrux.Sdk is already in packages/; update it later with update-acrux.sh / update-acrux.bat).\n2. Live preview in Rider: Settings > Plugins > Install Plugin from Disk... > tools/acrux-preview.jar, build once in Debug, open a .xaml view. It finds Space Engineers through Steam (or set ACRUX_SE_BIN to its Bin64 folder).\n3. Before publishing, add the Acrux UI mod as a required Workshop item." }
+      ],
+      "actionId": "AC1156F7-BB77-4DB8-B28F-24EEBCCA1E5C",
+      "continueOnError": true
+    }
+  ]
+}

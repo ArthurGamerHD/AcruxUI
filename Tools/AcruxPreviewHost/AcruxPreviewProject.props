@@ -1,0 +1,76 @@
+<Project>
+  <!--
+    Build definition of the preview host (AcruxPreviewHost.csproj): Acrux and its LCD backend, rendered with
+    SkiaSharp, behind Avalonia's remote previewer protocol (used only as the wire format to the IDE plugin).
+  -->
+  <PropertyGroup>
+    <OutputType>Exe</OutputType>
+    <TargetFramework>net9.0</TargetFramework>
+    <RollForward>Major</RollForward>
+    <Nullable>disable</Nullable>
+    <ImplicitUsings>disable</ImplicitUsings>
+    <LangVersion>latest</LangVersion>
+    <NoWarn>$(NoWarn);CS0618;CS0108;CS0114;CS0067;CS8981;CS0162;CS0169;CS0414;CS0649;CS1998</NoWarn>
+    <AcruxPreviewHostSource>$(MSBuildThisFileDirectory)</AcruxPreviewHostSource>
+    <AcruxPreviewToolkitRoot>$([System.IO.Path]::GetFullPath('$(MSBuildThisFileDirectory)../../'))</AcruxPreviewToolkitRoot>
+    <AdkRoot>$(AcruxPreviewToolkitRoot)External/Adk/</AdkRoot>
+    <AcruxRoot>$(AcruxPreviewToolkitRoot)Framework/</AcruxRoot>
+    <SpaceEngineersBin Condition="'$(SpaceEngineersBin)' == ''">$(HOME)/.local/share/Steam/steamapps/common/SpaceEngineers/Bin64</SpaceEngineersBin>
+    <!-- true: the host shipped in the Acrux.Sdk package (published by Acrux.Sdk.csproj). It carries no game files and
+         no machine paths: GameInstall finds the user's game at run time, and the toolkit's styles and content come
+         with it. -->
+    <AcruxPreviewRedistributable Condition="'$(AcruxPreviewRedistributable)' == ''">false</AcruxPreviewRedistributable>
+    <AcruxPreviewGameCopyLocal>true</AcruxPreviewGameCopyLocal>
+    <AcruxPreviewGameCopyLocal Condition="'$(AcruxPreviewRedistributable)' == 'true'">false</AcruxPreviewGameCopyLocal>
+    <GenerateDocumentationFile>false</GenerateDocumentationFile>
+  </PropertyGroup>
+  <!-- A pdb (and the debug directory pointing at it) would carry the build machine's paths. -->
+  <PropertyGroup Condition="'$(AcruxPreviewRedistributable)' == 'true'">
+    <DebugType>none</DebugType>
+    <!-- The IDE plugin starts the host with dotnet; a native launcher would only add a per-platform file. -->
+    <UseAppHost>false</UseAppHost>
+    <DebugSymbols>false</DebugSymbols>
+  </PropertyGroup>
+  <ItemGroup>
+    <Compile Include="$(AcruxPreviewHostSource)*.cs" Link="AcruxPreviewHost/%(Filename)%(Extension)" />
+    <!-- The compiled-root signature the view generator records, to tell when an edit needs a build. -->
+    <Compile Include="$(AcruxRoot)Acrux.Generator/ViewRootSignature.cs" Link="AcruxPreviewHost/ViewRootSignature.cs" />
+    <!-- The toolkit side of the bridge, so the previewed mod's client code runs here unchanged. -->
+    <Compile Include="$(AcruxRoot)Acrux.Toolkit/Server/**/*.cs" Link="AcruxToolkit/Server/%(RecursiveDir)%(Filename)%(Extension)" />
+    <AdditionalFiles Include="$(AcruxPreviewToolkitRoot)AcruxUiToolkit/acrux-ui-toolkit-shared.txt" />
+    <PackageReference Include="Avalonia.Remote.Protocol" Version="11.3.12" />
+    <None Include="$(AcruxPreviewHostSource)THIRD-PARTY-NOTICES.md" Link="THIRD-PARTY-NOTICES.md" CopyToOutputDirectory="PreserveNewest" />
+    <PackageReference Include="SkiaSharp" Version="2.88.9" />
+    <PackageReference Include="SkiaSharp.NativeAssets.Linux" Version="2.88.9" />
+    <ProjectReference Include="$(AdkRoot)Adk.Analyzer/Adk.Analyzer.csproj" OutputItemType="Analyzer" ReferenceOutputAssembly="false">
+      <SetPlatform>Platform=AnyCPU</SetPlatform>
+    </ProjectReference>
+    <ProjectReference Include="$(AcruxRoot)Acrux.Generator/Acrux.Generator.csproj" OutputItemType="Analyzer" ReferenceOutputAssembly="false">
+      <SetPlatform>Platform=AnyCPU</SetPlatform>
+    </ProjectReference>
+    <!-- The game's libraries Acrux is written against (math, sprites, the LCD surface interface). -->
+    <Reference Include="$(SpaceEngineersBin)/VRage.Math.dll;$(SpaceEngineersBin)/VRage.Game.dll;$(SpaceEngineersBin)/VRage.dll;$(SpaceEngineersBin)/VRage.Library.dll;$(SpaceEngineersBin)/VRage.Input.dll;$(SpaceEngineersBin)/VRage.Render.dll;$(SpaceEngineersBin)/Sandbox.Common.dll;$(SpaceEngineersBin)/Sandbox.Game.dll;$(SpaceEngineersBin)/SpaceEngineers.ObjectBuilders.dll;$(SpaceEngineersBin)/ProtoBuf.Net.Core.dll"
+               Private="$(AcruxPreviewGameCopyLocal)" />
+  </ItemGroup>
+  <ItemGroup Condition="'$(AcruxPreviewRedistributable)' != 'true'">
+    <AssemblyAttribute Include="System.Reflection.AssemblyMetadataAttribute">
+      <_Parameter1>AcruxPreview.GameBin</_Parameter1>
+      <_Parameter2>$(SpaceEngineersBin)</_Parameter2>
+    </AssemblyAttribute>
+    <AssemblyAttribute Include="System.Reflection.AssemblyMetadataAttribute">
+      <_Parameter1>AcruxPreview.ToolkitRoot</_Parameter1>
+      <_Parameter2>$(AcruxPreviewToolkitRoot)</_Parameter2>
+    </AssemblyAttribute>
+  </ItemGroup>
+  <ItemGroup Condition="'$(AcruxPreviewRedistributable)' == 'true'">
+    <None Include="$(AcruxRoot)Acrux/Styles/**/*" LinkBase="toolkit/Framework/Acrux/Styles" CopyToOutputDirectory="PreserveNewest" CopyToPublishDirectory="PreserveNewest" />
+    <None Include="$(AcruxPreviewToolkitRoot)AcruxUiToolkit/Content/**/*" LinkBase="toolkit/AcruxUiToolkit/Content" CopyToOutputDirectory="PreserveNewest" CopyToPublishDirectory="PreserveNewest" />
+  </ItemGroup>
+  <Import Project="$(AdkRoot)Adk.Mvvm/Adk.Mvvm.projitems" />
+  <Import Project="$(AcruxRoot)Acrux/Acrux.projitems" />
+  <Import Project="$(AcruxRoot)Acrux.Lcd/Acrux.Lcd.projitems" />
+  <Import Project="$(AcruxRoot)Acrux.ScreenSpace/Acrux.ScreenSpace.projitems" />
+  <!-- Decodes the game's DDS textures (fonts, sprites). -->
+  <Import Project="$(AdkRoot)Adk.Compression/Adk.Compression.projitems" />
+  <Import Project="$(AdkRoot)Adk.Image/Adk.Image.projitems" />
+</Project>

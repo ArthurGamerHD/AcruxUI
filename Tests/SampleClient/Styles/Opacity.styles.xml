@@ -1,0 +1,9 @@
+<?xml version="1.0" encoding="utf-8"?>
+<!-- An ImageBrush whose Opacity is a dynamic resource, as a theme binds it to the game's UI background opacity. -->
+<Styles xmlns="https://github.com/ArthurGamerHD/AcruxUI">
+  <Style Selector="Border.resource-faded">
+    <Setter Property="Background">
+      <ImageBrush Source="SquareSimple" Opacity="{DynamicResource imageOpacity}" />
+    </Setter>
+  </Style>
+</Styles>

@@ -1,0 +1,31 @@
+<?xml version="1.0" encoding="utf-8"?>
+<Styles xmlns="https://github.com/ArthurGamerHD/AcruxUI"
+        xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml">
+  <Style Selector="ScrollViewer">
+    <Setter Property="Template">
+      <ControlTemplate>
+        <Grid ColumnDefinitions="* Auto" RowDefinitions="* Auto">
+          <ScrollContentPresenter Name="PART_ContentPresenter"
+                                  Grid.Column="0"
+                                  Grid.Row="0" />
+          <ScrollBar Name="PART_HorizontalScrollBar"
+                     Classes="scroll-viewer-scrollbar"
+                     Orientation="Horizontal"
+                     Grid.Column="0"
+                     Grid.Row="1" />
+          <ScrollBar Name="PART_VerticalScrollBar"
+                     Classes="scroll-viewer-scrollbar"
+                     Orientation="Vertical"
+                     Grid.Column="1"
+                     Grid.Row="0" />
+        </Grid>
+      </ControlTemplate>
+    </Setter>
+  </Style>
+  <Style Selector="ScrollBar.scroll-viewer-scrollbar:vertical">
+    <Setter Property="Width" Value="46" />
+  </Style>
+  <Style Selector="ScrollBar.scroll-viewer-scrollbar:horizontal">
+    <Setter Property="Height" Value="46" />
+  </Style>
+</Styles>

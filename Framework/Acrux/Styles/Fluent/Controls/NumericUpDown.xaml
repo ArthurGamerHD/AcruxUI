@@ -1,0 +1,29 @@
+<?xml version="1.0" encoding="utf-8"?>
+<Styles xmlns="https://github.com/ArthurGamerHD/AcruxUI"
+        xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml">
+  <Style Selector="NumericUpDown">
+    <Setter Property="Template">
+      <ControlTemplate>
+        <Grid Name="PART_LayoutRoot" ColumnDefinitions="*,3*,*">
+          <Button Name="PART_DecreaseButton" Classes="numeric-step" Grid.Column="0" />
+          <TextBox Name="PART_TextBox" Classes="numeric-input" Grid.Column="1" />
+          <Button Name="PART_IncreaseButton" Classes="numeric-step" Grid.Column="2" />
+        </Grid>
+      </ControlTemplate>
+    </Setter>
+    <Setter Property="Width" Value="160" />
+    <Setter Property="Height" Value="34" />
+  </Style>
+  <Style Selector="NumericUpDown TextBox.numeric-input">
+    <Setter Property="Width" Value="96" />
+    <Setter Property="Height" Value="34" />
+    <Setter Property="Padding" Value="4 0 4 0" />
+  </Style>
+  <Style Selector="NumericUpDown Button.numeric-step">
+    <Setter Property="Width" Value="30" />
+    <Setter Property="Height" Value="34" />
+    <Setter Property="Padding" Value="0" />
+    <Setter Property="CornerRadius" Value="4" />
+    <Setter Property="Background" Value="{DynamicResource surfaceContainerHighColor}" />
+  </Style>
+</Styles>

@@ -1,0 +1,23 @@
+<Project Sdk="Microsoft.NET.Sdk">
+  <!-- Compiles a packed mod folder with Space Engineers' own script compiler and whitelist (Bin64 assemblies). -->
+  <PropertyGroup>
+    <OutputType>Exe</OutputType>
+    <TargetFramework>net10.0</TargetFramework>
+    <Nullable>disable</Nullable>
+    <ImplicitUsings>enable</ImplicitUsings>
+    <DotNetCompatDir Condition="'$(DotNetCompatDir)' == ''">$(HOME)/RiderProjects/se-dotnet-compat/ClientPlugin/bin/Debug/net10.0-windows</DotNetCompatDir>
+    <SpaceEngineersBin Condition="'$(SpaceEngineersBin)' == ''">$(HOME)/.local/share/Steam/steamapps/common/SpaceEngineers/Bin64</SpaceEngineersBin>
+  </PropertyGroup>
+  <ItemGroup>
+    <Reference Include="$(SpaceEngineersBin)/VRage.Scripting.dll" Private="false" />
+    <!-- The game runs on .NET 10 through se-dotnet-compat; its scripting patches make the whitelist register there. -->
+  </ItemGroup>
+  <ItemGroup>
+    <PackageReference Include="Lib.Harmony" Version="2.4.2" />
+    <Reference Include="$(SpaceEngineersBin)/VRage.Library.dll" Private="false" />
+    <Reference Include="$(SpaceEngineersBin)/VRage.dll" Private="false" />
+    <Reference Include="$(SpaceEngineersBin)/SpaceEngineers.Game.dll" Private="false" />
+    <Reference Include="$(SpaceEngineersBin)/Microsoft.CodeAnalysis.dll" Private="false" />
+    <Reference Include="$(SpaceEngineersBin)/Microsoft.CodeAnalysis.CSharp.dll" Private="false" />
+  </ItemGroup>
+</Project>

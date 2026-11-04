@@ -1,0 +1,108 @@
+<Project Sdk="Microsoft.NET.Sdk">
+    <PropertyGroup>
+        <TargetFramework>netframework48</TargetFramework>
+        <RootNamespace>Acrux</RootNamespace>
+        <AssemblyName>AcruxUiToolkit</AssemblyName>
+        <LangVersion>6</LangVersion>
+        <GenerateAssemblyInfo>false</GenerateAssemblyInfo>
+        <Configurations>Release;Debug</Configurations>
+        <Platforms>x64</Platforms>
+        <MdkInteractive>no</MdkInteractive>
+        <EmitCompilerGeneratedFiles>true</EmitCompilerGeneratedFiles>
+        <CompilerGeneratedFilesOutputPath>obj\$(Configuration)\Generated</CompilerGeneratedFilesOutputPath>
+        <ClientApiOutputPath>$([System.IO.Path]::GetFullPath('$(MSBuildProjectDirectory)\..\ClientApi'))</ClientApiOutputPath>
+    </PropertyGroup>
+    <ItemGroup>
+        <PackageReference Include="Microsoft.Extensions.FileSystemGlobbing" Version="9.0.0" GeneratePathProperty="true">
+            <PrivateAssets>all</PrivateAssets>
+            <IncludeAssets>none</IncludeAssets>
+        </PackageReference>
+        <PackageReference Include="System.Collections.Immutable" Version="9.0.0" GeneratePathProperty="true">
+            <PrivateAssets>all</PrivateAssets>
+            <IncludeAssets>none</IncludeAssets>
+        </PackageReference>
+    </ItemGroup>
+    <ItemGroup>
+        <Analyzer Include="$(MdkSourceRoot)Mdk.ModAnalyzers/bin/$(MdkLocalPlatform)/$(MdkLocalConfiguration)/netstandard2.0/Mal.Mdk2.ModAnalyzers.dll"/>
+    </ItemGroup>
+    <Import Project="Mdk.LocalSource.targets"/>
+    <ItemGroup>
+        <AdditionalFiles Include="Content\*\**\*">
+            <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+        </AdditionalFiles>
+        <AdditionalFiles Remove="Content\*\**\*.cs"/>
+        <None Remove="thumb.png"/>
+    </ItemGroup>
+
+    <Import Project="..\External\Adk\Adk.CodeGeneration.props" />
+    <Import Project="..\Framework\Acrux.Generator\Acrux.Generator.props" />
+    <Import Project="..\External\Adk\Adk.Mvvm\Adk.Mvvm.projitems" Label="Shared" />
+    <Import Project="..\Framework\Acrux\Acrux.projitems" Label="Shared" />
+    <Import Project="..\Framework\Acrux.Lcd\Acrux.Lcd.projitems" Label="Shared" />
+    <Import Project="..\Framework\Acrux.ScreenSpace\Acrux.ScreenSpace.projitems" Label="Shared" />
+    <Import Project="..\Framework\Acrux.Addons.KeySelector\Acrux.Addons.KeySelector.projitems" Label="Shared" />
+    <Import Project="..\External\Adk\Adk.Utils\Adk.Utils.projitems" Label="Shared" />
+    <Import Project="..\External\Adk\Adk.Compression\Adk.Compression.projitems" Label="Shared" />
+    <Import Project="..\External\Adk\Adk.Image\Adk.Image.projitems" Label="Shared" />
+    <Import Project="..\External\SE-Procedural-Voxel-Cubemap-Api\ClientApi\ClientApi.projitems" Label="Shared" />
+    <ItemGroup>
+        <Compile Include="..\External\SE-Water\API\WaterModAPI.cs" Link="Cartography\Api\WaterModAPI.cs" />
+    </ItemGroup>
+
+    <ItemGroup>
+        <AdditionalFiles Include="acrux-ui-toolkit-shared.txt" />
+        <AdditionalFiles Include="Dialogs\*.xaml" />
+        <Compile Include="..\Framework\Acrux.Toolkit\Server\**\*.cs" Link="AcruxToolkit\Server\%(RecursiveDir)%(Filename)%(Extension)" />
+    </ItemGroup>
+
+    <UsingTask TaskName="StripClientGuard" TaskFactory="RoslynCodeTaskFactory" AssemblyFile="$(MSBuildToolsPath)\Microsoft.Build.Tasks.Core.dll">
+        <ParameterGroup>
+            <Files ParameterType="Microsoft.Build.Framework.ITaskItem[]" Required="true" />
+            <Destination ParameterType="System.String" Required="true" />
+        </ParameterGroup>
+        <Task>
+            <Using Namespace="System.IO" />
+            <Code Type="Fragment" Language="cs"><![CDATA[
+                Directory.CreateDirectory(Destination);
+                foreach (var item in Files)
+                {
+                    var lines = new System.Collections.Generic.List<string>(File.ReadAllLines(item.ItemSpec));
+                    lines.RemoveAll(l => l.StartsWith("#if ACRUX_UI_TOOLKIT_CLIENT") || l.StartsWith("#endif // ACRUX_UI_TOOLKIT_CLIENT"));
+                    File.WriteAllLines(Path.Combine(Destination, Path.GetFileName(item.ItemSpec)), lines);
+                }
+            ]]></Code>
+        </Task>
+    </UsingTask>
+
+    <!-- Emitted generator files are never deleted by the compiler; start each compile from an empty folder. -->
+    <Target Name="CleanEmittedMirror" BeforeTargets="CoreCompile" Condition="'$(BuildingProject)' == 'true'">
+        <RemoveDir Directories="$(CompilerGeneratedFilesOutputPath)\Acrux.Generator\Acrux.Generator.AcruxUiToolkitMirrorGenerator;$(CompilerGeneratedFilesOutputPath)\Adk.Analyzer\Adk.Analyzer.ApiProviderGenerator" />
+    </Target>
+
+    <!-- Copies the generated client mirror (thin wrappers over this toolkit) to ClientApi/ for consumer mods. -->
+    <Target Name="ExportGeneratedClientApi" AfterTargets="CoreCompile">
+        <PropertyGroup>
+            <_UiGenDir>$(CompilerGeneratedFilesOutputPath)\Acrux.Generator</_UiGenDir>
+            <_AdkGenDir>$(CompilerGeneratedFilesOutputPath)\Adk.Analyzer</_AdkGenDir>
+        </PropertyGroup>
+        <ItemGroup>
+            <_OldClientApi Include="$(ClientApiOutputPath)\Generated\**\*.cs" />
+            <_NewClientApi Include="$(_UiGenDir)\Acrux.Generator.AcruxUiToolkitMirrorGenerator\Client.*.cs" />
+            <_EyeTrackingApi Include="$(_AdkGenDir)\Adk.Analyzer.ApiProviderGenerator\*.cs" Exclude="$(_AdkGenDir)\Adk.Analyzer.ApiProviderGenerator\*.g.cs" />
+        </ItemGroup>
+        <ReadLinesFromFile File="acrux-ui-toolkit-shared.txt">
+            <Output TaskParameter="Lines" ItemName="_SharedLine" />
+        </ReadLinesFromFile>
+        <ItemGroup>
+            <_SharedSource Include="@(_SharedLine->'..\Framework\%(Identity)')" Condition="!$([System.String]::Copy('%(Identity)').StartsWith('#')) And !$([System.String]::Copy('%(Identity)').StartsWith('./')) And !$([System.String]::Copy('%(Identity)').StartsWith('mirror:'))" />
+            <_SharedSource Include="@(_SharedLine)" Condition="$([System.String]::Copy('%(Identity)').StartsWith('./'))" />
+            <_ClientRuntime Include="..\Framework\Acrux.Toolkit\Client\**\*.cs" />
+            <_OldShared Include="$(ClientApiOutputPath)\Shared\**\*.cs;$(ClientApiOutputPath)\Runtime\**\*.cs" />
+        </ItemGroup>
+        <Delete Files="@(_OldClientApi);@(_OldShared)" Condition="'@(_NewClientApi)' != ''" />
+        <StripClientGuard Files="@(_NewClientApi)" Destination="$(ClientApiOutputPath)\Generated" Condition="'@(_NewClientApi)' != ''" />
+        <Copy SourceFiles="@(_SharedSource)" DestinationFiles="@(_SharedSource->'$(ClientApiOutputPath)\Shared\%(Filename)%(Extension)')" Condition="'@(_NewClientApi)' != ''" />
+        <Copy SourceFiles="@(_EyeTrackingApi)" DestinationFolder="$(ClientApiOutputPath)\EyeTracking" Condition="'@(_EyeTrackingApi)' != ''" />
+        <Copy SourceFiles="@(_ClientRuntime)" DestinationFolder="$(ClientApiOutputPath)\Runtime" Condition="'@(_NewClientApi)' != ''" />
+    </Target>
+</Project>

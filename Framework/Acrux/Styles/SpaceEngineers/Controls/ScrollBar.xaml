@@ -1,0 +1,147 @@
+<?xml version="1.0" encoding="utf-8"?>
+<Styles xmlns="https://github.com/ArthurGamerHD/AcruxUI"
+        xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml">
+  <Style Selector="ScrollBar">
+    <Setter Property="Cursor" Value="Hand" />
+  </Style>
+
+  <Style Selector="ScrollBar:vertical">
+    <Setter Property="Width" Value="46" />
+    <Setter Property="Template">
+      <ControlTemplate>
+        <Track Name="PART_Track"
+               Orientation="{TemplateBinding Orientation}"
+               Minimum="{TemplateBinding Minimum}"
+               Maximum="{TemplateBinding Maximum}"
+               Value="{TemplateBinding Value}"
+               ViewportSize="{TemplateBinding ViewportSize}">
+          <RepeatButton Name="PART_PageDecreaseButton"
+                        Classes="se-scrollbar-page-button"
+                        ClickMode="Press"
+                        Cursor="{TemplateBinding Cursor}" />
+          <RepeatButton Name="PART_PageIncreaseButton"
+                        Classes="se-scrollbar-page-button"
+                        ClickMode="Press"
+                        Cursor="{TemplateBinding Cursor}" />
+          <Thumb Name="PART_Thumb"
+                 Classes="se-scrollbar-thumb-vertical"
+                 Cursor="{TemplateBinding Cursor}" />
+        </Track>
+      </ControlTemplate>
+    </Setter>
+  </Style>
+
+  <Style Selector="ScrollBar:horizontal">
+    <Setter Property="Height" Value="46" />
+    <Setter Property="Template">
+      <ControlTemplate>
+        <Track Name="PART_Track"
+               Orientation="{TemplateBinding Orientation}"
+               Minimum="{TemplateBinding Minimum}"
+               Maximum="{TemplateBinding Maximum}"
+               Value="{TemplateBinding Value}"
+               ViewportSize="{TemplateBinding ViewportSize}">
+          <RepeatButton Name="PART_PageDecreaseButton"
+                        Classes="se-scrollbar-page-button"
+                        ClickMode="Press"
+                        Cursor="{TemplateBinding Cursor}" />
+          <RepeatButton Name="PART_PageIncreaseButton"
+                        Classes="se-scrollbar-page-button"
+                        ClickMode="Press"
+                        Cursor="{TemplateBinding Cursor}" />
+          <Thumb Name="PART_Thumb"
+                 Classes="se-scrollbar-thumb-horizontal"
+                 Cursor="{TemplateBinding Cursor}" />
+        </Track>
+      </ControlTemplate>
+    </Setter>
+  </Style>
+
+  <Style Selector="RepeatButton.se-scrollbar-page-button">
+    <Setter Property="Template">
+      <ControlTemplate>
+        <Border Background="#00000000" BorderThickness="0" />
+      </ControlTemplate>
+    </Setter>
+  </Style>
+
+  <!-- Three-slice thumbs: native caps authored for the 46 px scrollbar width,
+       with the center segment stretched along the track. -->
+  <Style Selector="Thumb.se-scrollbar-thumb-vertical">
+    <Setter Property="Template">
+      <ControlTemplate>
+        <Grid RowDefinitions="46,*,23">
+          <Border Grid.Row="0" Classes="se-thumb-start" />
+          <Border Grid.Row="1" Classes="se-thumb-center" />
+          <Border Grid.Row="2" Classes="se-thumb-end" />
+        </Grid>
+      </ControlTemplate>
+    </Setter>
+  </Style>
+  <Style Selector="Thumb.se-scrollbar-thumb-vertical Border.se-thumb-start">
+    <Setter Property="Background"><ImageBrush Source="Acrux_SE_ScrollBar_V_Thumb_Top" /></Setter>
+  </Style>
+  <Style Selector="Thumb.se-scrollbar-thumb-vertical Border.se-thumb-center">
+    <Setter Property="Background"><ImageBrush Source="Acrux_SE_ScrollBar_V_Thumb_Center" /></Setter>
+  </Style>
+  <Style Selector="Thumb.se-scrollbar-thumb-vertical Border.se-thumb-end">
+    <Setter Property="Background"><ImageBrush Source="Acrux_SE_ScrollBar_V_Thumb_Bottom" /></Setter>
+  </Style>
+  <Style Selector="Thumb.se-scrollbar-thumb-vertical:pointerover Border.se-thumb-start">
+    <Setter Property="Background"><ImageBrush Source="Acrux_SE_ScrollBar_V_Thumb_Top_Highlight" /></Setter>
+  </Style>
+  <Style Selector="Thumb.se-scrollbar-thumb-vertical:pointerover Border.se-thumb-center">
+    <Setter Property="Background"><ImageBrush Source="Acrux_SE_ScrollBar_V_Thumb_Center_Highlight" /></Setter>
+  </Style>
+  <Style Selector="Thumb.se-scrollbar-thumb-vertical:pointerover Border.se-thumb-end">
+    <Setter Property="Background"><ImageBrush Source="Acrux_SE_ScrollBar_V_Thumb_Bottom_Highlight" /></Setter>
+  </Style>
+  <Style Selector="Thumb.se-scrollbar-thumb-vertical:pressed Border.se-thumb-start">
+    <Setter Property="Background"><ImageBrush Source="Acrux_SE_ScrollBar_V_Thumb_Top_Highlight" /></Setter>
+  </Style>
+  <Style Selector="Thumb.se-scrollbar-thumb-vertical:pressed Border.se-thumb-center">
+    <Setter Property="Background"><ImageBrush Source="Acrux_SE_ScrollBar_V_Thumb_Center_Highlight" /></Setter>
+  </Style>
+  <Style Selector="Thumb.se-scrollbar-thumb-vertical:pressed Border.se-thumb-end">
+    <Setter Property="Background"><ImageBrush Source="Acrux_SE_ScrollBar_V_Thumb_Bottom_Highlight" /></Setter>
+  </Style>
+
+  <Style Selector="Thumb.se-scrollbar-thumb-horizontal">
+    <Setter Property="Template">
+      <ControlTemplate>
+        <Grid ColumnDefinitions="39,*,26">
+          <Border Grid.Column="0" Classes="se-thumb-start" />
+          <Border Grid.Column="1" Classes="se-thumb-center" />
+          <Border Grid.Column="2" Classes="se-thumb-end" />
+        </Grid>
+      </ControlTemplate>
+    </Setter>
+  </Style>
+  <Style Selector="Thumb.se-scrollbar-thumb-horizontal Border.se-thumb-start">
+    <Setter Property="Background"><ImageBrush Source="Acrux_SE_ScrollBar_H_Thumb_Left" /></Setter>
+  </Style>
+  <Style Selector="Thumb.se-scrollbar-thumb-horizontal Border.se-thumb-center">
+    <Setter Property="Background"><ImageBrush Source="Acrux_SE_ScrollBar_H_Thumb_Center" /></Setter>
+  </Style>
+  <Style Selector="Thumb.se-scrollbar-thumb-horizontal Border.se-thumb-end">
+    <Setter Property="Background"><ImageBrush Source="Acrux_SE_ScrollBar_H_Thumb_Right" /></Setter>
+  </Style>
+  <Style Selector="Thumb.se-scrollbar-thumb-horizontal:pointerover Border.se-thumb-start">
+    <Setter Property="Background"><ImageBrush Source="Acrux_SE_ScrollBar_H_Thumb_Left_Highlight" /></Setter>
+  </Style>
+  <Style Selector="Thumb.se-scrollbar-thumb-horizontal:pointerover Border.se-thumb-center">
+    <Setter Property="Background"><ImageBrush Source="Acrux_SE_ScrollBar_H_Thumb_Center_Highlight" /></Setter>
+  </Style>
+  <Style Selector="Thumb.se-scrollbar-thumb-horizontal:pointerover Border.se-thumb-end">
+    <Setter Property="Background"><ImageBrush Source="Acrux_SE_ScrollBar_H_Thumb_Right_Highlight" /></Setter>
+  </Style>
+  <Style Selector="Thumb.se-scrollbar-thumb-horizontal:pressed Border.se-thumb-start">
+    <Setter Property="Background"><ImageBrush Source="Acrux_SE_ScrollBar_H_Thumb_Left_Highlight" /></Setter>
+  </Style>
+  <Style Selector="Thumb.se-scrollbar-thumb-horizontal:pressed Border.se-thumb-center">
+    <Setter Property="Background"><ImageBrush Source="Acrux_SE_ScrollBar_H_Thumb_Center_Highlight" /></Setter>
+  </Style>
+  <Style Selector="Thumb.se-scrollbar-thumb-horizontal:pressed Border.se-thumb-end">
+    <Setter Property="Background"><ImageBrush Source="Acrux_SE_ScrollBar_H_Thumb_Right_Highlight" /></Setter>
+  </Style>
+</Styles>

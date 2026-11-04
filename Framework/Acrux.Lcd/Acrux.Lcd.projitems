@@ -1,0 +1,21 @@
+<?xml version="1.0" encoding="utf-8"?>
+<Project xmlns="http://schemas.microsoft.com/developer/msbuild/2003">
+  <PropertyGroup>
+    <MSBuildAllProjects Condition="'$(MSBuildVersion)' == '' Or '$(MSBuildVersion)' &lt; '16.0'">$(MSBuildAllProjects);$(MSBuildThisFileFullPath)</MSBuildAllProjects>
+    <HasSharedItems>true</HasSharedItems>
+    <SharedGUID>0b94a9ef-926c-4d88-bc49-9af4e52bed6c</SharedGUID>
+  </PropertyGroup>
+  <ItemGroup>
+    <Compile Include="$(MSBuildThisFileDirectory)LcdCursor.cs" />
+    <Compile Include="$(MSBuildThisFileDirectory)LcdDynamicTexture.cs" />
+    <Compile Include="$(MSBuildThisFileDirectory)LcdGuiHost.cs" />
+    <Compile Include="$(MSBuildThisFileDirectory)LcdInputSource.cs" />
+    <Compile Include="$(MSBuildThisFileDirectory)LcdRenderer.cs" />
+    <Compile Include="$(MSBuildThisFileDirectory)LcdSpriteCanvas.cs" />
+    <Compile Include="$(MSBuildThisFileDirectory)LcdSurfaceLayers.cs" />
+    <Compile Include="$(MSBuildThisFileDirectory)LcdTextMetrics.cs" />
+    <Compile Include="$(MSBuildThisFileDirectory)LcdTextureResolver.cs" />
+    <Compile Include="$(MSBuildThisFileDirectory)LcdWindowPlatform.cs" />
+    <Compile Include="$(MSBuildThisFileDirectory)LcdWindowSessionComponent.cs" />
+  </ItemGroup>
+</Project>

@@ -1,0 +1,35 @@
+<UserControl xmlns="https://github.com/ArthurGamerHD/AcruxUI"
+             xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+             xmlns:local="using:Sample"
+             x:Class="Sample.CounterView"
+             x:DataType="local:CounterViewModel"
+             Classes="inline-root">
+  <!-- Inline styles (Avalonia's UserControl.Styles), with a prefixed ancestor type and a class from the root. -->
+  <UserControl.Styles>
+    <Style Selector="local|CounterView.inline-root Border.inline-box">
+      <Setter Property="Width" Value="33" />
+    </Style>
+  </UserControl.Styles>
+  <Grid RowDefinitions="Auto Auto *" Margin="8">
+    <StackPanel Orientation="Horizontal">
+      <TextBlock x:Name="Title" Text="{Binding Title}" FontSize="24" />
+      <Border x:Name="Accent" Background="{DynamicResource accent}" Width="10" Height="10" />
+      <Border x:Name="Missing" Background="{DynamicResource missingKey}" Width="10" Height="10" />
+      <Border x:Name="InlineBox" Classes="inline-box" Height="10" />
+      <TextBlock x:Name="Doubled" Text="{Binding Count, Converter={StaticResource Doubler}}" />
+    </StackPanel>
+    <ItemsControl Grid.Row="1" ItemsSource="{Binding Items}">
+      <ItemsControl.ItemTemplate>
+        <DataTemplate x:DataType="local:CounterItem">
+          <TextBlock Text="{Binding Label}" />
+        </DataTemplate>
+      </ItemsControl.ItemTemplate>
+    </ItemsControl>
+    <StackPanel Grid.Row="2" Orientation="Horizontal" Spacing="6">
+      <Button x:Name="Increment" Command="{Binding IncrementCommand}" Width="120" Height="40">
+        <TextBlock Text="+1" />
+      </Button>
+      <local:Gauge x:Name="Meter" Value="{Binding Fraction}" Mode="{Binding Mode}" Width="200" Height="40" />
+    </StackPanel>
+  </Grid>
+</UserControl>

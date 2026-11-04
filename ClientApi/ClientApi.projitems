@@ -1,0 +1,11 @@
+<?xml version="1.0" encoding="utf-8"?>
+<!-- Import into a client mod: thin wrappers over Acrux UI (generated), the bridge runtime, shared Acrux value types, and the
+     client of the shared gaze/click tracker (LcdEyeTracking.Api, generated from the toolkit's [ApiProvider]). -->
+<Project xmlns="http://schemas.microsoft.com/developer/msbuild/2003">
+  <ItemGroup>
+    <Compile Include="$(MSBuildThisFileDirectory)Generated\*.cs" />
+    <Compile Include="$(MSBuildThisFileDirectory)Runtime\*.cs" />
+    <Compile Include="$(MSBuildThisFileDirectory)Shared\*.cs" />
+    <Compile Include="$(MSBuildThisFileDirectory)EyeTracking\*.cs" />
+  </ItemGroup>
+</Project>

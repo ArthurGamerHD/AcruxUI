@@ -1,0 +1,11 @@
+<Project Sdk="Microsoft.NET.Sdk">
+  <PropertyGroup>
+    <OutputType>Exe</OutputType>
+    <AssemblyName>Harness.Runner</AssemblyName>
+  </PropertyGroup>
+  <ItemGroup>
+    <ProjectReference Include="../ToolkitHost/ToolkitHost.csproj" Aliases="toolkit" />
+    <ProjectReference Include="../SampleClient/SampleClient.csproj" />
+    <None Include="../SampleClient/Styles/**" CopyToOutputDirectory="PreserveNewest" LinkBase="Styles" />
+  </ItemGroup>
+</Project>

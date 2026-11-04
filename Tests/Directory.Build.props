@@ -1,0 +1,26 @@
+<Project>
+  <!-- Offline bridge harness: the toolkit and a client compile into separate assemblies, as two mods would. -->
+  <PropertyGroup>
+    <TargetFramework>net9.0</TargetFramework>
+    <LangVersion>latest</LangVersion>
+    <Nullable>disable</Nullable>
+    <ImplicitUsings>disable</ImplicitUsings>
+    <NoWarn>$(NoWarn);CS0618;CS0108;CS0114;CS0067;CS8981;CS0162;CS0169;CS0414;CS0649</NoWarn>
+    <SpaceEngineersBin Condition="'$(SpaceEngineersBin)' == ''">$(HOME)/.local/share/Steam/steamapps/common/SpaceEngineers/Bin64</SpaceEngineersBin>
+    <AdkRoot>$(MSBuildThisFileDirectory)../External/Adk</AdkRoot>
+    <AcruxRoot>$(MSBuildThisFileDirectory)../Framework</AcruxRoot>
+    <EmitCompilerGeneratedFiles>true</EmitCompilerGeneratedFiles>
+  </PropertyGroup>
+  <ItemGroup>
+    <Reference Include="$(SpaceEngineersBin)/VRage.Math.dll" />
+    <Reference Include="$(SpaceEngineersBin)/VRage.Game.dll" />
+    <Reference Include="$(SpaceEngineersBin)/VRage.dll" />
+    <Reference Include="$(SpaceEngineersBin)/VRage.Library.dll" />
+    <Reference Include="$(SpaceEngineersBin)/VRage.Input.dll" />
+    <Reference Include="$(SpaceEngineersBin)/VRage.Render.dll" />
+    <Reference Include="$(SpaceEngineersBin)/Sandbox.Common.dll" />
+    <Reference Include="$(SpaceEngineersBin)/Sandbox.Game.dll" />
+    <Reference Include="$(SpaceEngineersBin)/SpaceEngineers.ObjectBuilders.dll" />
+    <Reference Include="$(SpaceEngineersBin)/ProtoBuf.Net.Core.dll" />
+  </ItemGroup>
+</Project>

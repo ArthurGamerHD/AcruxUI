@@ -1,0 +1,48 @@
+<?xml version="1.0" encoding="utf-8"?>
+<Styles xmlns="https://github.com/ArthurGamerHD/AcruxUI"
+        xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml">
+  <Style Selector="TextBox">
+    <Setter Property="Template">
+      <ControlTemplate>
+        <Border Name="PART_BorderElement"
+                Background="{TemplateBinding Background}"
+                BorderBrush="{TemplateBinding BorderBrush}"
+                BorderThickness="{TemplateBinding BorderThickness}"
+                Padding="{TemplateBinding Padding}"
+                CornerRadius="{TemplateBinding CornerRadius}">
+          <Grid ColumnDefinitions="Auto,*,Auto,Auto">
+            <ContentPresenter Name="PART_InnerLeftContent" VerticalAlignment="Center" />
+            <ScrollViewer Name="PART_ScrollViewer"
+                          Grid.Column="1"
+                          HorizontalScrollBarVisibility="Hidden"
+                          VerticalScrollBarVisibility="Disabled"
+                          IsEnabled="false">
+              <TextPresenter Name="PART_TextPresenter" />
+            </ScrollViewer>
+            <Border Name="PART_ClearButtonHost" Grid.Column="2" VerticalAlignment="Center" />
+            <ContentPresenter Name="PART_InnerRightContent" Grid.Column="3" VerticalAlignment="Center" />
+          </Grid>
+        </Border>
+      </ControlTemplate>
+    </Setter>
+    <Setter Property="MinWidth" Value="260" />
+    <Setter Property="MinHeight" Value="34" />
+    <Setter Property="Padding" Value="10 0 10 0" />
+    <Setter Property="CornerRadius" Value="4" />
+    <Setter Property="BorderThickness" Value="1" />
+    <Setter Property="Background" Value="{DynamicResource surfaceColor}" />
+    <Setter Property="BorderBrush" Value="{DynamicResource borderVariantColor}" />
+    <Setter Property="Foreground" Value="{DynamicResource onSurfaceColor}" />
+    <Setter Property="PlaceholderForeground" Value="{DynamicResource disabledColor}" />
+  </Style>
+  <Style Selector="Button.text-box-clear">
+    <Setter Property="Width" Value="22" />
+    <Setter Property="Height" Value="22" />
+    <Setter Property="Margin" Value="4 0 0 0" />
+    <Setter Property="Foreground" Value="{DynamicResource onSurfaceVariantColor}" />
+  </Style>
+  <Style Selector="TextBox:focus">
+    <Setter Property="BorderBrush" Value="{DynamicResource accentColor}" />
+    <Setter Property="BorderThickness" Value="2" />
+  </Style>
+</Styles>

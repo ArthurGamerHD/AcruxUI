@@ -1,0 +1,98 @@
+<?xml version="1.0" encoding="utf-8"?>
+<Styles xmlns="https://github.com/ArthurGamerHD/AcruxUI"
+        xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml">
+  <Style Selector="ScrollBar">
+    <Setter Property="Cursor" Value="Hand" />
+  </Style>
+
+  <Style Selector="ScrollBar:vertical">
+    <Setter Property="Width" Value="8" />
+    <Setter Property="Template">
+      <ControlTemplate>
+        <Grid>
+          <Border Classes="scrollbar-track-background" />
+          <Track Name="PART_Track"
+                 Orientation="{TemplateBinding Orientation}"
+                 Minimum="{TemplateBinding Minimum}"
+                 Maximum="{TemplateBinding Maximum}"
+                 Value="{TemplateBinding Value}"
+                 ViewportSize="{TemplateBinding ViewportSize}">
+            <RepeatButton Name="PART_PageDecreaseButton"
+                          Classes="scrollbar-page-button"
+                          ClickMode="Press"
+                          Cursor="{TemplateBinding Cursor}" />
+            <RepeatButton Name="PART_PageIncreaseButton"
+                          Classes="scrollbar-page-button"
+                          ClickMode="Press"
+                          Cursor="{TemplateBinding Cursor}" />
+            <Thumb Name="PART_Thumb"
+                   Classes="scrollbar-thumb"
+                   Cursor="{TemplateBinding Cursor}" />
+          </Track>
+        </Grid>
+      </ControlTemplate>
+    </Setter>
+  </Style>
+
+  <Style Selector="ScrollBar:horizontal">
+    <Setter Property="Height" Value="8" />
+    <Setter Property="Template">
+      <ControlTemplate>
+        <Grid>
+          <Border Classes="scrollbar-track-background" />
+          <Track Name="PART_Track"
+                 Orientation="{TemplateBinding Orientation}"
+                 Minimum="{TemplateBinding Minimum}"
+                 Maximum="{TemplateBinding Maximum}"
+                 Value="{TemplateBinding Value}"
+                 ViewportSize="{TemplateBinding ViewportSize}">
+            <RepeatButton Name="PART_PageDecreaseButton"
+                          Classes="scrollbar-page-button"
+                          ClickMode="Press"
+                          Cursor="{TemplateBinding Cursor}" />
+            <RepeatButton Name="PART_PageIncreaseButton"
+                          Classes="scrollbar-page-button"
+                          ClickMode="Press"
+                          Cursor="{TemplateBinding Cursor}" />
+            <Thumb Name="PART_Thumb"
+                   Classes="scrollbar-thumb"
+                   Cursor="{TemplateBinding Cursor}" />
+          </Track>
+        </Grid>
+      </ControlTemplate>
+    </Setter>
+  </Style>
+
+  <Style Selector="RepeatButton.scrollbar-page-button">
+    <!-- The page buttons are hit-test regions owned by Track, not visual
+         buttons.  Give them a deliberately empty template so the generic
+         Button hover/pressed chrome can never leak into the scrollbar. -->
+    <Setter Property="Template">
+      <ControlTemplate>
+        <Border Background="#00000000" />
+      </ControlTemplate>
+    </Setter>
+    <Setter Property="Background" Value="#00000000" />
+    <Setter Property="BorderBrush" Value="#00000000" />
+    <Setter Property="BorderThickness" Value="0" />
+    <Setter Property="Padding" Value="0" />
+  </Style>
+  <Style Selector="Border.scrollbar-track-background">
+    <Setter Property="Background" Value="{DynamicResource scrollBarTrackColor}" />
+    <Setter Property="CornerRadius" Value="9999" />
+  </Style>
+  <Style Selector="Thumb.scrollbar-thumb">
+    <Setter Property="Background" Value="{DynamicResource scrollBarThumbColor}" />
+    <Setter Property="Template">
+      <ControlTemplate>
+        <Border Background="{TemplateBinding Background}" CornerRadius="9999" />
+      </ControlTemplate>
+    </Setter>
+  </Style>
+  <Style Selector="Thumb.scrollbar-thumb:pointerover">
+    <Setter Property="Background" Value="{DynamicResource scrollBarThumbHoverColor}" />
+  </Style>
+  <Style Selector="Thumb.scrollbar-thumb:pressed">
+    <Setter Property="Background" Value="{DynamicResource scrollBarThumbPressedColor}" />
+  </Style>
+</Styles>

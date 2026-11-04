@@ -1,0 +1,76 @@
+<?xml version="1.0" encoding="utf-8"?>
+<Styles xmlns="https://github.com/ArthurGamerHD/AcruxUI"
+        xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml">
+  <Style Selector="CheckBox">
+    <Setter Property="Cursor" Value="Hand" />
+    <Setter Property="MinHeight" Value="28" />
+    <Setter Property="Padding" Value="0" />
+    <Setter Property="HorizontalContentAlignment" Value="Left" />
+    <Setter Property="VerticalContentAlignment" Value="Center" />
+    <Setter Property="Background" Value="#00000000" />
+    <Setter Property="BorderThickness" Value="0" />
+    <Setter Property="CornerRadius" Value="4" />
+    <Setter Property="Template">
+      <ControlTemplate>
+        <Grid ColumnDefinitions="32,*">
+          <Border Name="PART_Border" Grid.ColumnSpan="2"
+                  Background="{TemplateBinding Background}"
+                  BorderBrush="{TemplateBinding BorderBrush}"
+                  BorderThickness="{TemplateBinding BorderThickness}"
+                  CornerRadius="{TemplateBinding CornerRadius}" />
+          <Border Name="PART_Indicator" Classes="checkbox-indicator" Margin="4 2" Width="18" Height="18" VerticalAlignment="Center"
+                  CornerRadius="3" BorderThickness="1">
+            <Grid>
+              <Path Name="PART_CheckGlyph" Classes="checkbox-glyph" Width="12" Height="12" HorizontalAlignment="Center"
+                    VerticalAlignment="Center" Data="M1 6 L5 10 L11 2" StrokeThickness="2"
+                    StrokeLineCap="Round" />
+              <Path Name="PART_IndeterminateGlyph" Classes="checkbox-indeterminate-glyph" Width="12" Height="12"
+                    HorizontalAlignment="Center" VerticalAlignment="Center" Data="M2 6 L10 6"
+                    StrokeThickness="2" StrokeLineCap="Round" />
+            </Grid>
+          </Border>
+          <ContentPresenter Name="PART_ContentPresenter" Grid.Column="1" Margin="8 0 0 0" />
+        </Grid>
+      </ControlTemplate>
+    </Setter>
+  </Style>
+  <Style Selector="CheckBox:pointerover">
+    <Setter Property="Background" Value="#00000000" />
+    <Setter Property="BorderThickness" Value="0" />
+  </Style>
+  <Style Selector="CheckBox:pressed">
+    <Setter Property="Background" Value="#00000000" />
+    <Setter Property="BorderThickness" Value="0" />
+  </Style>
+  <Style Selector="CheckBox:focus-visible">
+    <Setter Property="BorderThickness" Value="0" />
+  </Style>
+  <Style Selector="CheckBox:disabled">
+    <Setter Property="Background" Value="#00000000" />
+    <Setter Property="BorderThickness" Value="0" />
+  </Style>
+  <Style Selector="Border.checkbox-indicator">
+    <Setter Property="BorderBrush" Value="{DynamicResource borderColor}" />
+    <Setter Property="Background" Value="{DynamicResource controlBackgroundColor}" />
+  </Style>
+  <Style Selector="CheckBox:checked Border.checkbox-indicator">
+    <Setter Property="Background" Value="{DynamicResource accentColor}" />
+    <Setter Property="BorderBrush" Value="{DynamicResource accentColor}" />
+  </Style>
+  <Style Selector="CheckBox:checked Path.checkbox-glyph">
+    <Setter Property="Stroke" Value="{DynamicResource onAccentColor}" />
+  </Style>
+  <Style Selector="CheckBox:indeterminate Border.checkbox-indicator">
+    <Setter Property="Background" Value="{DynamicResource accentColor}" />
+    <Setter Property="BorderBrush" Value="{DynamicResource accentColor}" />
+  </Style>
+  <Style Selector="CheckBox:indeterminate Path.checkbox-indeterminate-glyph">
+    <Setter Property="Stroke" Value="{DynamicResource onAccentColor}" />
+  </Style>
+  <Style Selector="CheckBox:focus-visible Border.checkbox-indicator">
+    <Setter Property="BorderThickness" Value="2" />
+  </Style>
+  <Style Selector="CheckBox:disabled Border.checkbox-indicator">
+    <Setter Property="BorderBrush" Value="{DynamicResource disabledColor}" />
+  </Style>
+</Styles>

@@ -1,0 +1,79 @@
+<?xml version="1.0" encoding="utf-8"?>
+<Styles xmlns="https://github.com/ArthurGamerHD/AcruxUI"
+        xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml">
+  <!-- Sizes in pixels at 1080p, as the rest of the theme (MessageBox.xaml): Keen's 1600x1200 reference pixels x 0.9. -->
+  <Style Selector="Slider">
+    <Setter Property="Template">
+      <ControlTemplate>
+        <Grid>
+          <Border Name="PART_Track" Classes="slider-track">
+            <Grid ColumnDefinitions="25,*,25">
+              <Border Grid.Column="0" Classes="se-slider-rail-start" />
+              <Border Grid.Column="1" Classes="se-slider-rail-center" />
+              <Border Grid.Column="2" Classes="se-slider-rail-end" />
+            </Grid>
+          </Border>
+          <Border Name="PART_Fill" Classes="slider-fill" />
+          <Border Name="PART_Thumb" Classes="slider-thumb" />
+        </Grid>
+      </ControlTemplate>
+    </Setter>
+    <Setter Property="Width" Value="234" />
+    <Setter Property="Height" Value="49.5" />
+    <!-- Keen's rail textures are the whole control: a framed box (32x64 caps, a 4x64 centre) with the groove
+         inside, drawn at full height (49.5 of 64 at 1080p: ~0.77). So the drawn track fills the slider, while the
+         thumb (32x32, ~25 here) travels along the groove, which starts 16 texels (~12.5 here) into each cap. -->
+    <Setter Property="TrackVisualHeight" Value="1000" />
+    <Setter Property="TrackVisualInset" Value="0" />
+    <Setter Property="TrackInset" Value="12.5" />
+    <Setter Property="ThumbSize" Value="25" />
+  </Style>
+  <Style Selector="Border.slider-track">
+    <Setter Property="Background" Value="#00000000" />
+    <Setter Property="BorderThickness" Value="0" />
+    <Setter Property="CornerRadius" Value="0" />
+  </Style>
+  <Style Selector="Border.se-slider-rail-start">
+    <Setter Property="Background"><ImageBrush Source="Acrux_SE_Slider_Rail_Left" /></Setter>
+  </Style>
+  <Style Selector="Border.se-slider-rail-center">
+    <Setter Property="Background"><ImageBrush Source="Acrux_SE_Slider_Rail_Center" /></Setter>
+  </Style>
+  <Style Selector="Border.se-slider-rail-end">
+    <Setter Property="Background"><ImageBrush Source="Acrux_SE_Slider_Rail_Right" /></Setter>
+  </Style>
+  <Style Selector="Border.slider-fill">
+    <Setter Property="Background" Value="#00000000" />
+    <Setter Property="BorderThickness" Value="0" />
+  </Style>
+  <Style Selector="Border.slider-thumb">
+    <Setter Property="Background"><ImageBrush Source="Acrux_SE_Slider_Thumb" /></Setter>
+    <Setter Property="BorderThickness" Value="0" />
+    <Setter Property="CornerRadius" Value="0" />
+  </Style>
+  <!-- Keen's hover (highlight) and keyboard-focus textures for the rail and the thumb. -->
+  <Style Selector="Slider:focus-visible Border.se-slider-rail-start">
+    <Setter Property="Background"><ImageBrush Source="Acrux_SE_Slider_Rail_Left_Focus" /></Setter>
+  </Style>
+  <Style Selector="Slider:focus-visible Border.se-slider-rail-center">
+    <Setter Property="Background"><ImageBrush Source="Acrux_SE_Slider_Rail_Center_Focus" /></Setter>
+  </Style>
+  <Style Selector="Slider:focus-visible Border.se-slider-rail-end">
+    <Setter Property="Background"><ImageBrush Source="Acrux_SE_Slider_Rail_Right_Focus" /></Setter>
+  </Style>
+  <Style Selector="Slider:focus-visible Border.slider-thumb">
+    <Setter Property="Background"><ImageBrush Source="Acrux_SE_Slider_Thumb_Focus" /></Setter>
+  </Style>
+  <Style Selector="Slider:pointerover Border.se-slider-rail-start">
+    <Setter Property="Background"><ImageBrush Source="Acrux_SE_Slider_Rail_Left_Highlight" /></Setter>
+  </Style>
+  <Style Selector="Slider:pointerover Border.se-slider-rail-center">
+    <Setter Property="Background"><ImageBrush Source="Acrux_SE_Slider_Rail_Center_Highlight" /></Setter>
+  </Style>
+  <Style Selector="Slider:pointerover Border.se-slider-rail-end">
+    <Setter Property="Background"><ImageBrush Source="Acrux_SE_Slider_Rail_Right_Highlight" /></Setter>
+  </Style>
+  <Style Selector="Slider:pointerover Border.slider-thumb">
+    <Setter Property="Background"><ImageBrush Source="Acrux_SE_Slider_Thumb_Highlight" /></Setter>
+  </Style>
+</Styles>

@@ -1,0 +1,55 @@
+<?xml version="1.0" encoding="utf-8"?>
+<Styles xmlns="https://github.com/ArthurGamerHD/AcruxUI"
+        xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+        xmlns:addons="using:Acrux.Addons">
+  <Style Selector="addons|KeySelector">
+    <Setter Property="Template">
+      <ControlTemplate>
+        <Border Name="PART_Border"
+                Background="{TemplateBinding Background}"
+                BorderBrush="{TemplateBinding BorderBrush}"
+                BorderThickness="{TemplateBinding BorderThickness}"
+                Padding="{TemplateBinding Padding}"
+                CornerRadius="{TemplateBinding CornerRadius}">
+          <TextBlock Name="PART_Text"
+                     HorizontalAlignment="Center"
+                     VerticalAlignment="Center"
+                     FontSize="0.68"
+                     Foreground="{TemplateBinding Foreground}" />
+        </Border>
+      </ControlTemplate>
+    </Setter>
+    <Setter Property="Width" Value="160" />
+    <Setter Property="Height" Value="34" />
+    <Setter Property="CaptureText" Value="Press a key…" />
+    <Setter Property="Padding" Value="12 0 12 0" />
+    <Setter Property="CornerRadius" Value="0" />
+    <Setter Property="BorderThickness" Value="1" />
+    <Setter Property="Background"><ImageBrush Source="Acrux_SE_Button_Normal" /></Setter>
+    <Setter Property="Foreground" Value="#ffffff" />
+    <Setter Property="BorderBrush" Value="#3a434c" />
+  </Style>
+
+  <Style Selector="addons|KeySelector.settings-key-selector">
+    <Setter Property="Width" Value="180" />
+    <Setter Property="Height" Value="34" />
+    <Setter Property="HorizontalAlignment" Value="Right" />
+    <Setter Property="VerticalAlignment" Value="Center" />
+  </Style>
+  <Style Selector="addons|KeySelector:pointerover">
+    <Setter Property="Background"><ImageBrush Source="Acrux_SE_Button_Highlight" /></Setter>
+  </Style>
+  <Style Selector="addons|KeySelector:pressed">
+    <Setter Property="Background"><ImageBrush Source="Acrux_SE_Button_Active" /></Setter>
+    <Setter Property="Foreground" Value="#21292d" />
+  </Style>
+  <Style Selector="addons|KeySelector:open">
+    <Setter Property="Background"><ImageBrush Source="Acrux_SE_Button_Active" /></Setter>
+    <Setter Property="Foreground" Value="#21292d" />
+    <Setter Property="BorderBrush" Value="#8ebcce" />
+  </Style>
+  <Style Selector="addons|KeySelector:focus-visible">
+    <Setter Property="BorderBrush" Value="#8ebcce" />
+    <Setter Property="Background"><ImageBrush Source="Acrux_SE_Button_Focus" /></Setter>
+  </Style>
+</Styles>

@@ -1,0 +1,64 @@
+<?xml version="1.0" encoding="utf-8"?>
+<!--
+  This mod's stylesheet: the toolkit's Fluent theme plus the app's own selectors on top.
+  Views include it with <StyleInclude Source="/Data/Gui/Styles/AcruxAppTemplate/AppStyle.xaml" />.
+
+  Keep the folder name unique to the mod: every client's style loader is asked in turn and the toolkit caches
+  sources by path, so two mods shipping the same path (e.g. /Data/Gui/Styles/Fluent/FluentStyle.xaml) would
+  get each other's styles. Opening this file in Rider previews the Design.PreviewWith control below.
+-->
+<Styles xmlns="https://github.com/ArthurGamerHD/AcruxUI"
+        xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml">
+  <Design.PreviewWith>
+    <Border Padding="16">
+      <StackPanel Spacing="6">
+        <TextBlock Classes="title" Text="Title" />
+        <TextBlock Classes="display" Text="42" />
+        <TextBlock Classes="caption" Text="Caption text" />
+        <StackPanel Orientation="Horizontal" Spacing="10" HorizontalAlignment="Center">
+          <Button Classes="app-button primary">
+            <TextBlock Text="Primary" />
+          </Button>
+          <Button Classes="app-button">
+            <TextBlock Text="Button" />
+          </Button>
+        </StackPanel>
+      </StackPanel>
+    </Border>
+  </Design.PreviewWith>
+
+  <!-- The base theme, served by the Acrux UI mod. -->
+  <StyleInclude Source="/Data/Gui/Styles/Acrux/Fluent/FluentStyle.xaml" />
+
+  <!-- Text: every TextBlock follows the surface's font and colour (SurfaceTheme). -->
+  <Style Selector="TextBlock">
+    <Setter Property="FontFamily" Value="{DynamicResource textFont}" />
+    <Setter Property="Foreground" Value="{DynamicResource fontColor}" />
+  </Style>
+  <Style Selector="TextBlock.title">
+    <Setter Property="FontSize" Value="1.1" />
+    <Setter Property="HorizontalAlignment" Value="Center" />
+  </Style>
+  <Style Selector="TextBlock.display">
+    <Setter Property="FontSize" Value="3" />
+    <Setter Property="HorizontalAlignment" Value="Center" />
+  </Style>
+  <Style Selector="TextBlock.caption">
+    <Setter Property="FontSize" Value="0.7" />
+    <Setter Property="Foreground" Value="{DynamicResource onSurfaceVariantColor}" />
+    <Setter Property="HorizontalAlignment" Value="Center" />
+    <Setter Property="TextAlignment" Value="Center" />
+  </Style>
+
+  <!-- Buttons: the Fluent button, sized for an LCD; .primary uses the accent colours. -->
+  <Style Selector="Button.app-button">
+    <Setter Property="Width" Value="140" />
+    <Setter Property="Height" Value="44" />
+  </Style>
+  <Style Selector="Button.app-button TextBlock">
+    <Setter Property="FontSize" Value="0.9" />
+  </Style>
+  <Style Selector="Button.app-button.primary">
+    <Setter Property="Background" Value="{DynamicResource accentContainerColor}" />
+  </Style>
+</Styles>

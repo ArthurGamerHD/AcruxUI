@@ -1,0 +1,18 @@
+<?xml version="1.0" encoding="utf-8"?>
+<Styles xmlns="https://github.com/ArthurGamerHD/AcruxUI"
+        xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml">
+  <StyleInclude Source="./Controls/Button.xaml" />
+  <StyleInclude Source="./Controls/CheckBox.xaml" />
+  <StyleInclude Source="./Controls/ToggleSwitch.xaml" />
+  <StyleInclude Source="./Controls/Slider.xaml" />
+  <StyleInclude Source="./Controls/TextBox.xaml" />
+  <StyleInclude Source="./Controls/NumericUpDown.xaml" />
+  <StyleInclude Source="./Controls/ComboBox.xaml" />
+  <StyleInclude Source="./Controls/ScrollBar.xaml" />
+  <StyleInclude Source="./Controls/ScrollViewer.xaml" />
+  <StyleInclude Source="./Controls/Carousel.xaml" />
+  <StyleInclude Source="./Controls/TabControl.xaml" />
+  <StyleInclude Source="./Controls/Window.xaml" />
+  <StyleInclude Source="./Controls/Menu.xaml" />
+  <StyleInclude Source="./Controls/ToolTip.xaml" />
+</Styles>

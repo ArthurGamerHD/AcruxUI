@@ -1,0 +1,34 @@
+<?xml version="1.0" encoding="utf-8"?>
+<Styles xmlns="https://github.com/ArthurGamerHD/AcruxUI"
+        xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml">
+  <Style Selector="Slider">
+    <Setter Property="Cursor" Value="Hand" />
+    <Setter Property="Template">
+      <ControlTemplate>
+        <Grid>
+          <Border Name="PART_Track" Classes="slider-track" />
+          <Border Name="PART_Fill" Classes="slider-fill" />
+          <Border Name="PART_Thumb" Classes="slider-thumb" />
+        </Grid>
+      </ControlTemplate>
+    </Setter>
+    <Setter Property="Width" Value="260" />
+    <Setter Property="Height" Value="34" />
+  </Style>
+
+  <Style Selector="Border.slider-track">
+    <Setter Property="Background" Value="{DynamicResource borderVariantColor}" />
+    <Setter Property="BorderThickness" Value="0" />
+    <Setter Property="CornerRadius" Value="3" />
+  </Style>
+  <Style Selector="Border.slider-fill">
+    <Setter Property="Background" Value="{DynamicResource accentColor}" />
+    <Setter Property="BorderThickness" Value="0" />
+    <Setter Property="CornerRadius" Value="3" />
+  </Style>
+  <Style Selector="Border.slider-thumb">
+    <Setter Property="Background" Value="{DynamicResource onSurfaceColor}" />
+    <Setter Property="BorderThickness" Value="0" />
+    <Setter Property="CornerRadius" Value="8" />
+  </Style>
+</Styles>

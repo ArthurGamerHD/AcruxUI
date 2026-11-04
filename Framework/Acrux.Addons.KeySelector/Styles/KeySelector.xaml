@@ -1,0 +1,47 @@
+<?xml version="1.0" encoding="utf-8"?>
+<Styles xmlns="https://github.com/ArthurGamerHD/AcruxUI"
+        xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+        xmlns:addons="using:Acrux.Addons">
+  <Style Selector="addons|KeySelector">
+    <Setter Property="Template">
+      <ControlTemplate>
+        <Border Name="PART_Border"
+                Background="{TemplateBinding Background}"
+                BorderBrush="{TemplateBinding BorderBrush}"
+                BorderThickness="{TemplateBinding BorderThickness}"
+                Padding="{TemplateBinding Padding}"
+                CornerRadius="{TemplateBinding CornerRadius}">
+          <TextBlock Name="PART_Text"
+                     HorizontalAlignment="Center"
+                     VerticalAlignment="Center"
+                     FontSize="0.68"
+                     Foreground="{TemplateBinding Foreground}" />
+        </Border>
+      </ControlTemplate>
+    </Setter>
+    <Setter Property="Width" Value="160" />
+    <Setter Property="Height" Value="34" />
+    <Setter Property="CaptureText" Value="Press a key…" />
+    <Setter Property="Padding" Value="12 0 12 0" />
+    <Setter Property="CornerRadius" Value="6" />
+    <Setter Property="BorderThickness" Value="1" />
+    <Setter Property="Background" Value="{DynamicResource surfaceColor}" />
+    <Setter Property="Foreground" Value="{DynamicResource onSurfaceColor}" />
+    <Setter Property="BorderBrush" Value="{DynamicResource borderVariantColor}" />
+  </Style>
+
+  <Style Selector="addons|KeySelector:pointerover">
+    <Setter Property="Background" Value="{DynamicResource accentContainerColor}" />
+  </Style>
+  <Style Selector="addons|KeySelector:pressed">
+    <Setter Property="Background" Value="{DynamicResource accentContainerColor}" />
+  </Style>
+  <Style Selector="addons|KeySelector:open">
+    <Setter Property="BorderBrush" Value="{DynamicResource accentColor}" />
+    <Setter Property="BorderThickness" Value="2" />
+  </Style>
+  <Style Selector="addons|KeySelector:focus-visible">
+    <Setter Property="BorderBrush" Value="{DynamicResource accentColor}" />
+    <Setter Property="BorderThickness" Value="2" />
+  </Style>
+</Styles>

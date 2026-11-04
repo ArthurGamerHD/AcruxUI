@@ -1,0 +1,10 @@
+<?xml version="1.0" encoding="utf-8"?>
+<Styles xmlns="https://github.com/ArthurGamerHD/AcruxUI"
+        xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml">
+  <Style Selector="Carousel">
+    <Setter Property="ClipToBounds" Value="True" />
+    <Setter Property="PageTransition">
+      <PageSlide Duration="0:0:0.4" />
+    </Setter>
+  </Style>
+</Styles>

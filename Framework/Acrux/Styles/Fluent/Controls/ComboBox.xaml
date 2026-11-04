@@ -1,0 +1,87 @@
+<?xml version="1.0" encoding="utf-8"?>
+<Styles xmlns="https://github.com/ArthurGamerHD/AcruxUI"
+        xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml">
+  <Style Selector="ComboBox">
+    <Setter Property="Cursor" Value="Hand" />
+    <Setter Property="CornerRadius" Value="4" />
+    <Setter Property="Template">
+      <ControlTemplate>
+        <Border Name="PART_Header"
+                Background="{TemplateBinding Background}"
+                BorderBrush="{TemplateBinding BorderBrush}"
+                BorderThickness="{TemplateBinding BorderThickness}"
+                Padding="{TemplateBinding Padding}"
+                CornerRadius="{TemplateBinding CornerRadius}">
+          <Grid ColumnDefinitions="* Auto">
+            <TextBlock Name="PART_HeaderText"
+                       Grid.Column="0"
+                       HorizontalAlignment="Left"
+                       VerticalAlignment="Center"
+                       FontSize="0.68"
+                       Foreground="{TemplateBinding Foreground}" />
+            <!-- Shows the selection through SelectionBoxItemTemplate / ItemTemplate when one is set. -->
+            <ContentPresenter Name="PART_ContentPresenter"
+                              Grid.Column="0"
+                              VerticalAlignment="Center"
+                              IsVisible="False" />
+            <Border Name="PART_Indicator"
+                    Grid.Column="1"
+                    Width="9"
+                    Height="9"
+                    VerticalAlignment="Center"
+                    Background="{TemplateBinding Foreground}"
+                    RenderTransform="rotate(180deg)">
+              <Border.OpacityMask>
+                <ImageBrush Source="Triangle" />
+              </Border.OpacityMask>
+            </Border>
+          </Grid>
+        </Border>
+      </ControlTemplate>
+    </Setter>
+    <Setter Property="Width" Value="260" />
+    <Setter Property="Height" Value="34" />
+    <Setter Property="MaxDropDownHeight" Value="200" />
+    <Setter Property="CornerRadius" Value="6" />
+    <Setter Property="BorderThickness" Value="1" />
+    <Setter Property="Padding" Value="12 0 8 0" />
+    <Setter Property="MinWidth" Value="64" />
+    <Setter Property="HorizontalContentAlignment" Value="Left" />
+    <Setter Property="VerticalContentAlignment" Value="Center" />
+    <Setter Property="Background" Value="{DynamicResource controlBackgroundColor}" />
+    <Setter Property="Foreground" Value="{DynamicResource onSurfaceColor}" />
+    <Setter Property="PlaceholderForeground" Value="{DynamicResource disabledColor}" />
+    <Setter Property="BorderBrush" Value="{DynamicResource borderVariantColor}" />
+  </Style>
+
+  <Style Selector="ComboBox:pointerover">
+    <Setter Property="Background" Value="{DynamicResource surfaceContainerHighColor}" />
+  </Style>
+  <Style Selector="ComboBox:pressed">
+    <Setter Property="Background" Value="{DynamicResource surfaceContainerHighestColor}" />
+  </Style>
+  <Style Selector="ComboBox:focus-visible">
+    <Setter Property="BorderBrush" Value="{DynamicResource accentColor}" />
+    <Setter Property="BorderThickness" Value="2" />
+  </Style>
+  <Style Selector="ComboBox:dropdownopen">
+    <Setter Property="BorderBrush" Value="{DynamicResource accentColor}" />
+    <Setter Property="BorderThickness" Value="2" />
+  </Style>
+  <Style Selector="ComboBox:disabled">
+    <Setter Property="Foreground" Value="{DynamicResource disabledColor}" />
+  </Style>
+
+  <Style Selector="Border.combo-box-popup">
+    <Setter Property="Background" Value="{DynamicResource popupBackgroundColor}" />
+  </Style>
+  <Style Selector="Border.combo-box-item">
+    <Setter Property="Cursor" Value="Hand" />
+  </Style>
+  <Style Selector="Border.combo-box-item:pointerover">
+    <Setter Property="Background" Value="{DynamicResource accentContainerColor}" />
+  </Style>
+  <Style Selector="Border.combo-box-item:pressed">
+    <Setter Property="Background" Value="{DynamicResource accentContainerColor}" />
+  </Style>
+</Styles>

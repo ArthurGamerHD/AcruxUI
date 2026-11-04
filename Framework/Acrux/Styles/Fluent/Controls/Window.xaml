@@ -1,0 +1,48 @@
+<?xml version="1.0" encoding="utf-8"?>
+<Styles xmlns="https://github.com/ArthurGamerHD/AcruxUI">
+  <Style Selector="Window">
+    <Setter Property="Background" Value="{DynamicResource surfaceContainerHighColor}" />
+    <Setter Property="BorderBrush" Value="{DynamicResource borderVariantColor}" />
+    <Setter Property="CornerRadius" Value="10" />
+  </Style>
+  <Style Selector="TextBlock.window-title">
+    <Setter Property="Foreground" Value="{DynamicResource fontColor}" />
+    <Setter Property="FontFamily" Value="{DynamicResource textFont}" />
+  </Style>
+  <Style Selector="Button.caption-button">
+    <Setter Property="Template">
+      <ControlTemplate>
+        <Border Background="#00000000" />
+      </ControlTemplate>
+    </Setter>
+    <Setter Property="Foreground" Value="{DynamicResource fontColor}" />
+    <Setter Property="Cursor" Value="Hand" />
+  </Style>
+  <Style Selector="Button.caption-button:pointerover">
+    <Setter Property="Foreground" Value="{DynamicResource fontColor}" />
+  </Style>
+  <Style Selector="Button.caption-button:pressed">
+    <Setter Property="Foreground" Value="{DynamicResource fontColor}" />
+  </Style>
+  <Style Selector="Button.caption-button.close:pointerover">
+    <Setter Property="Foreground" Value="{DynamicResource errorColor}" />
+  </Style>
+  <Style Selector="Button.caption-button.close:pressed">
+    <Setter Property="Foreground" Value="{DynamicResource errorColor}" />
+  </Style>
+  <!-- MessageBox caption: a 30 px title bar with 22 px caption buttons. -->
+  <Style Selector="Grid.message-box-title-bar">
+    <Setter Property="Height" Value="30" />
+  </Style>
+  <Style Selector="TextBlock.message-box-title">
+    <Setter Property="Height" Value="30" />
+  </Style>
+  <Style Selector="Button.message-box-caption-button">
+    <Setter Property="Width" Value="22" />
+    <Setter Property="Height" Value="22" />
+  </Style>
+  <Style Selector="Button.caption-button:disabled">
+    <Setter Property="Foreground" Value="{DynamicResource disabledColor}" />
+    <Setter Property="Cursor" Value="Arrow" />
+  </Style>
+</Styles>

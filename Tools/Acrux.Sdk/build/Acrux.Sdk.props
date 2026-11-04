@@ -1,0 +1,49 @@
+<Project>
+  <!--
+    Everything a mod needs to draw UI through the Acrux UI mod, added by <PackageReference Include="Acrux.Sdk" />:
+      * Acrux.ClientApi.Generator (analyzer): emits ClientApi as generated source, compiled into this mod and packed by
+        MDK under MdkGenerated/: thin Acrux.* wrappers that forward to the Acrux UI mod at run time, plus the client of
+        its shared gaze/click tracker (LcdEyeTracking.Api: AcruxClient, PointerButton, PointerFlags).
+      * Acrux.Generator and Adk.Analyzer (analyzers, from the package's analyzers folder): XAML views to C#,
+        [PreviewWith] design data, the bridge member check, [ObservableProperty] and the other ADK generators.
+      * The files both generators read: adk.ini (feature switches) and mdk.ini (its `ignores` decide which files are
+        design-only code that MDK does not pack).
+  -->
+  <PropertyGroup>
+    <AcruxSdkRoot>$([System.IO.Path]::GetFullPath('$(MSBuildThisFileDirectory)..\'))</AcruxSdkRoot>
+    <AdkIniPath Condition="'$(AdkIniPath)' == ''">$(MSBuildProjectDirectory)\adk.ini</AdkIniPath>
+  </PropertyGroup>
+
+  <ItemGroup>
+    <CompilerVisibleProperty Include="RootNamespace" />
+    <CompilerVisibleProperty Include="ProjectDir" />
+    <CompilerVisibleProperty Include="Configuration" />
+    <CompilerVisibleProperty Include="Version" />
+    <CompilerVisibleItemMetadata Include="AdditionalFiles" MetadataName="Link" />
+
+    <AdditionalFiles Include="$(AdkIniPath)" Condition="Exists('$(AdkIniPath)')" />
+    <AdditionalFiles Include="$(MSBuildProjectDirectory)\mdk.ini" Condition="Exists('$(MSBuildProjectDirectory)\mdk.ini')" />
+    <AdditionalFiles Include="$(MSBuildProjectDirectory)\mdk.local.ini" Condition="Exists('$(MSBuildProjectDirectory)\mdk.local.ini')" />
+
+
+  </ItemGroup>
+
+  <!--
+    Live preview of the views in Rider (Acrux Preview plugin, tools/rider/acrux-preview.jar in this package): design-time
+    only, adds nothing to the mod. Debug builds write obj/acrux-preview.properties for the plugin.
+      * By default the preview host in this package (tools/preview/) renders the views; it finds Space Engineers
+        through Steam, or ACRUX_SE_BIN (its Bin64 folder).
+      * With an Acrux UI checkout (AcruxUiRoot, the ACRUX_UI_ROOT environment variable, or its path in acrux-ui.local
+        next to the project or one folder up), the host is built from that checkout instead: for Acrux development.
+    Optional per mod: AcruxPreviewDesignResources / AcruxPreviewDesignHost / AcruxPreviewDesignStyles (see AcruxPreview.props in Acrux UI).
+  -->
+  <PropertyGroup>
+    <AcruxUiRoot Condition="'$(AcruxUiRoot)' == ''">$(ACRUX_UI_ROOT)</AcruxUiRoot>
+    <AcruxUiRoot Condition="'$(AcruxUiRoot)' == '' And Exists('$(MSBuildProjectDirectory)\acrux-ui.local')">$([System.IO.File]::ReadAllText('$(MSBuildProjectDirectory)\acrux-ui.local').Trim())</AcruxUiRoot>
+    <AcruxUiRoot Condition="'$(AcruxUiRoot)' == '' And Exists('$(MSBuildProjectDirectory)\..\acrux-ui.local')">$([System.IO.File]::ReadAllText('$(MSBuildProjectDirectory)\..\acrux-ui.local').Trim())</AcruxUiRoot>
+    <_AcruxPreviewProps>$(AcruxUiRoot)\Tools\AcruxPreviewHost\AcruxPreview.props</_AcruxPreviewProps>
+    <AcruxPreviewFromCheckout Condition="'$(AcruxUiRoot)' != '' And Exists('$(_AcruxPreviewProps)')">true</AcruxPreviewFromCheckout>
+    <AcruxPreviewBundledHost>$(AcruxSdkRoot)tools\preview\AcruxPreviewHost.dll</AcruxPreviewBundledHost>
+  </PropertyGroup>
+  <Import Project="$(_AcruxPreviewProps)" Condition="'$(AcruxPreviewFromCheckout)' == 'true' And '$(Configuration)' == 'Debug'" />
+</Project>

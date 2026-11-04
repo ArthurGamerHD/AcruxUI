@@ -1,0 +1,6 @@
+namespace Adk.Mvvm
+{
+    public delegate void NotifyCollectionChangedEventHandler(
+        object sender,
+        NotifyCollectionChangedEventArgs e);
+}

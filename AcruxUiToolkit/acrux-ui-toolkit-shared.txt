@@ -1,0 +1,37 @@
+# Acrux source files that clients compile verbatim (pure values, no toolkit object model).
+Acrux/Core/Input/ICommand.cs
+Acrux/Core/Input/Key.cs
+Acrux/Core/Input/PointerCursor.cs
+Acrux/Core/Invalidation/UiInvalidation.cs
+Acrux/Core/Orientation.cs
+Acrux/Layout/GridLength.cs
+Acrux/Rendering/TextureSource.cs
+Acrux/Styling/RelativeRect.cs
+Acrux/Animation/EasingMode.cs
+Acrux/Animation/Easings.cs
+Acrux/Animation/AnimationConflict.cs
+Acrux/Animation/AnimationState.cs
+Acrux/Data/Converters/IValueConverter.cs
+Acrux/Extensions/ContextValueConverter.cs
+Acrux/Styling/IResourceProvider.cs
+# ADK's observable types (Adk.Mvvm), the base of every view model: each mod compiles its own copy and bindings
+# meet through the BCL INotifyPropertyChanged. Paths are relative to Framework/, as above.
+../External/Adk/Adk.Mvvm/INotifyCollectionChanged.cs
+../External/Adk/Adk.Mvvm/IObservableDictionary.cs
+../External/Adk/Adk.Mvvm/IObservableList.cs
+../External/Adk/Adk.Mvvm/NotifyCollectionChangedAction.cs
+../External/Adk/Adk.Mvvm/NotifyCollectionChangedEventArgs.cs
+../External/Adk/Adk.Mvvm/NotifyCollectionChangedEventHandler.cs
+../External/Adk/Adk.Mvvm/ObservableDictionary.cs
+../External/Adk/Adk.Mvvm/ObservableList.cs
+../External/Adk/Adk.Mvvm/ObservableObject.cs
+../External/Adk/Adk.Mvvm/ObservablePropertyAttribute.cs
+../External/Adk/Adk.Mvvm/PreviewWithAttribute.cs
+../External/Adk/Adk.Mvvm/ReadOnlyList.cs
+# Toolkit-owned value types ("./" = relative to the toolkit project).
+./Cartography/PlanetRoadLine.cs
+./Dialogs/HostStorage.cs
+# Toolkit-owned namespaces mirrored to clients (Space Engineers features built on Acrux, not part of it).
+mirror: Acrux.Cartography
+mirror: Acrux.Diagnostics
+mirror: Acrux.Dialogs

@@ -1,0 +1,29 @@
+<UserControl xmlns="https://github.com/ArthurGamerHD/AcruxUI"
+             xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+             xmlns:viewModel="using:AcruxAppTemplate.Client.ViewModel"
+             x:Class="AcruxAppTemplate.Client.View.CounterView"
+             x:DataType="viewModel:CounterViewModel"
+             Design.DataContext="{x:Static viewModel:CounterViewModelPreview.Default}">
+  <UserControl.Styles>
+    <!-- This mod's stylesheet (Content/Data/Gui/Styles/AcruxAppTemplate/AppStyle.xaml); it includes the toolkit's Fluent theme. -->
+    <StyleInclude Source="/Data/Gui/Styles/AcruxAppTemplate/AppStyle.xaml" />
+  </UserControl.Styles>
+  <!-- No background: the surface paints its own (the block's background colour). -->
+  <Border Padding="16">
+    <Grid RowDefinitions="Auto,*,Auto">
+      <TextBlock Classes="title" Text="{Binding Title}" />
+      <StackPanel Grid.Row="1" VerticalAlignment="Center" HorizontalAlignment="Center" Spacing="4">
+        <TextBlock Classes="display" Text="{Binding CountText}" />
+        <TextBlock Classes="caption" Text="{Binding Status}" />
+      </StackPanel>
+      <StackPanel Grid.Row="2" Orientation="Horizontal" HorizontalAlignment="Center" Spacing="10">
+        <Button Classes="app-button primary" Command="{Binding IncrementCommand}">
+          <TextBlock Text="+1" />
+        </Button>
+        <Button Classes="app-button" Command="{Binding ResetCommand}">
+          <TextBlock Text="Reset" />
+        </Button>
+      </StackPanel>
+    </Grid>
+  </Border>
+</UserControl>

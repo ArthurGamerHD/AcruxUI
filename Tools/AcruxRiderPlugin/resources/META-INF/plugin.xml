@@ -1,0 +1,17 @@
+<idea-plugin>
+  <id>acrux-ui.preview</id>
+  <name>Acrux Preview</name>
+  <version>0.1.0</version>
+  <vendor>Acrux UI</vendor>
+  <description><![CDATA[
+    Live preview for Acrux UI views (.axaml / .xaml files in the Acrux XML namespace) of Space Engineers mods built on
+    Acrux UI. The preview is rendered by the toolkit's preview host over Avalonia's remote previewer
+    protocol; the edited file needs no Avalonia references. Preview hosting follows AvaloniaRider (MIT); see
+    META-INF/THIRD-PARTY-NOTICES.md.
+  ]]></description>
+  <idea-version since-build="262"/>
+  <depends>com.intellij.modules.platform</depends>
+  <extensions defaultExtensionNs="com.intellij">
+    <fileEditorProvider implementation="acrux.preview.AcruxPreviewEditorProvider"/>
+  </extensions>
+</idea-plugin>

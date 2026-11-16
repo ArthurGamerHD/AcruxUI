@@ -101,17 +101,9 @@ namespace Acrux.Lcd
                 supported = textures != null && textures.IsSupported;
                 maxSide = textures == null ? 0 : textures.MaxTextureSide;
             }
-            if (!supported || maxSide <= 0 || requestedSize.X <= 0 || requestedSize.Y <= 0)
+            if (!supported)
                 return Vector2I.Zero;
-
-            int largestRequestedSide = Math.Max(requestedSize.X, requestedSize.Y);
-            if (largestRequestedSide <= maxSide)
-                return requestedSize;
-
-            double scale = maxSide / (double)largestRequestedSide;
-            return new Vector2I(
-                Math.Max(1, (int)Math.Round(requestedSize.X * scale)),
-                Math.Max(1, (int)Math.Round(requestedSize.Y * scale)));
+            return DynamicTextureSize.Fit(requestedSize, maxSide);
         }
 
         public bool Update(Action<PixelCanvas> paint)

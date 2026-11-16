@@ -443,7 +443,9 @@ namespace Acrux.Controls
             if (supported.X <= 0 || supported.Y <= 0)
                 return;
 
-            Vector4 radius = Vector4.Min(CornerRadius, new Vector4(Math.Min(supported.X, supported.Y) * 0.5f));
+            Vector4 radius = Vector4.Min(
+                CornerRadius * GetTextureScale(supported),
+                new Vector4(Math.Min(supported.X, supported.Y) * 0.5f));
             var fill = new BorderTextureCache.Key(supported, radius, Vector4.Zero, Color.White, Color.White, false);
             bool sameOwner = ReferenceEquals(_sharedTextureOwner, context.BorderTextures);
             if (_sharedTexture == null || !sameOwner || !_sharedTexture.CacheKey.Equals(fill))
@@ -470,14 +472,16 @@ namespace Acrux.Controls
                 return;
             }
 
+            float scale = GetTextureScale(supported);
+            Vector4 thickness = BorderThickness * scale;
             Vector4 radius = Vector4.Min(
-                Vector4.Max(cornerRadius, Vector4.Zero),
+                Vector4.Max(cornerRadius, Vector4.Zero) * scale,
                 new Vector4(Math.Min(supported.X, supported.Y) * 0.5f));
-            var ring = new BorderTextureCache.Key(supported, radius, BorderThickness, Color.White, Color.White, true);
+            var ring = new BorderTextureCache.Key(supported, radius, thickness, Color.White, Color.White, true);
             if (_ringTexture == null || !ReferenceEquals(_ringTextureOwner, context.BorderTextures) ||
                 !_ringTexture.CacheKey.Equals(ring))
             {
-                BorderTextureCache.Lease next = context.BorderTextures.AcquireRing(supported, radius, BorderThickness, context);
+                BorderTextureCache.Lease next = context.BorderTextures.AcquireRing(supported, radius, thickness, context);
                 ReleaseRingTexture();
                 _ringTexture = next;
             }
@@ -521,6 +525,15 @@ namespace Acrux.Controls
                 Math.Max(1, (int)Math.Round(Bounds.Width)),
                 Math.Max(1, (int)Math.Round(Bounds.Height)));
             return context.DynamicTextures.FitToSupportedSize(requested);
+        }
+
+        // Texture pixels per layout unit: the texture is allocated at a renderer-friendly size and stretched over
+        // Bounds, so lengths painted into it (corner radius, stroke) are scaled to match.
+        float GetTextureScale(Vector2I supported)
+        {
+            return Bounds.Width >= Bounds.Height
+                ? supported.X / Math.Max(1f, (float)Math.Round(Bounds.Width))
+                : supported.Y / Math.Max(1f, (float)Math.Round(Bounds.Height));
         }
 
         void DisposeTexture()

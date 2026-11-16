@@ -156,7 +156,8 @@ namespace Acrux.Cartography
                 heightPngs = new RawPngBitmap[ExportOrder.Length];
                 materialPngs = new RawPngBitmap[ExportOrder.Length];
                 var failures = new Exception[ExportOrder.Length * 2];
-                MyAPIGateway.Parallel.For(0, ExportOrder.Length * 2, job =>
+                // The paint threads' budget, off the game's worker pool.
+                Acrux.Render3D.PaintWorkers.For(0, ExportOrder.Length * 2, job =>
                 {
                     int faceIndex = job / 2;
                     bool material = (job & 1) == 1;

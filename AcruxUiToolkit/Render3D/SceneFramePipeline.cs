@@ -69,11 +69,12 @@ namespace Acrux.Render3D
             _jobs[_jobCount++] = job;
             try
             {
-                parallel.Start(() =>
+                // A background thread, not the game's worker pool: the simulation's parallel steps share that
+                // pool, and a frame painting there for a few milliseconds held one of its workers each time.
+                parallel.StartBackground(() =>
                 {
                     try
                     {
-                        // Every hardware thread, not only the game's worker pool.
                         frame.Paint(canvas, PaintWorkers.For);
                     }
                     catch (Exception exception)

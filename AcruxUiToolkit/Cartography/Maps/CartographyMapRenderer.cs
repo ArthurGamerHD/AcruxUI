@@ -126,6 +126,8 @@ namespace Acrux.Cartography.Maps
         const int PLANETARY_FACE_SIDE = 0;
         const int STAR_MAP_FACE_SIDE = 64;
         const int PREVIEW_FACE_SIDE = 16;
+        // UpdateRequests calls (host ticks) before a failed cubemap request is sent again: about five seconds.
+        const int FAILED_REQUEST_RETRY_TICKS = 300;
         const int MAXIMUM_STAR_MAP_REQUESTS = 24;
         public const float STAR_MINIMUM_ZOOM = 0.25f;
         public const float STAR_MAXIMUM_ZOOM = 108f;
@@ -196,6 +198,15 @@ namespace Acrux.Cartography.Maps
             public byte Style;
         }
 
+        struct OrbitRing
+        {
+            public Vector3D Center;
+            public Vector3D AxisX;
+            public Vector3D AxisY;
+            public double Radius;
+            public byte Style;
+        }
+
         struct StarCamera
         {
             public Vector3D PositionWorld;
@@ -217,6 +228,9 @@ namespace Acrux.Cartography.Maps
             new Dictionary<CubemapKey, PlanetColorCubemap>();
         readonly Dictionary<CubemapKey, PendingRequest> _pending =
             new Dictionary<CubemapKey, PendingRequest>();
+        // The _requestTick each cubemap request last failed at.
+        readonly Dictionary<CubemapKey, int> _failedRequests = new Dictionary<CubemapKey, int>();
+        int _requestTick;
         readonly Dictionary<CubemapKey, int> _versions =
             new Dictionary<CubemapKey, int>();
         readonly List<StarMapLabel> _starMapLabels = new List<StarMapLabel>();
@@ -329,6 +343,7 @@ namespace Acrux.Cartography.Maps
         {
             if (_disposed || _cartography == null || data == null)
                 return;
+            _requestTick++;
 
             if (state.RenderSkybox)
                 _cartography.Skybox.Update();
@@ -545,8 +560,9 @@ namespace Acrux.Cartography.Maps
 
         /// <summary>
         /// Renders an overscanned, player-centred tangent texture for the in-game
-        /// HUD. The square result can rotate behind its viewport without exposing
-        /// empty corners and shows nearby terrain instead of the complete globe.
+        /// HUD on the caller's thread. The square result can rotate behind its viewport without exposing
+        /// empty corners and shows nearby terrain instead of the complete globe. A host that updates every
+        /// few ticks uses <see cref="RequestPlanetaryMinimapRender"/> instead: this blocks for the whole paint.
         /// </summary>
         public void RenderPlanetaryMinimap(
             PixelCanvas canvas,
@@ -555,11 +571,41 @@ namespace Acrux.Cartography.Maps
             float zoom,
             float tangentExtentScale)
         {
-            canvas.Clear(Color.Transparent);
+            _pipeline.Render(canvas, slot => PreparePlanetaryMinimapFrame(canvas, data, state, zoom,
+                tangentExtentScale));
+        }
+
+        /// <summary>
+        /// <see cref="RenderPlanetaryMinimap"/> painted on the paint threads: the planet, view basis, cubemap and
+        /// mip are captured here, every pixel is sampled off the caller's thread. Shares the frames in flight
+        /// with <see cref="RequestRender"/> (false when both are painting); completions run in request order on
+        /// the caller's thread, delivered by <see cref="CompleteFinishedRender"/>.
+        /// </summary>
+        public bool RequestPlanetaryMinimapRender(
+            PixelCanvas canvas,
+            MapData data,
+            MapViewState state,
+            float zoom,
+            float tangentExtentScale,
+            Action<Exception> completed)
+        {
+            return !_disposed && _pipeline.Request(canvas,
+                slot => PreparePlanetaryMinimapFrame(canvas, data, state, zoom, tangentExtentScale), completed);
+        }
+
+        SceneFrame PreparePlanetaryMinimapFrame(
+            PixelCanvas canvas,
+            MapData data,
+            MapViewState state,
+            float zoom,
+            float tangentExtentScale)
+        {
+            var frame = new SceneFrame();
+            // The frame clears the canvas: no planet leaves it transparent.
             PlanetSnapshot snapshot = ResolvePlanet(data, state);
             MyPlanet planet = snapshot == null ? null : snapshot.Planet;
             if (planet == null || planet.MarkedForClose)
-                return;
+                return frame;
 
             Vector3 centerDirection;
             Vector3 mapRight;
@@ -572,7 +618,7 @@ namespace Acrux.Cartography.Maps
                     out mapRight,
                     out mapUp))
             {
-                return;
+                return frame;
             }
 
             zoom = MathHelper.Clamp(zoom, 0.25f, 8f);
@@ -585,31 +631,35 @@ namespace Acrux.Cartography.Maps
                 ? 0
                 : cubemap.SelectMipLevel(
                     canvas.Height * MathHelper.PiOver2 / Math.Max(0.0001f, verticalFov));
+            PlanetColorCubemap water = cubemap != null && state.WaterVisible ? cubemap.WaterOverlay : null;
 
             float centerX = canvas.Width * 0.5f;
             float centerY = canvas.Height * 0.5f;
-            for (int y = 0; y < canvas.Height; y++)
-            for (int x = 0; x < canvas.Width; x++)
+            frame.Commands.Add((target, first, end) =>
             {
-                float tangentX = (x + 0.5f - centerX) * tangentUnitsPerPixel;
-                float tangentY = (centerY - y - 0.5f) * tangentUnitsPerPixel;
-                Vector3 direction = centerDirection +
-                                    mapRight * tangentX +
-                                    mapUp * tangentY;
-                if (direction.Normalize() <= VECTOR_EPSILON)
-                    direction = centerDirection;
-
-                Color color = cubemap == null
-                    ? new Color(82, 86, 89, 245)
-                    : cubemap.Sample(direction, mip);
-                if (cubemap != null && state.WaterVisible && cubemap.WaterOverlay != null)
+                Color missing = new Color(82, 86, 89, 245);
+                for (int y = first; y < end; y++)
                 {
-                    Color water = cubemap.WaterOverlay.Sample(direction, mip);
-                    if (water.A != 0)
-                        color = CompositeWaterTint(color, water.A);
+                    float tangentY = (centerY - y - 0.5f) * tangentUnitsPerPixel;
+                    Vector3 row = centerDirection + mapUp * tangentY;
+                    for (int x = 0; x < target.Width; x++)
+                    {
+                        Vector3 direction = row + mapRight * ((x + 0.5f - centerX) * tangentUnitsPerPixel);
+                        if (direction.Normalize() <= VECTOR_EPSILON)
+                            direction = centerDirection;
+
+                        Color color = cubemap == null ? missing : cubemap.Sample(direction, mip);
+                        if (water != null)
+                        {
+                            Color tint = water.Sample(direction, mip);
+                            if (tint.A != 0)
+                                color = CompositeWaterTint(color, tint.A);
+                        }
+                        target.SetPixel(x, y, color);
+                    }
                 }
-                canvas.SetPixel(x, y, color);
-            }
+            });
+            return frame;
         }
 
         public bool TransferStarCameraToPlanet(
@@ -1465,6 +1515,16 @@ namespace Acrux.Cartography.Maps
                 return;
             }
 
+            // A request that failed is not sent again every tick: each failure raised Changed, so the host
+            // repainted and the next tick failed again.
+            int failedTick;
+            if (_failedRequests.TryGetValue(key, out failedTick))
+            {
+                if (_requestTick - failedTick < FAILED_REQUEST_RETRY_TICKS)
+                    return;
+                _failedRequests.Remove(key);
+            }
+
             PendingRequest pending;
             if (_pending.TryGetValue(key, out pending))
             {
@@ -1555,6 +1615,15 @@ namespace Acrux.Cartography.Maps
             for (int i = 0; i < loadedKeys.Count; i++)
                 _cubemaps.Remove(loadedKeys[i]);
 
+            var failedKeys = new List<CubemapKey>();
+            foreach (CubemapKey key in _failedRequests.Keys)
+            {
+                if (key.PlanetId == invalidated.PlanetEntityId)
+                    failedKeys.Add(key);
+            }
+            for (int i = 0; i < failedKeys.Count; i++)
+                _failedRequests.Remove(failedKeys[i]);
+
             var pendingKeys = new List<CubemapKey>();
             foreach (KeyValuePair<CubemapKey, PendingRequest> pair in _pending)
             {
@@ -1585,6 +1654,8 @@ namespace Acrux.Cartography.Maps
             _pending.Remove(key);
             if (result == null || !result.Success || result.ColorCubemap == null)
             {
+                if (result == null || !result.Cancelled)
+                    _failedRequests[key] = _requestTick;
                 if (result != null && !result.Cancelled)
                     Error = result.Error;
                 RaiseChanged();
@@ -1592,6 +1663,7 @@ namespace Acrux.Cartography.Maps
             }
 
             Error = null;
+            _failedRequests.Remove(key);
             StoreCubemap(key, result.ColorCubemap);
         }
 
@@ -1753,6 +1825,9 @@ namespace Acrux.Cartography.Maps
             {
                 double nearestStrokeDistance = Math.Max(cameraNearDepth, cameraDistance - cameraExtent);
                 double farthestStrokeDistance = cameraDistance + cameraExtent;
+                // Each ring is up to two thousand projected and clipped segments: only its parameters are
+                // captured here, and the rings are built on the paint coordinator before the bands draw.
+                var rings = new List<OrbitRing>();
 
                 for (int i = 0; i < count; i++)
                 {
@@ -1774,16 +1849,37 @@ namespace Acrux.Cartography.Maps
                             ? FOCUSED_ORBIT_STYLE
                             : DEFAULT_ORBIT_STYLE;
 
-                    BuildDepthTestedOrbitRing(
-                        slot.OrbitSegments,
-                        ringCenter,
-                        radial,
-                        tangent,
-                        orbitDistances[i],
-                        camera,
-                        nearestStrokeDistance,
-                        farthestStrokeDistance,
-                        orbitStyle);
+                    rings.Add(new OrbitRing
+                    {
+                        Center = ringCenter,
+                        AxisX = radial,
+                        AxisY = tangent,
+                        Radius = orbitDistances[i],
+                        Style = orbitStyle
+                    });
+                }
+
+                if (rings.Count > 0)
+                {
+                    StarCamera ringCamera = camera;
+                    List<DepthLineSegment> segments = slot.OrbitSegments;
+                    frame.Builds.Add(() =>
+                    {
+                        for (int r = 0; r < rings.Count; r++)
+                        {
+                            OrbitRing ring = rings[r];
+                            BuildDepthTestedOrbitRing(
+                                segments,
+                                ring.Center,
+                                ring.AxisX,
+                                ring.AxisY,
+                                ring.Radius,
+                                ringCamera,
+                                nearestStrokeDistance,
+                                farthestStrokeDistance,
+                                ring.Style);
+                        }
+                    });
                 }
             }
 
@@ -2016,10 +2112,18 @@ namespace Acrux.Cartography.Maps
             Vector3D viewD = view;
             Vector3D rightD = right;
             Vector3D upD = up;
+            double planetRadius = planet.Radius;
             var points = new List<Vector2[]>(roads.Count);
             var visibility = new List<bool[]>(roads.Count);
             var fillRadii = new List<double>(roads.Count);
             var fades = new List<byte>(roads.Count);
+            int roadTop = 0;
+            int roadBottom = 0;
+            // Sampling and projecting every road is up to a thousand points each: a build on the paint
+            // coordinator, before the bands, not work on the caller's thread. The road list is the cache's
+            // immutable listing, and every other input is captured above.
+            frame.Builds.Add(() =>
+            {
             float minY = float.MaxValue;
             float maxY = float.MinValue;
             double maxOuterRadius = 0;
@@ -2029,7 +2133,7 @@ namespace Acrux.Cartography.Maps
                 // Unknown widths draw as a full-strength one-pixel road.
                 double pixelWidth = road.WidthMeters <= 0.0
                     ? ROAD_FADE_START_PIXELS
-                    : road.WidthMeters * radius / planet.Radius;
+                    : road.WidthMeters * radius / planetRadius;
                 double fade = Math.Log(Math.Max(1e-9, pixelWidth) / ROAD_FADE_END_PIXELS) /
                               Math.Log(ROAD_FADE_START_PIXELS / ROAD_FADE_END_PIXELS);
                 byte fadeByte = (byte)Math.Round(255 * Math.Max(0, Math.Min(1, fade)));
@@ -2069,10 +2173,13 @@ namespace Acrux.Cartography.Maps
                 return;
 
             // Clamped before narrowing: at a high zoom the roads' extent can lie far beyond the integer range.
-            int roadTop = (int)Math.Max(-1.0, Math.Floor(minY - maxOuterRadius));
-            int roadBottom = (int)Math.Min(int.MaxValue - 1.0, Math.Ceiling(maxY + maxOuterRadius) + 1);
+            roadTop = (int)Math.Max(-1.0, Math.Floor(minY - maxOuterRadius));
+            roadBottom = (int)Math.Min(int.MaxValue - 1.0, Math.Ceiling(maxY + maxOuterRadius) + 1);
+            });
             frame.Commands.Add((target, first, end) =>
             {
+                if (points.Count == 0)
+                    return;
                 int top = Math.Max(first, Math.Max(0, roadTop));
                 int bottom = Math.Min(end, Math.Min(target.Height, roadBottom));
                 if (top >= bottom)

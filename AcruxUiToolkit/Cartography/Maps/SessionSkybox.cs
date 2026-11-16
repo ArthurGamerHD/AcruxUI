@@ -54,7 +54,7 @@ namespace Acrux.Cartography.Maps
             _pending = true;
             try
             {
-                MyAPIGateway.Parallel.Start(() =>
+                MyAPIGateway.Parallel.StartBackground(() =>
                 {
                     try { result = Load(path, mods); }
                     catch (Exception error) { failure = error; }

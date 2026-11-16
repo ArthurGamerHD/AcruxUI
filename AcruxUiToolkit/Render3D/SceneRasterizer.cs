@@ -154,7 +154,7 @@ namespace Acrux.Render3D
                     raster(items[k]);
                 return;
             }
-            MyAPIGateway.Parallel.For(0, count, raster);
+            PaintWorkers.For(0, count, raster);
         }
 
         /// <summary>

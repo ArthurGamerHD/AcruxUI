@@ -29,7 +29,7 @@ namespace Acrux.Render3D
         /// <summary>Screen pixels per voxel mesh cell: higher is coarser and faster.</summary>
         public double VoxelPixelsPerCell = 4d;
 
-        /// <summary>Threads painting a frame at once; 0 uses every hardware thread but two.</summary>
+        /// <summary>Threads painting frames at once, shared by every renderer; 0 uses half the hardware threads.</summary>
         public int PaintThreads = 0;
 
         internal static Render3DSettings Current

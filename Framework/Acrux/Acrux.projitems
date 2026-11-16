@@ -125,6 +125,7 @@
     <Compile Include="$(MSBuildThisFileDirectory)Markup\GeneratedTypeCatalog.cs" />
     <Compile Include="$(MSBuildThisFileDirectory)Rendering\BorderTextureCache.cs" />
     <Compile Include="$(MSBuildThisFileDirectory)Rendering\DrawCommand.cs" />
+    <Compile Include="$(MSBuildThisFileDirectory)Rendering\DynamicTextureSize.cs" />
     <Compile Include="$(MSBuildThisFileDirectory)Rendering\IDynamicTexture.cs" />
     <Compile Include="$(MSBuildThisFileDirectory)Rendering\ITextMetrics.cs" />
     <Compile Include="$(MSBuildThisFileDirectory)Rendering\ITextureResolver.cs" />

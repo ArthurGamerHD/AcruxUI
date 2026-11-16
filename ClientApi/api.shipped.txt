@@ -733,6 +733,7 @@ member Acrux.Cartography.Maps.CartographyMapRenderer.PanStarMap`0(object,global:
 member Acrux.Cartography.Maps.CartographyMapRenderer.RemoveModel`0(object) : System.Func<object, object, bool>
 member Acrux.Cartography.Maps.CartographyMapRenderer.RenderPlanetaryMinimap`0(object,object,object,float,float) : System.Action<object, object, object, object, float, float>
 member Acrux.Cartography.Maps.CartographyMapRenderer.Render`0(object,object,int,object) : System.Action<object, object, object, int, object>
+member Acrux.Cartography.Maps.CartographyMapRenderer.RequestPlanetaryMinimapRender`0(object,object,object,float,float,global::System.Action<global::System.Exception>) : System.Func<object, object, object, object, float, float, System.Action<System.Exception>, bool>
 member Acrux.Cartography.Maps.CartographyMapRenderer.RequestRender`0(object,object,int,object,global::System.Action<global::System.Exception>) : System.Func<object, object, object, int, object, System.Action<System.Exception>, bool>
 member Acrux.Cartography.Maps.CartographyMapRenderer.ScrollPlanetSurfaceView`0(object,object,int) : System.Func<object, object, object, int, bool>
 member Acrux.Cartography.Maps.CartographyMapRenderer.TransferPlanetCameraToStar`0(object,object) : System.Func<object, object, object, bool>

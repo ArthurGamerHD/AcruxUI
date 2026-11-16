@@ -914,7 +914,8 @@ namespace Acrux.Cartography
                 return;
             }
 
-            MyAPIGateway.Parallel.Start(
+            // Decoding takes up to seconds: a background thread, not the game's worker pool the simulation shares.
+            MyAPIGateway.Parallel.StartBackground(
                 delegate { Execute(job); },
                 delegate { Complete(job); });
         }

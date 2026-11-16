@@ -86,7 +86,8 @@ namespace Acrux.Cartography
             }
 
             PlanetOreDistributionResult result = null;
-            MyAPIGateway.Parallel.Start(
+            // A survey takes seconds: a background thread, not the game's worker pool the simulation shares.
+            MyAPIGateway.Parallel.StartBackground(
                 delegate
                 {
                     try

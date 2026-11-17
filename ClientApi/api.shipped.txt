@@ -153,6 +153,7 @@ enum Acrux.Controls.SizeToContent.WidthAndHeight = 3
 enum Acrux.Controls.TextTrimming : int
 enum Acrux.Controls.TextTrimming.CharacterEllipsis = 1
 enum Acrux.Controls.TextTrimming.None = 0
+enum Acrux.Controls.TextTrimming.PrefixCharacterEllipsis = 3
 enum Acrux.Controls.TextTrimming.WordEllipsis = 2
 enum Acrux.Controls.TextWrapping : int
 enum Acrux.Controls.TextWrapping.NoWrap = 0
@@ -2265,6 +2266,8 @@ member Acrux.Core.IInputSource.IsPrimaryButtonPressed`0() : System.Func<object, 
 member Acrux.Core.IInputSource.IsSecondaryButtonPressed`0() : System.Func<object, bool>
 member Acrux.Core.IInputSource.TryGetPointerPosition#out(out global::VRageMath.Vector2) : System.Func<object, object[]>
 member Acrux.Core.IInputSource.get_TextInput : System.Func<object, System.Collections.Generic.IEnumerable<char>>
+member Acrux.Core.Input.PointerEventArgs.ctor(object,object) : System.Func<object, object, object>
+member Acrux.Core.Input.PointerEventArgs.ctor(object,object)#remote : System.Func<object, object, object, object>
 member Acrux.Core.TemplatedControl.ArrangeTemplate`0(global::VRageMath.RectangleF) : System.Action<object, VRageMath.RectangleF>
 member Acrux.Core.TemplatedControl.EnsureTemplateApplied`0() : System.Action<object>
 member Acrux.Core.TemplatedControl.GetTemplateChild`0(string) : System.Func<object, string, object>
@@ -2326,7 +2329,11 @@ member Acrux.Core.VisualElement.SetGridPlacement`0(int,int,int,int) : System.Act
 member Acrux.Core.VisualElement.SetRect`0(global::VRageMath.RectangleF) : System.Action<object, VRageMath.RectangleF>
 member Acrux.Core.VisualElement.SetVisible`0(bool) : System.Action<object, bool>
 member Acrux.Core.VisualElement.ValidateChildForAdd`0(object) : System.Action<object, object>
+member Acrux.Core.VisualElement.add_PointerEntered : System.Action<object, System.Action<object, object>>
+member Acrux.Core.VisualElement.add_PointerExited : System.Action<object, System.Action<object, object>>
 member Acrux.Core.VisualElement.ctor()#remote : System.Func<object, object>
+member Acrux.Core.VisualElement.field_PointerEnteredEvent : System.Func<object>
+member Acrux.Core.VisualElement.field_PointerExitedEvent : System.Func<object>
 member Acrux.Core.VisualElement.get_AcceptsKeyboardFocus : System.Func<object, bool>
 member Acrux.Core.VisualElement.get_AnimationController : System.Func<object, object>
 member Acrux.Core.VisualElement.get_AttachedTextMetrics : System.Func<object, object>

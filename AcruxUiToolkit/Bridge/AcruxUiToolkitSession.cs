@@ -84,6 +84,7 @@ namespace Acrux.Bridge
             Acrux.Sprites.BlockSprites.ReleaseShared();
             Acrux.Toolkit.GeneratedTexturePool.Clear();
             Acrux.Diagnostics.CrashQrCode.Release();
+            Acrux.ScreenSpace.KeyboardCaptureOwners.Set.Clear();
         }
 
         const string COMMAND_PREFIX = "/acrux";

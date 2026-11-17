@@ -3240,6 +3240,10 @@ member Acrux.ScreenSpace.GuiAnimationSessionComponent.add_RedrawRequested : Syst
 member Acrux.ScreenSpace.GuiAnimationSessionComponent.ctor() : System.Func<object>
 member Acrux.ScreenSpace.GuiAnimationSessionComponent.get_Animations : System.Func<object>
 member Acrux.ScreenSpace.GuiAnimationSessionComponent.get_Instance : System.Func<object>
+member Acrux.ScreenSpace.KeyboardCapture.Acquire`0(string)s : System.Action<string>
+member Acrux.ScreenSpace.KeyboardCapture.IsCapturedBy`0(string)s : System.Func<string, bool>
+member Acrux.ScreenSpace.KeyboardCapture.Release`0(string)s : System.Action<string>
+member Acrux.ScreenSpace.KeyboardCapture.get_IsCaptured : System.Func<bool>
 member Acrux.ScreenSpace.ScreenSpaceDynamicTextureFactory.Create`0(string,global::VRageMath.Vector2I) : System.Func<object, string, VRageMath.Vector2I, object>
 member Acrux.ScreenSpace.ScreenSpaceDynamicTextureFactory.FitToSupportedSize`0(global::VRageMath.Vector2I) : System.Func<object, VRageMath.Vector2I, VRageMath.Vector2I>
 member Acrux.ScreenSpace.ScreenSpaceDynamicTextureFactory.ctor() : System.Func<object>

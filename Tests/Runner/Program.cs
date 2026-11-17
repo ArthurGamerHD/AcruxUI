@@ -390,6 +390,7 @@ static class Program
         StyleAnimationChecks();
         TransformParseChecks();
         TrimmingChecks();
+        ComboBoxPlacementChecks();
 
         Console.WriteLine(_failures == 0 ? "ALL CHECKS PASSED" : _failures + " CHECK(S) FAILED");
         return _failures == 0 ? 0 : 1;
@@ -450,6 +451,31 @@ static class Program
         Check(run("Destination Pad", 12f, prefix) == "Destinat\u2026Pad", "PrefixCharacterEllipsis keeps 8 leading characters and fills the rest from the end");
         Check(run("Destination Pad", 7f, prefix) == "Destin\u2026", "PrefixCharacterEllipsis keeps only the prefix when 8 characters or fewer fit");
         Check(run("Destination Pad", 12f, toolkit::Acrux.Controls.TextTrimming.CharacterEllipsis) == "Destination\u2026", "CharacterEllipsis still trims at the end");
+    }
+
+    // The drop-down opens on the side with room and is shortened to fit the surface.
+    static void ComboBoxPlacementChecks()
+    {
+        Func<float, toolkit::Acrux.Controls.ComboBoxOpenDirection, RectangleF> open = (spacer, direction) =>
+        {
+            var combo = new toolkit::Acrux.Controls.ComboBox(new[] { "a", "b", "c", "d", "e" }) { Height = 24, OpenDirection = direction };
+            var panel = new toolkit::Acrux.Layout.StackPanel();
+            panel.Add(new toolkit::Acrux.Controls.Border { Height = spacer });
+            panel.Add(combo);
+            var host = new toolkit::Acrux.Lcd.LcdGuiHost(SurfaceMock.Create(new Vector2(128, 128)), panel);
+            host.Arrange(new RectangleF(0, 0, 128, 128));
+            host.Draw(new List<MySprite>());
+            combo.Open();
+            var popup = (toolkit::Acrux.Core.VisualElement)typeof(toolkit::Acrux.Controls.ComboBox)
+                .GetField("_popup", BindingFlags.Instance | BindingFlags.NonPublic).GetValue(combo);
+            return popup.Bounds;
+        };
+        RectangleF low = open(100f, toolkit::Acrux.Controls.ComboBoxOpenDirection.Down);
+        Check(low.Bottom <= 100.5f && low.Y >= -0.5f, "a combo box near the bottom opens upward, within the surface (" + low + ")");
+        RectangleF high = open(4f, toolkit::Acrux.Controls.ComboBoxOpenDirection.Up);
+        Check(high.Y >= 27.5f && high.Bottom <= 128.5f, "a combo box near the top opens downward even when Up is preferred (" + high + ")");
+        RectangleF fits = open(0f, toolkit::Acrux.Controls.ComboBoxOpenDirection.Down);
+        Check(Math.Abs(fits.Y - 24f) < 0.5f && fits.Bottom <= 128.5f, "a drop-down with room below opens downward (" + fits + ")");
     }
 
     // Avalonia's <Style.Animations>, toolkit side, on a hand-driven frame clock.

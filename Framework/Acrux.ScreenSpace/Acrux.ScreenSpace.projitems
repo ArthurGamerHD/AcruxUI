@@ -9,6 +9,7 @@
     <Compile Include="$(MSBuildThisFileDirectory)DynamicMapTexture.cs" />
     <Compile Include="$(MSBuildThisFileDirectory)GameUiOpacity.cs" />
     <Compile Include="$(MSBuildThisFileDirectory)GuiAnimationSessionComponent.cs" />
+    <Compile Include="$(MSBuildThisFileDirectory)KeyboardCapture.cs" />
     <Compile Include="$(MSBuildThisFileDirectory)ScreenSpaceInputSource.cs" />
     <Compile Include="$(MSBuildThisFileDirectory)ScreenSpaceRenderer.cs" />
     <Compile Include="$(MSBuildThisFileDirectory)ScreenSpaceTextMetrics.cs" />

@@ -332,6 +332,8 @@ namespace Acrux.Controls
                 ItemsSource = options;
         }
 
+        /// <summary>The preferred side for the drop-down. It opens on the other side when it does not fit and that side
+        /// has more room, and is shortened to the room on the side it opens.</summary>
         public ComboBoxOpenDirection OpenDirection { get; set; } = ComboBoxOpenDirection.Down;
 
         public bool IsOpen
@@ -586,7 +588,8 @@ namespace Acrux.Controls
                     {
                         Text = LabelOf(option),
                         TextAlignment = HorizontalAlignment.Left,
-                        VerticalTextAlignment = VerticalAlignment.Center
+                        VerticalTextAlignment = VerticalAlignment.Center,
+                        TextTrimming = TextTrimming.PrefixCharacterEllipsis
                     }
                     : null;
                 Border border = _popupPanel.Add(new Border
@@ -691,10 +694,25 @@ namespace Acrux.Controls
             float height = BorderThickness.Y + BorderThickness.W + popupPadding.Y + popupPadding.W +
                 _items.Count * OptionHeight + Math.Max(0, _items.Count - 1) * spacing;
             height = Math.Min(Math.Max(0f, MaxDropDownHeight), height);
-            float y = OpenDirection == ComboBoxOpenDirection.Up
-                ? Bounds.Y - height
-                : Bounds.Bottom;
+            RectangleF area = ConstraintBounds();
+            float below = Math.Max(0f, area.Bottom - Bounds.Bottom);
+            float above = Math.Max(0f, Bounds.Y - area.Y);
+            bool up = OpenDirection == ComboBoxOpenDirection.Up;
+            float preferred = up ? above : below;
+            float other = up ? below : above;
+            if (height > preferred && other > preferred)
+                up = !up;
+            height = Math.Min(height, up ? above : below);
+            float y = up ? Bounds.Y - height : Bounds.Bottom;
             _popup.Arrange(new RectangleF(Bounds.X, y, Bounds.Width, Math.Max(1f, height)));
+        }
+
+        RectangleF ConstraintBounds()
+        {
+            VisualElement root = this;
+            for (VisualElement next = root.Parent ?? root.OverlayOwner; next != null; next = next.Parent ?? next.OverlayOwner)
+                root = next;
+            return root.Bounds;
         }
 
         string GetDisplayText()

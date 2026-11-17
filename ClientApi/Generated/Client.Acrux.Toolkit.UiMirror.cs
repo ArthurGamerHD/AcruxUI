@@ -179,6 +179,7 @@ namespace Acrux.Toolkit
             global::Acrux.Rendering.__UiBridge_Acrux_Rendering_RenderContext.Load(api);
             global::Acrux.ScreenSpace.__UiBridge_Acrux_ScreenSpace_DynamicMapTexture.Load(api);
             global::Acrux.ScreenSpace.__UiBridge_Acrux_ScreenSpace_GuiAnimationSessionComponent.Load(api);
+            global::Acrux.ScreenSpace.__UiBridge_Acrux_ScreenSpace_KeyboardCapture.Load(api);
             global::Acrux.ScreenSpace.__UiBridge_Acrux_ScreenSpace_ScreenSpaceDynamicTextureFactory.Load(api);
             global::Acrux.ScreenSpace.__UiBridge_Acrux_ScreenSpace_ScreenSpaceInputSource.Load(api);
             global::Acrux.ScreenSpace.__UiBridge_Acrux_ScreenSpace_ScreenSpaceRenderer.Load(api);

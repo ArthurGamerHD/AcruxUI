@@ -38,6 +38,8 @@ public sealed class AcruxViewGenerator : IIncrementalGenerator
         "ACRUX005", "Unsupported Acrux markup", "{0}");
     static readonly DiagnosticDescriptor UnobservableDataType = CreateDiagnostic(
         "ACRUX010", "View models must be observable", "{0}");
+    static readonly DiagnosticDescriptor UnknownEventHandler = CreateDiagnostic(
+        "ACRUX012", "Unknown Acrux event handler", "{0}");
     static readonly DiagnosticDescriptor UnresolvedStyleInclude = new DiagnosticDescriptor(
         "ACRUX006",
         "Unresolved Acrux StyleInclude",
@@ -501,6 +503,13 @@ public sealed class AcruxViewGenerator : IIncrementalGenerator
         builder.AppendLine("        void global::Acrux.Markup.IHotReloadableView.RegisterHotReloadTypes(global::Acrux.Markup.HotReloadContext context)");
         builder.AppendLine("        {");
         HotReloadTables.Emit(builder, emitter.ElementTypes, emitter.ElementAliases, emitter.DataTypes, compilation);
+        foreach (EventHandlerUse handler in emitter.EventHandlers)
+        {
+            builder.Append("            context.Handler(").Append(SymbolDisplay.FormatLiteral(handler.Event, true)).Append(", ")
+                .Append(SymbolDisplay.FormatLiteral(handler.Method, true)).Append(", new ")
+                .Append(handler.DelegateType.ToDisplayString(SymbolDisplayFormat.FullyQualifiedFormat))
+                .Append("(this.").Append(handler.Method).AppendLine("));");
+        }
         foreach (KeyValuePair<string, INamedTypeSymbol> extension in emitter.MarkupExtensions)
         {
             builder.Append("            context.Types.RegisterMarkupExtension(")
@@ -589,8 +598,11 @@ public sealed class AcruxViewGenerator : IIncrementalGenerator
         readonly Dictionary<string, string> _elementAliases = new(StringComparer.Ordinal);
         readonly Dictionary<string, ITypeSymbol> _dataTypes = new(StringComparer.Ordinal);
         readonly Dictionary<string, INamedTypeSymbol> _markupExtensions = new(StringComparer.Ordinal);
+        readonly List<EventHandlerUse> _eventHandlers = new();
+        INamedTypeSymbol _viewType;
 
         public bool HasErrors { get; private set; }
+        public IReadOnlyList<EventHandlerUse> EventHandlers => _eventHandlers;
 
         // The bound properties a design view model may supply instead of the x:DataType: each one a bodiless static
         // partial method in the shipped source (the compiler drops its calls), implemented only in the design-build
@@ -672,6 +684,7 @@ public sealed class AcruxViewGenerator : IIncrementalGenerator
             ITypeSymbol dataType)
         {
             var builder = new StringBuilder();
+            _viewType = viewType;
             EmitAttributes(builder, root, "this", viewType, dataType, false, 3);
 
             foreach (XElement propertyElement in GetPropertyElements(root))
@@ -773,6 +786,63 @@ public sealed class AcruxViewGenerator : IIncrementalGenerator
             return new EmittedNode(variable, type);
         }
 
+        // Avalonia's event attribute: the value names an instance method of the x:Class whose parameters accept the
+        // event's (sender, args), subscribed when the view is built.
+        void EmitEventHandler(StringBuilder builder, string target, IEventSymbol routed, string value, bool insideTemplate, int indent)
+        {
+            string handler = (value ?? string.Empty).Trim();
+            if (insideTemplate)
+            {
+                Error(UnsupportedMarkup, "Event handlers inside DataTemplate are not supported yet ('" + routed.Name + "').");
+                return;
+            }
+            IMethodSymbol invoke = (routed.Type as INamedTypeSymbol)?.DelegateInvokeMethod;
+            string signature = invoke == null
+                ? routed.Type.ToDisplayString()
+                : "void " + handler + "(" + string.Join(", ", invoke.Parameters.Select((p, i) => p.Type.ToDisplayString() + " " + (i == 0 ? "sender" : i == 1 ? "e" : p.Name))) + ")";
+            if (!SyntaxFacts.IsValidIdentifier(handler))
+            {
+                Error(UnknownEventHandler, "'" + handler + "' is not a valid handler name for event '" + routed.Name + "'.");
+                return;
+            }
+            if (invoke == null || FindEventHandler(_viewType, handler, invoke) == null)
+            {
+                Error(UnknownEventHandler, "Event '" + routed.Name + "' needs a method '" + signature + "' on '" +
+                                           _viewType.ToDisplayString() + "'.");
+                return;
+            }
+            AppendIndent(builder, indent);
+            builder.Append(target).Append('.').Append(routed.Name).Append(" += this.").Append(handler).AppendLine(";");
+            if (!_eventHandlers.Any(use => use.Event == routed.Name && use.Method == handler))
+                _eventHandlers.Add(new EventHandlerUse(routed.Name, handler, routed.Type));
+        }
+
+        IMethodSymbol FindEventHandler(INamedTypeSymbol type, string name, IMethodSymbol invoke)
+        {
+            for (INamedTypeSymbol current = type; current != null; current = current.BaseType)
+            {
+                foreach (IMethodSymbol method in current.GetMembers(name).OfType<IMethodSymbol>())
+                {
+                    if (method.IsStatic || !method.ReturnsVoid || method.IsGenericMethod ||
+                        method.Parameters.Length != invoke.Parameters.Length)
+                        continue;
+                    if (!SymbolEqualityComparer.Default.Equals(current, type) &&
+                        method.DeclaredAccessibility == Accessibility.Private)
+                        continue;
+                    bool accepts = true;
+                    for (int i = 0; i < method.Parameters.Length && accepts; i++)
+                    {
+                        IParameterSymbol parameter = method.Parameters[i];
+                        Conversion conversion = _compilation.ClassifyConversion(invoke.Parameters[i].Type, parameter.Type);
+                        accepts = parameter.RefKind == RefKind.None && (conversion.IsIdentity || conversion.IsImplicit && conversion.IsReference);
+                    }
+                    if (accepts)
+                        return method;
+                }
+            }
+            return null;
+        }
+
         void EmitAttributes(
             StringBuilder builder,
             XElement element,
@@ -830,6 +900,13 @@ public sealed class AcruxViewGenerator : IIncrementalGenerator
                         builder.Append(definitions);
                         builder.AppendLine(");");
                     }
+                    continue;
+                }
+
+                IEventSymbol routed = propertyName.IndexOf('.') < 0 ? FindEvent(targetType, propertyName) : null;
+                if (routed != null)
+                {
+                    EmitEventHandler(builder, target, routed, attribute.Value, insideTemplate, indent);
                     continue;
                 }
 
@@ -2180,6 +2257,19 @@ public sealed class AcruxViewGenerator : IIncrementalGenerator
         return key.Length > 0;
     }
 
+    static IEventSymbol FindEvent(INamedTypeSymbol type, string name)
+    {
+        for (INamedTypeSymbol current = type; current != null; current = current.BaseType)
+        {
+            IEventSymbol found = current.GetMembers(name)
+                .OfType<IEventSymbol>()
+                .FirstOrDefault(item => !item.IsStatic && item.DeclaredAccessibility == Accessibility.Public);
+            if (found != null)
+                return found;
+        }
+        return null;
+    }
+
     static IPropertySymbol FindProperty(INamedTypeSymbol type, string name)
     {
         for (INamedTypeSymbol current = type; current != null; current = current.BaseType)
@@ -2353,6 +2443,20 @@ public sealed class AcruxViewGenerator : IIncrementalGenerator
                 ? string.Empty
                 : NormalizeAssetPath(path.Substring(content + marker.Length));
         }
+    }
+
+    sealed class EventHandlerUse
+    {
+        public EventHandlerUse(string eventName, string method, ITypeSymbol delegateType)
+        {
+            Event = eventName;
+            Method = method;
+            DelegateType = delegateType;
+        }
+
+        public string Event { get; }
+        public string Method { get; }
+        public ITypeSymbol DelegateType { get; }
     }
 
     sealed class NamedElement

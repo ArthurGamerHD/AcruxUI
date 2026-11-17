@@ -1642,7 +1642,9 @@ public sealed class AcruxUiToolkitMirrorGenerator : IIncrementalGenerator
                 client.Append("        ").Append(st).Append("bool ").Append(subscribed).AppendLine(";");
                 client.Append("        ").Append(AccessText(e)).Append(' ').Append(HidesBase(e)).Append(st).Append("event ").Append(map.Client).Append(' ').Append(e.Name).AppendLine();
                 client.AppendLine("        {");
-                client.Append("            add { ").Append(handlers).Append(" += value; if (!").Append(subscribed).Append(") { ").Append(subscribed).Append(" = true; ")
+                // An older toolkit may not export the event: it then never fires, instead of the subscription throwing.
+                client.Append("            add { ").Append(handlers).Append(" += value; if (!").Append(subscribed).Append(" && ").Append(addField)
+                    .Append(" != null) { ").Append(subscribed).Append(" = true; ")
                     .Append(addField).Append('(').Append(instance ? "Native, " : "")
                     .Append(map.C2W("new " + map.Client + "((" + string.Join(", ", ips) + ") => { var __h = " + handlers + "; if (__h != null) __h(" + string.Join(", ", ips) + "); })"))
                     .AppendLine("); } }");

@@ -25,76 +25,94 @@ namespace Acrux.Core
         public void SetVisible(bool @visible)  { __UiBridge_Acrux_Core_VisualElement.m24(Native, @visible); }
         public virtual global::Acrux.Core.VisualElement SetEnabled(bool @enabled)  { return global::Acrux.Toolkit.Ui.Wrap<global::Acrux.Core.VisualElement>(__UiBridge_Acrux_Core_VisualElement.m25(Native, @enabled)); }
         public virtual void SetRect(global::VRageMath.RectangleF @bounds)  { __UiBridge_Acrux_Core_VisualElement.m26(Native, @bounds); }
-        public bool IsPointerOver { get { return __UiBridge_Acrux_Core_VisualElement.m27(Native); } internal set { __UiBridge_Acrux_Core_VisualElement.m28(Native, value); } }
-        public bool IsPressed { get { return __UiBridge_Acrux_Core_VisualElement.m29(Native); } internal set { __UiBridge_Acrux_Core_VisualElement.m30(Native, value); } }
-        public bool IsFocused { get { return __UiBridge_Acrux_Core_VisualElement.m31(Native); } internal set { __UiBridge_Acrux_Core_VisualElement.m32(Native, value); } }
-        public bool IsFocusWithin { get { return __UiBridge_Acrux_Core_VisualElement.m33(Native); } internal set { __UiBridge_Acrux_Core_VisualElement.m34(Native, value); } }
-        public bool IsFocusVisible { get { return __UiBridge_Acrux_Core_VisualElement.m35(Native); } internal set { __UiBridge_Acrux_Core_VisualElement.m36(Native, value); } }
-        public bool AcceptsKeyboardFocus { get { return __UiBridge_Acrux_Core_VisualElement.m37(Native); } }
-        public bool IsEffectivelyEnabled { get { return __UiBridge_Acrux_Core_VisualElement.m38(Native); } }
-        public object DataContext { get { return global::Acrux.Toolkit.Ui.FromWire(__UiBridge_Acrux_Core_VisualElement.m39(Native)); } set { __UiBridge_Acrux_Core_VisualElement.m40(Native, global::Acrux.Toolkit.Ui.ToWire(value)); } }
-        public void ClearDataContext()  { __UiBridge_Acrux_Core_VisualElement.m41(Native); }
-        public global::Acrux.Core.Binding.CompiledBinding<TSource, TValue> Bind<TSource, TValue>(global::System.Func<TSource, TValue> @getter, global::System.Action<TValue> @setter, string @propertyName) where TSource : class { return global::Acrux.Toolkit.Ui.Wrap<global::Acrux.Core.Binding.CompiledBinding<TSource, TValue>>(__UiBridge_Acrux_Core_VisualElement.m42(Native, ((global::System.Func<global::System.Func<TSource, TValue>, global::System.Func<object, object>>)(__d155 => __d155 == null ? null : new global::System.Func<object, object>((__p155_0) => global::Acrux.Toolkit.Ui.ToWire(__d155(global::Acrux.Toolkit.Ui.FromWire<TSource>(__p155_0))))))(@getter), ((global::System.Func<global::System.Action<TValue>, global::System.Action<object>>)(__d156 => __d156 == null ? null : new global::System.Action<object>((__p156_0) => __d156(global::Acrux.Toolkit.Ui.FromWire<TValue>(__p156_0)))))(@setter), @propertyName), __n => { var __w = new global::Acrux.Core.Binding.CompiledBinding<TSource, TValue>(global::Acrux.Toolkit.Deferred.Value); __w.__AttachNative(__n); return __w; }); }
-        public T Add<T>(T @child) where T : global::Acrux.Core.VisualElement { return global::Acrux.Toolkit.Ui.Wrap<T>(__UiBridge_Acrux_Core_VisualElement.m43(Native, global::Acrux.Toolkit.Ui.Native(@child))); }
-        public T AddChild<T>(T @child) where T : global::Acrux.Core.VisualElement { return global::Acrux.Toolkit.Ui.Wrap<T>(__UiBridge_Acrux_Core_VisualElement.m44(Native, global::Acrux.Toolkit.Ui.Native(@child))); }
-        protected virtual void ValidateChildForAdd(global::Acrux.Core.VisualElement @child)  { __UiBridge_Acrux_Core_VisualElement.m45(Native, global::Acrux.Toolkit.Ui.Native(@child)); }
-        public void AddChildren(global::System.Collections.Generic.IEnumerable<global::Acrux.Core.VisualElement> @children)  { __UiBridge_Acrux_Core_VisualElement.m46(Native, global::Acrux.Toolkit.Ui.ListToWire<global::Acrux.Core.VisualElement>(@children, __x68 => (object)global::Acrux.Toolkit.Ui.Native(__x68))); }
-        public virtual bool RemoveChild(global::Acrux.Core.VisualElement @child)  { return __UiBridge_Acrux_Core_VisualElement.m47(Native, global::Acrux.Toolkit.Ui.Native(@child)); }
-        public virtual void ClearChildren()  { __UiBridge_Acrux_Core_VisualElement.m48(Native); }
-        public bool MoveChild(global::Acrux.Core.VisualElement @child, int @index)  { return __UiBridge_Acrux_Core_VisualElement.m49(Native, global::Acrux.Toolkit.Ui.Native(@child), @index); }
-        internal void InheritDataContext(object @value)  { __UiBridge_Acrux_Core_VisualElement.m50(Native, global::Acrux.Toolkit.Ui.ToWire(@value)); }
-        public global::Acrux.Core.Binding.CompiledBinding<TSource, TValue> BindDataContext<TSource, TValue>(global::System.Func<TSource, TValue> @getter, string @propertyName) where TSource : class { return global::Acrux.Toolkit.Ui.Wrap<global::Acrux.Core.Binding.CompiledBinding<TSource, TValue>>(__UiBridge_Acrux_Core_VisualElement.m51(Native, ((global::System.Func<global::System.Func<TSource, TValue>, global::System.Func<object, object>>)(__d161 => __d161 == null ? null : new global::System.Func<object, object>((__p161_0) => global::Acrux.Toolkit.Ui.ToWire(__d161(global::Acrux.Toolkit.Ui.FromWire<TSource>(__p161_0))))))(@getter), @propertyName), __n => { var __w = new global::Acrux.Core.Binding.CompiledBinding<TSource, TValue>(global::Acrux.Toolkit.Deferred.Value); __w.__AttachNative(__n); return __w; }); }
-        internal global::Acrux.Core.VisualElement HitTest(global::VRageMath.Vector2 @point)  { return global::Acrux.Toolkit.Ui.Wrap<global::Acrux.Core.VisualElement>(__UiBridge_Acrux_Core_VisualElement.m52(Native, @point)); }
-        protected virtual bool HitTestSelf(global::VRageMath.Vector2 @point)  { return __UiBridge_Acrux_Core_VisualElement.m53(Native, @point); }
-        internal virtual global::VRageMath.Vector2 MapPointToChildren(global::VRageMath.Vector2 @point)  { return __UiBridge_Acrux_Core_VisualElement.m54(Native, @point); }
-        internal void DrawTree(global::Acrux.Rendering.RenderContext @context)  { __UiBridge_Acrux_Core_VisualElement.m55(Native, global::Acrux.Toolkit.Ui.Native(@context)); }
-        protected virtual global::System.IDisposable BeginChildDraw(global::Acrux.Rendering.RenderContext @context, global::Acrux.Core.VisualElement @child)  { return __UiBridge_Acrux_Core_VisualElement.m56(Native, global::Acrux.Toolkit.Ui.Native(@context), global::Acrux.Toolkit.Ui.Native(@child)); }
-        protected virtual void DrawSelf(global::Acrux.Rendering.RenderContext @context)  { __UiBridge_Acrux_Core_VisualElement.m57(Native, global::Acrux.Toolkit.Ui.Native(@context)); }
-        internal virtual bool OverlayContains(global::VRageMath.Vector2 @point)  { return __UiBridge_Acrux_Core_VisualElement.m58(Native, @point); }
-        internal virtual void PointerPressed(global::VRageMath.Vector2 @point)  { __UiBridge_Acrux_Core_VisualElement.m59(Native, @point); }
-        internal virtual void PointerMoved(global::VRageMath.Vector2 @point, global::VRageMath.Vector2 @delta)  { __UiBridge_Acrux_Core_VisualElement.m60(Native, @point, @delta); }
-        internal virtual void PointerReleased(global::VRageMath.Vector2 @point, bool @clicked)  { __UiBridge_Acrux_Core_VisualElement.m61(Native, @point, @clicked); }
-        internal virtual void PointerCaptureLost()  { __UiBridge_Acrux_Core_VisualElement.m62(Native); }
-        internal virtual void PointerHovered(global::VRageMath.Vector2 @point)  { __UiBridge_Acrux_Core_VisualElement.m63(Native, @point); }
-        internal virtual global::Acrux.Core.Input.PointerCursor GetPointerCursor(global::VRageMath.Vector2 @point)  { return (global::Acrux.Core.Input.PointerCursor)(__UiBridge_Acrux_Core_VisualElement.m64(Native, @point)); }
-        internal virtual bool PointerScrolled(global::VRageMath.Vector2 @point, int @delta)  { return __UiBridge_Acrux_Core_VisualElement.m65(Native, @point, @delta); }
-        internal virtual void KeyboardInput(global::Acrux.Core.IInputSource @input)  { __UiBridge_Acrux_Core_VisualElement.m66(Native, global::Acrux.Core.__UiBridge_Acrux_Core_IInputSource.Export(@input)); }
-        internal virtual void MiddlePointerPressed(global::VRageMath.Vector2 @point)  { __UiBridge_Acrux_Core_VisualElement.m67(Native, @point); }
-        internal virtual void MiddlePointerMoved(global::VRageMath.Vector2 @point, global::VRageMath.Vector2 @delta)  { __UiBridge_Acrux_Core_VisualElement.m68(Native, @point, @delta); }
-        internal virtual void MiddlePointerReleased(global::VRageMath.Vector2 @point)  { __UiBridge_Acrux_Core_VisualElement.m69(Native, @point); }
-        internal virtual void SecondaryPointerPressed(global::VRageMath.Vector2 @point)  { __UiBridge_Acrux_Core_VisualElement.m70(Native, @point); }
-        internal virtual void SecondaryPointerMoved(global::VRageMath.Vector2 @point, global::VRageMath.Vector2 @delta)  { __UiBridge_Acrux_Core_VisualElement.m71(Native, @point, @delta); }
-        internal virtual void SecondaryPointerReleased(global::VRageMath.Vector2 @point, bool @clicked)  { __UiBridge_Acrux_Core_VisualElement.m72(Native, @point, @clicked); }
-        internal bool HandlesSecondaryClick { get { return __UiBridge_Acrux_Core_VisualElement.m73(Native); } }
-        public global::System.Action ContextRequested { get { return __UiBridge_Acrux_Core_VisualElement.m74(Native); } set { __UiBridge_Acrux_Core_VisualElement.m75(Native, value); } }
+        static global::Acrux.Interactivity.RoutedEvent<global::Acrux.Core.Input.PointerEventArgs> __field_PointerEnteredEvent;
+        public static global::Acrux.Interactivity.RoutedEvent<global::Acrux.Core.Input.PointerEventArgs> PointerEnteredEvent { get { return __field_PointerEnteredEvent ?? (__field_PointerEnteredEvent = global::Acrux.Toolkit.Ui.Wrap<global::Acrux.Interactivity.RoutedEvent<global::Acrux.Core.Input.PointerEventArgs>>(__UiBridge_Acrux_Core_VisualElement.m27(), __n => { var __w = new global::Acrux.Interactivity.RoutedEvent<global::Acrux.Core.Input.PointerEventArgs>(global::Acrux.Toolkit.Deferred.Value); __w.__AttachNative(__n); return __w; })); } }
+        static global::Acrux.Interactivity.RoutedEvent<global::Acrux.Core.Input.PointerEventArgs> __field_PointerExitedEvent;
+        public static global::Acrux.Interactivity.RoutedEvent<global::Acrux.Core.Input.PointerEventArgs> PointerExitedEvent { get { return __field_PointerExitedEvent ?? (__field_PointerExitedEvent = global::Acrux.Toolkit.Ui.Wrap<global::Acrux.Interactivity.RoutedEvent<global::Acrux.Core.Input.PointerEventArgs>>(__UiBridge_Acrux_Core_VisualElement.m28(), __n => { var __w = new global::Acrux.Interactivity.RoutedEvent<global::Acrux.Core.Input.PointerEventArgs>(global::Acrux.Toolkit.Deferred.Value); __w.__AttachNative(__n); return __w; })); } }
+        global::System.Action<object, global::Acrux.Core.Input.PointerEventArgs> __event_PointerEntered;
+        bool __event_PointerEntered_subscribed;
+        public event global::System.Action<object, global::Acrux.Core.Input.PointerEventArgs> PointerEntered
+        {
+            add { __event_PointerEntered += value; if (!__event_PointerEntered_subscribed && __UiBridge_Acrux_Core_VisualElement.m29 != null) { __event_PointerEntered_subscribed = true; __UiBridge_Acrux_Core_VisualElement.m29(Native, ((global::System.Func<global::System.Action<object, global::Acrux.Core.Input.PointerEventArgs>, global::System.Action<object, object>>)(__d154 => __d154 == null ? null : new global::System.Action<object, object>((__p154_0, __p154_1) => __d154(global::Acrux.Toolkit.Ui.FromWire(__p154_0), global::Acrux.Toolkit.Ui.Wrap<global::Acrux.Core.Input.PointerEventArgs>(__p154_1)))))(new global::System.Action<object, global::Acrux.Core.Input.PointerEventArgs>((__a0, __a1) => { var __h = __event_PointerEntered; if (__h != null) __h(__a0, __a1); }))); } }
+            remove { __event_PointerEntered -= value; }
+        }
+        global::System.Action<object, global::Acrux.Core.Input.PointerEventArgs> __event_PointerExited;
+        bool __event_PointerExited_subscribed;
+        public event global::System.Action<object, global::Acrux.Core.Input.PointerEventArgs> PointerExited
+        {
+            add { __event_PointerExited += value; if (!__event_PointerExited_subscribed && __UiBridge_Acrux_Core_VisualElement.m30 != null) { __event_PointerExited_subscribed = true; __UiBridge_Acrux_Core_VisualElement.m30(Native, ((global::System.Func<global::System.Action<object, global::Acrux.Core.Input.PointerEventArgs>, global::System.Action<object, object>>)(__d156 => __d156 == null ? null : new global::System.Action<object, object>((__p156_0, __p156_1) => __d156(global::Acrux.Toolkit.Ui.FromWire(__p156_0), global::Acrux.Toolkit.Ui.Wrap<global::Acrux.Core.Input.PointerEventArgs>(__p156_1)))))(new global::System.Action<object, global::Acrux.Core.Input.PointerEventArgs>((__a0, __a1) => { var __h = __event_PointerExited; if (__h != null) __h(__a0, __a1); }))); } }
+            remove { __event_PointerExited -= value; }
+        }
+        public bool IsPointerOver { get { return __UiBridge_Acrux_Core_VisualElement.m31(Native); } internal set { __UiBridge_Acrux_Core_VisualElement.m32(Native, value); } }
+        public bool IsPressed { get { return __UiBridge_Acrux_Core_VisualElement.m33(Native); } internal set { __UiBridge_Acrux_Core_VisualElement.m34(Native, value); } }
+        public bool IsFocused { get { return __UiBridge_Acrux_Core_VisualElement.m35(Native); } internal set { __UiBridge_Acrux_Core_VisualElement.m36(Native, value); } }
+        public bool IsFocusWithin { get { return __UiBridge_Acrux_Core_VisualElement.m37(Native); } internal set { __UiBridge_Acrux_Core_VisualElement.m38(Native, value); } }
+        public bool IsFocusVisible { get { return __UiBridge_Acrux_Core_VisualElement.m39(Native); } internal set { __UiBridge_Acrux_Core_VisualElement.m40(Native, value); } }
+        public bool AcceptsKeyboardFocus { get { return __UiBridge_Acrux_Core_VisualElement.m41(Native); } }
+        public bool IsEffectivelyEnabled { get { return __UiBridge_Acrux_Core_VisualElement.m42(Native); } }
+        public object DataContext { get { return global::Acrux.Toolkit.Ui.FromWire(__UiBridge_Acrux_Core_VisualElement.m43(Native)); } set { __UiBridge_Acrux_Core_VisualElement.m44(Native, global::Acrux.Toolkit.Ui.ToWire(value)); } }
+        public void ClearDataContext()  { __UiBridge_Acrux_Core_VisualElement.m45(Native); }
+        public global::Acrux.Core.Binding.CompiledBinding<TSource, TValue> Bind<TSource, TValue>(global::System.Func<TSource, TValue> @getter, global::System.Action<TValue> @setter, string @propertyName) where TSource : class { return global::Acrux.Toolkit.Ui.Wrap<global::Acrux.Core.Binding.CompiledBinding<TSource, TValue>>(__UiBridge_Acrux_Core_VisualElement.m46(Native, ((global::System.Func<global::System.Func<TSource, TValue>, global::System.Func<object, object>>)(__d159 => __d159 == null ? null : new global::System.Func<object, object>((__p159_0) => global::Acrux.Toolkit.Ui.ToWire(__d159(global::Acrux.Toolkit.Ui.FromWire<TSource>(__p159_0))))))(@getter), ((global::System.Func<global::System.Action<TValue>, global::System.Action<object>>)(__d160 => __d160 == null ? null : new global::System.Action<object>((__p160_0) => __d160(global::Acrux.Toolkit.Ui.FromWire<TValue>(__p160_0)))))(@setter), @propertyName), __n => { var __w = new global::Acrux.Core.Binding.CompiledBinding<TSource, TValue>(global::Acrux.Toolkit.Deferred.Value); __w.__AttachNative(__n); return __w; }); }
+        public T Add<T>(T @child) where T : global::Acrux.Core.VisualElement { return global::Acrux.Toolkit.Ui.Wrap<T>(__UiBridge_Acrux_Core_VisualElement.m47(Native, global::Acrux.Toolkit.Ui.Native(@child))); }
+        public T AddChild<T>(T @child) where T : global::Acrux.Core.VisualElement { return global::Acrux.Toolkit.Ui.Wrap<T>(__UiBridge_Acrux_Core_VisualElement.m48(Native, global::Acrux.Toolkit.Ui.Native(@child))); }
+        protected virtual void ValidateChildForAdd(global::Acrux.Core.VisualElement @child)  { __UiBridge_Acrux_Core_VisualElement.m49(Native, global::Acrux.Toolkit.Ui.Native(@child)); }
+        public void AddChildren(global::System.Collections.Generic.IEnumerable<global::Acrux.Core.VisualElement> @children)  { __UiBridge_Acrux_Core_VisualElement.m50(Native, global::Acrux.Toolkit.Ui.ListToWire<global::Acrux.Core.VisualElement>(@children, __x68 => (object)global::Acrux.Toolkit.Ui.Native(__x68))); }
+        public virtual bool RemoveChild(global::Acrux.Core.VisualElement @child)  { return __UiBridge_Acrux_Core_VisualElement.m51(Native, global::Acrux.Toolkit.Ui.Native(@child)); }
+        public virtual void ClearChildren()  { __UiBridge_Acrux_Core_VisualElement.m52(Native); }
+        public bool MoveChild(global::Acrux.Core.VisualElement @child, int @index)  { return __UiBridge_Acrux_Core_VisualElement.m53(Native, global::Acrux.Toolkit.Ui.Native(@child), @index); }
+        internal void InheritDataContext(object @value)  { __UiBridge_Acrux_Core_VisualElement.m54(Native, global::Acrux.Toolkit.Ui.ToWire(@value)); }
+        public global::Acrux.Core.Binding.CompiledBinding<TSource, TValue> BindDataContext<TSource, TValue>(global::System.Func<TSource, TValue> @getter, string @propertyName) where TSource : class { return global::Acrux.Toolkit.Ui.Wrap<global::Acrux.Core.Binding.CompiledBinding<TSource, TValue>>(__UiBridge_Acrux_Core_VisualElement.m55(Native, ((global::System.Func<global::System.Func<TSource, TValue>, global::System.Func<object, object>>)(__d165 => __d165 == null ? null : new global::System.Func<object, object>((__p165_0) => global::Acrux.Toolkit.Ui.ToWire(__d165(global::Acrux.Toolkit.Ui.FromWire<TSource>(__p165_0))))))(@getter), @propertyName), __n => { var __w = new global::Acrux.Core.Binding.CompiledBinding<TSource, TValue>(global::Acrux.Toolkit.Deferred.Value); __w.__AttachNative(__n); return __w; }); }
+        internal global::Acrux.Core.VisualElement HitTest(global::VRageMath.Vector2 @point)  { return global::Acrux.Toolkit.Ui.Wrap<global::Acrux.Core.VisualElement>(__UiBridge_Acrux_Core_VisualElement.m56(Native, @point)); }
+        protected virtual bool HitTestSelf(global::VRageMath.Vector2 @point)  { return __UiBridge_Acrux_Core_VisualElement.m57(Native, @point); }
+        internal virtual global::VRageMath.Vector2 MapPointToChildren(global::VRageMath.Vector2 @point)  { return __UiBridge_Acrux_Core_VisualElement.m58(Native, @point); }
+        internal void DrawTree(global::Acrux.Rendering.RenderContext @context)  { __UiBridge_Acrux_Core_VisualElement.m59(Native, global::Acrux.Toolkit.Ui.Native(@context)); }
+        protected virtual global::System.IDisposable BeginChildDraw(global::Acrux.Rendering.RenderContext @context, global::Acrux.Core.VisualElement @child)  { return __UiBridge_Acrux_Core_VisualElement.m60(Native, global::Acrux.Toolkit.Ui.Native(@context), global::Acrux.Toolkit.Ui.Native(@child)); }
+        protected virtual void DrawSelf(global::Acrux.Rendering.RenderContext @context)  { __UiBridge_Acrux_Core_VisualElement.m61(Native, global::Acrux.Toolkit.Ui.Native(@context)); }
+        internal virtual bool OverlayContains(global::VRageMath.Vector2 @point)  { return __UiBridge_Acrux_Core_VisualElement.m62(Native, @point); }
+        internal virtual void PointerPressed(global::VRageMath.Vector2 @point)  { __UiBridge_Acrux_Core_VisualElement.m63(Native, @point); }
+        internal virtual void PointerMoved(global::VRageMath.Vector2 @point, global::VRageMath.Vector2 @delta)  { __UiBridge_Acrux_Core_VisualElement.m64(Native, @point, @delta); }
+        internal virtual void PointerReleased(global::VRageMath.Vector2 @point, bool @clicked)  { __UiBridge_Acrux_Core_VisualElement.m65(Native, @point, @clicked); }
+        internal virtual void PointerCaptureLost()  { __UiBridge_Acrux_Core_VisualElement.m66(Native); }
+        internal virtual void PointerHovered(global::VRageMath.Vector2 @point)  { __UiBridge_Acrux_Core_VisualElement.m67(Native, @point); }
+        internal virtual global::Acrux.Core.Input.PointerCursor GetPointerCursor(global::VRageMath.Vector2 @point)  { return (global::Acrux.Core.Input.PointerCursor)(__UiBridge_Acrux_Core_VisualElement.m68(Native, @point)); }
+        internal virtual bool PointerScrolled(global::VRageMath.Vector2 @point, int @delta)  { return __UiBridge_Acrux_Core_VisualElement.m69(Native, @point, @delta); }
+        internal virtual void KeyboardInput(global::Acrux.Core.IInputSource @input)  { __UiBridge_Acrux_Core_VisualElement.m70(Native, global::Acrux.Core.__UiBridge_Acrux_Core_IInputSource.Export(@input)); }
+        internal virtual void MiddlePointerPressed(global::VRageMath.Vector2 @point)  { __UiBridge_Acrux_Core_VisualElement.m71(Native, @point); }
+        internal virtual void MiddlePointerMoved(global::VRageMath.Vector2 @point, global::VRageMath.Vector2 @delta)  { __UiBridge_Acrux_Core_VisualElement.m72(Native, @point, @delta); }
+        internal virtual void MiddlePointerReleased(global::VRageMath.Vector2 @point)  { __UiBridge_Acrux_Core_VisualElement.m73(Native, @point); }
+        internal virtual void SecondaryPointerPressed(global::VRageMath.Vector2 @point)  { __UiBridge_Acrux_Core_VisualElement.m74(Native, @point); }
+        internal virtual void SecondaryPointerMoved(global::VRageMath.Vector2 @point, global::VRageMath.Vector2 @delta)  { __UiBridge_Acrux_Core_VisualElement.m75(Native, @point, @delta); }
+        internal virtual void SecondaryPointerReleased(global::VRageMath.Vector2 @point, bool @clicked)  { __UiBridge_Acrux_Core_VisualElement.m76(Native, @point, @clicked); }
+        internal bool HandlesSecondaryClick { get { return __UiBridge_Acrux_Core_VisualElement.m77(Native); } }
+        public global::System.Action ContextRequested { get { return __UiBridge_Acrux_Core_VisualElement.m78(Native); } set { __UiBridge_Acrux_Core_VisualElement.m79(Native, value); } }
         protected VisualElement() : base(global::Acrux.Toolkit.Deferred.Value)
         {
-            __AttachNative(__UiBridge_Acrux_Core_VisualElement.m76(this));
+            __AttachNative(__UiBridge_Acrux_Core_VisualElement.m80(this));
         }
         internal object __Hook_Acrux_Core_VisualElement_SetEnabled_150(bool __w_enabled) { return global::Acrux.Toolkit.Ui.Native(SetEnabled(__w_enabled)); }
         internal void __Hook_Acrux_Core_VisualElement_SetRect_151(global::VRageMath.RectangleF __w_bounds) { SetRect(__w_bounds); }
-        internal void __Hook_Acrux_Core_VisualElement_ValidateChildForAdd_156(object __w_child) { ValidateChildForAdd(global::Acrux.Toolkit.Ui.Wrap<global::Acrux.Core.VisualElement>(__w_child)); }
-        internal bool __Hook_Acrux_Core_VisualElement_RemoveChild_157(object __w_child) { return RemoveChild(global::Acrux.Toolkit.Ui.Wrap<global::Acrux.Core.VisualElement>(__w_child)); }
-        internal void __Hook_Acrux_Core_VisualElement_ClearChildren_158() { ClearChildren(); }
-        internal bool __Hook_Acrux_Core_VisualElement_HitTestSelf_161(global::VRageMath.Vector2 __w_point) { return HitTestSelf(__w_point); }
-        internal global::VRageMath.Vector2 __Hook_Acrux_Core_VisualElement_MapPointToChildren_162(global::VRageMath.Vector2 __w_point) { return MapPointToChildren(__w_point); }
-        internal global::System.IDisposable __Hook_Acrux_Core_VisualElement_BeginChildDraw_163(object __w_context, object __w_child) { return BeginChildDraw(global::Acrux.Toolkit.Ui.Wrap<global::Acrux.Rendering.RenderContext>(__w_context), global::Acrux.Toolkit.Ui.Wrap<global::Acrux.Core.VisualElement>(__w_child)); }
-        internal void __Hook_Acrux_Core_VisualElement_DrawSelf_164(object __w_context) { DrawSelf(global::Acrux.Toolkit.Ui.Wrap<global::Acrux.Rendering.RenderContext>(__w_context)); }
-        internal bool __Hook_Acrux_Core_VisualElement_OverlayContains_165(global::VRageMath.Vector2 __w_point) { return OverlayContains(__w_point); }
-        internal void __Hook_Acrux_Core_VisualElement_PointerPressed_166(global::VRageMath.Vector2 __w_point) { PointerPressed(__w_point); }
-        internal void __Hook_Acrux_Core_VisualElement_PointerMoved_167(global::VRageMath.Vector2 __w_point, global::VRageMath.Vector2 __w_delta) { PointerMoved(__w_point, __w_delta); }
-        internal void __Hook_Acrux_Core_VisualElement_PointerReleased_168(global::VRageMath.Vector2 __w_point, bool __w_clicked) { PointerReleased(__w_point, __w_clicked); }
-        internal void __Hook_Acrux_Core_VisualElement_PointerCaptureLost_169() { PointerCaptureLost(); }
-        internal void __Hook_Acrux_Core_VisualElement_PointerHovered_170(global::VRageMath.Vector2 __w_point) { PointerHovered(__w_point); }
-        internal byte __Hook_Acrux_Core_VisualElement_GetPointerCursor_171(global::VRageMath.Vector2 __w_point) { return (byte)(GetPointerCursor(__w_point)); }
-        internal bool __Hook_Acrux_Core_VisualElement_PointerScrolled_172(global::VRageMath.Vector2 __w_point, int __w_delta) { return PointerScrolled(__w_point, __w_delta); }
-        internal void __Hook_Acrux_Core_VisualElement_KeyboardInput_173(object __w_input) { KeyboardInput(global::Acrux.Toolkit.Ui.Wrap<global::Acrux.Core.IInputSource>(__w_input)); }
-        internal void __Hook_Acrux_Core_VisualElement_MiddlePointerPressed_174(global::VRageMath.Vector2 __w_point) { MiddlePointerPressed(__w_point); }
-        internal void __Hook_Acrux_Core_VisualElement_MiddlePointerMoved_175(global::VRageMath.Vector2 __w_point, global::VRageMath.Vector2 __w_delta) { MiddlePointerMoved(__w_point, __w_delta); }
-        internal void __Hook_Acrux_Core_VisualElement_MiddlePointerReleased_176(global::VRageMath.Vector2 __w_point) { MiddlePointerReleased(__w_point); }
-        internal void __Hook_Acrux_Core_VisualElement_SecondaryPointerPressed_177(global::VRageMath.Vector2 __w_point) { SecondaryPointerPressed(__w_point); }
-        internal void __Hook_Acrux_Core_VisualElement_SecondaryPointerMoved_178(global::VRageMath.Vector2 __w_point, global::VRageMath.Vector2 __w_delta) { SecondaryPointerMoved(__w_point, __w_delta); }
-        internal void __Hook_Acrux_Core_VisualElement_SecondaryPointerReleased_179(global::VRageMath.Vector2 __w_point, bool __w_clicked) { SecondaryPointerReleased(__w_point, __w_clicked); }
+        internal void __Hook_Acrux_Core_VisualElement_ValidateChildForAdd_160(object __w_child) { ValidateChildForAdd(global::Acrux.Toolkit.Ui.Wrap<global::Acrux.Core.VisualElement>(__w_child)); }
+        internal bool __Hook_Acrux_Core_VisualElement_RemoveChild_161(object __w_child) { return RemoveChild(global::Acrux.Toolkit.Ui.Wrap<global::Acrux.Core.VisualElement>(__w_child)); }
+        internal void __Hook_Acrux_Core_VisualElement_ClearChildren_162() { ClearChildren(); }
+        internal bool __Hook_Acrux_Core_VisualElement_HitTestSelf_165(global::VRageMath.Vector2 __w_point) { return HitTestSelf(__w_point); }
+        internal global::VRageMath.Vector2 __Hook_Acrux_Core_VisualElement_MapPointToChildren_166(global::VRageMath.Vector2 __w_point) { return MapPointToChildren(__w_point); }
+        internal global::System.IDisposable __Hook_Acrux_Core_VisualElement_BeginChildDraw_167(object __w_context, object __w_child) { return BeginChildDraw(global::Acrux.Toolkit.Ui.Wrap<global::Acrux.Rendering.RenderContext>(__w_context), global::Acrux.Toolkit.Ui.Wrap<global::Acrux.Core.VisualElement>(__w_child)); }
+        internal void __Hook_Acrux_Core_VisualElement_DrawSelf_168(object __w_context) { DrawSelf(global::Acrux.Toolkit.Ui.Wrap<global::Acrux.Rendering.RenderContext>(__w_context)); }
+        internal bool __Hook_Acrux_Core_VisualElement_OverlayContains_169(global::VRageMath.Vector2 __w_point) { return OverlayContains(__w_point); }
+        internal void __Hook_Acrux_Core_VisualElement_PointerPressed_170(global::VRageMath.Vector2 __w_point) { PointerPressed(__w_point); }
+        internal void __Hook_Acrux_Core_VisualElement_PointerMoved_171(global::VRageMath.Vector2 __w_point, global::VRageMath.Vector2 __w_delta) { PointerMoved(__w_point, __w_delta); }
+        internal void __Hook_Acrux_Core_VisualElement_PointerReleased_172(global::VRageMath.Vector2 __w_point, bool __w_clicked) { PointerReleased(__w_point, __w_clicked); }
+        internal void __Hook_Acrux_Core_VisualElement_PointerCaptureLost_173() { PointerCaptureLost(); }
+        internal void __Hook_Acrux_Core_VisualElement_PointerHovered_174(global::VRageMath.Vector2 __w_point) { PointerHovered(__w_point); }
+        internal byte __Hook_Acrux_Core_VisualElement_GetPointerCursor_175(global::VRageMath.Vector2 __w_point) { return (byte)(GetPointerCursor(__w_point)); }
+        internal bool __Hook_Acrux_Core_VisualElement_PointerScrolled_176(global::VRageMath.Vector2 __w_point, int __w_delta) { return PointerScrolled(__w_point, __w_delta); }
+        internal void __Hook_Acrux_Core_VisualElement_KeyboardInput_177(object __w_input) { KeyboardInput(global::Acrux.Toolkit.Ui.Wrap<global::Acrux.Core.IInputSource>(__w_input)); }
+        internal void __Hook_Acrux_Core_VisualElement_MiddlePointerPressed_178(global::VRageMath.Vector2 __w_point) { MiddlePointerPressed(__w_point); }
+        internal void __Hook_Acrux_Core_VisualElement_MiddlePointerMoved_179(global::VRageMath.Vector2 __w_point, global::VRageMath.Vector2 __w_delta) { MiddlePointerMoved(__w_point, __w_delta); }
+        internal void __Hook_Acrux_Core_VisualElement_MiddlePointerReleased_180(global::VRageMath.Vector2 __w_point) { MiddlePointerReleased(__w_point); }
+        internal void __Hook_Acrux_Core_VisualElement_SecondaryPointerPressed_181(global::VRageMath.Vector2 __w_point) { SecondaryPointerPressed(__w_point); }
+        internal void __Hook_Acrux_Core_VisualElement_SecondaryPointerMoved_182(global::VRageMath.Vector2 __w_point, global::VRageMath.Vector2 __w_delta) { SecondaryPointerMoved(__w_point, __w_delta); }
+        internal void __Hook_Acrux_Core_VisualElement_SecondaryPointerReleased_183(global::VRageMath.Vector2 __w_point, bool __w_clicked) { SecondaryPointerReleased(__w_point, __w_clicked); }
         void global::Acrux.Core.IControlContainer.AddTemplateChild(global::Acrux.Core.Control @child) { new global::Acrux.Core.__Proxy_Acrux_Core_IControlContainer(Native, true).AddTemplateChild(@child); }
     }
     internal static class __UiBridge_Acrux_Core_VisualElement
@@ -126,10 +144,10 @@ namespace Acrux.Core
         internal static global::System.Action<object, bool> m24;
         internal static global::System.Func<object, bool, object> m25;
         internal static global::System.Action<object, global::VRageMath.RectangleF> m26;
-        internal static global::System.Func<object, bool> m27;
-        internal static global::System.Action<object, bool> m28;
-        internal static global::System.Func<object, bool> m29;
-        internal static global::System.Action<object, bool> m30;
+        internal static global::System.Func<object> m27;
+        internal static global::System.Func<object> m28;
+        internal static global::System.Action<object, global::System.Action<object, object>> m29;
+        internal static global::System.Action<object, global::System.Action<object, object>> m30;
         internal static global::System.Func<object, bool> m31;
         internal static global::System.Action<object, bool> m32;
         internal static global::System.Func<object, bool> m33;
@@ -137,45 +155,49 @@ namespace Acrux.Core
         internal static global::System.Func<object, bool> m35;
         internal static global::System.Action<object, bool> m36;
         internal static global::System.Func<object, bool> m37;
-        internal static global::System.Func<object, bool> m38;
-        internal static global::System.Func<object, object> m39;
-        internal static global::System.Action<object, object> m40;
-        internal static global::System.Action<object> m41;
-        internal static global::System.Func<object, global::System.Func<object, object>, global::System.Action<object>, string, object> m42;
-        internal static global::System.Func<object, object, object> m43;
-        internal static global::System.Func<object, object, object> m44;
-        internal static global::System.Action<object, object> m45;
-        internal static global::System.Action<object, object> m46;
-        internal static global::System.Func<object, object, bool> m47;
-        internal static global::System.Action<object> m48;
-        internal static global::System.Func<object, object, int, bool> m49;
+        internal static global::System.Action<object, bool> m38;
+        internal static global::System.Func<object, bool> m39;
+        internal static global::System.Action<object, bool> m40;
+        internal static global::System.Func<object, bool> m41;
+        internal static global::System.Func<object, bool> m42;
+        internal static global::System.Func<object, object> m43;
+        internal static global::System.Action<object, object> m44;
+        internal static global::System.Action<object> m45;
+        internal static global::System.Func<object, global::System.Func<object, object>, global::System.Action<object>, string, object> m46;
+        internal static global::System.Func<object, object, object> m47;
+        internal static global::System.Func<object, object, object> m48;
+        internal static global::System.Action<object, object> m49;
         internal static global::System.Action<object, object> m50;
-        internal static global::System.Func<object, global::System.Func<object, object>, string, object> m51;
-        internal static global::System.Func<object, global::VRageMath.Vector2, object> m52;
-        internal static global::System.Func<object, global::VRageMath.Vector2, bool> m53;
-        internal static global::System.Func<object, global::VRageMath.Vector2, global::VRageMath.Vector2> m54;
-        internal static global::System.Action<object, object> m55;
-        internal static global::System.Func<object, object, object, global::System.IDisposable> m56;
-        internal static global::System.Action<object, object> m57;
-        internal static global::System.Func<object, global::VRageMath.Vector2, bool> m58;
-        internal static global::System.Action<object, global::VRageMath.Vector2> m59;
-        internal static global::System.Action<object, global::VRageMath.Vector2, global::VRageMath.Vector2> m60;
-        internal static global::System.Action<object, global::VRageMath.Vector2, bool> m61;
-        internal static global::System.Action<object> m62;
+        internal static global::System.Func<object, object, bool> m51;
+        internal static global::System.Action<object> m52;
+        internal static global::System.Func<object, object, int, bool> m53;
+        internal static global::System.Action<object, object> m54;
+        internal static global::System.Func<object, global::System.Func<object, object>, string, object> m55;
+        internal static global::System.Func<object, global::VRageMath.Vector2, object> m56;
+        internal static global::System.Func<object, global::VRageMath.Vector2, bool> m57;
+        internal static global::System.Func<object, global::VRageMath.Vector2, global::VRageMath.Vector2> m58;
+        internal static global::System.Action<object, object> m59;
+        internal static global::System.Func<object, object, object, global::System.IDisposable> m60;
+        internal static global::System.Action<object, object> m61;
+        internal static global::System.Func<object, global::VRageMath.Vector2, bool> m62;
         internal static global::System.Action<object, global::VRageMath.Vector2> m63;
-        internal static global::System.Func<object, global::VRageMath.Vector2, byte> m64;
-        internal static global::System.Func<object, global::VRageMath.Vector2, int, bool> m65;
-        internal static global::System.Action<object, object> m66;
+        internal static global::System.Action<object, global::VRageMath.Vector2, global::VRageMath.Vector2> m64;
+        internal static global::System.Action<object, global::VRageMath.Vector2, bool> m65;
+        internal static global::System.Action<object> m66;
         internal static global::System.Action<object, global::VRageMath.Vector2> m67;
-        internal static global::System.Action<object, global::VRageMath.Vector2, global::VRageMath.Vector2> m68;
-        internal static global::System.Action<object, global::VRageMath.Vector2> m69;
-        internal static global::System.Action<object, global::VRageMath.Vector2> m70;
-        internal static global::System.Action<object, global::VRageMath.Vector2, global::VRageMath.Vector2> m71;
-        internal static global::System.Action<object, global::VRageMath.Vector2, bool> m72;
-        internal static global::System.Func<object, bool> m73;
-        internal static global::System.Func<object, global::System.Action> m74;
-        internal static global::System.Action<object, global::System.Action> m75;
-        internal static global::System.Func<object, object> m76;
+        internal static global::System.Func<object, global::VRageMath.Vector2, byte> m68;
+        internal static global::System.Func<object, global::VRageMath.Vector2, int, bool> m69;
+        internal static global::System.Action<object, object> m70;
+        internal static global::System.Action<object, global::VRageMath.Vector2> m71;
+        internal static global::System.Action<object, global::VRageMath.Vector2, global::VRageMath.Vector2> m72;
+        internal static global::System.Action<object, global::VRageMath.Vector2> m73;
+        internal static global::System.Action<object, global::VRageMath.Vector2> m74;
+        internal static global::System.Action<object, global::VRageMath.Vector2, global::VRageMath.Vector2> m75;
+        internal static global::System.Action<object, global::VRageMath.Vector2, bool> m76;
+        internal static global::System.Func<object, bool> m77;
+        internal static global::System.Func<object, global::System.Action> m78;
+        internal static global::System.Action<object, global::System.Action> m79;
+        internal static global::System.Func<object, object> m80;
         internal static void Load(global::System.Collections.Generic.IDictionary<string, global::System.Delegate> api)
         {
             m0 = global::Acrux.Toolkit.Ui.Get<global::System.Func<object, bool>>(api, "Acrux.Core.VisualElement.get_IsAttachingBindings");
@@ -205,56 +227,60 @@ namespace Acrux.Core
             m24 = global::Acrux.Toolkit.Ui.Get<global::System.Action<object, bool>>(api, "Acrux.Core.VisualElement.SetVisible`0(bool)");
             m25 = global::Acrux.Toolkit.Ui.Get<global::System.Func<object, bool, object>>(api, "Acrux.Core.VisualElement.SetEnabled`0(bool)");
             m26 = global::Acrux.Toolkit.Ui.Get<global::System.Action<object, global::VRageMath.RectangleF>>(api, "Acrux.Core.VisualElement.SetRect`0(global::VRageMath.RectangleF)");
-            m27 = global::Acrux.Toolkit.Ui.Get<global::System.Func<object, bool>>(api, "Acrux.Core.VisualElement.get_IsPointerOver");
-            m28 = global::Acrux.Toolkit.Ui.Get<global::System.Action<object, bool>>(api, "Acrux.Core.VisualElement.set_IsPointerOver");
-            m29 = global::Acrux.Toolkit.Ui.Get<global::System.Func<object, bool>>(api, "Acrux.Core.VisualElement.get_IsPressed");
-            m30 = global::Acrux.Toolkit.Ui.Get<global::System.Action<object, bool>>(api, "Acrux.Core.VisualElement.set_IsPressed");
-            m31 = global::Acrux.Toolkit.Ui.Get<global::System.Func<object, bool>>(api, "Acrux.Core.VisualElement.get_IsFocused");
-            m32 = global::Acrux.Toolkit.Ui.Get<global::System.Action<object, bool>>(api, "Acrux.Core.VisualElement.set_IsFocused");
-            m33 = global::Acrux.Toolkit.Ui.Get<global::System.Func<object, bool>>(api, "Acrux.Core.VisualElement.get_IsFocusWithin");
-            m34 = global::Acrux.Toolkit.Ui.Get<global::System.Action<object, bool>>(api, "Acrux.Core.VisualElement.set_IsFocusWithin");
-            m35 = global::Acrux.Toolkit.Ui.Get<global::System.Func<object, bool>>(api, "Acrux.Core.VisualElement.get_IsFocusVisible");
-            m36 = global::Acrux.Toolkit.Ui.Get<global::System.Action<object, bool>>(api, "Acrux.Core.VisualElement.set_IsFocusVisible");
-            m37 = global::Acrux.Toolkit.Ui.Get<global::System.Func<object, bool>>(api, "Acrux.Core.VisualElement.get_AcceptsKeyboardFocus");
-            m38 = global::Acrux.Toolkit.Ui.Get<global::System.Func<object, bool>>(api, "Acrux.Core.VisualElement.get_IsEffectivelyEnabled");
-            m39 = global::Acrux.Toolkit.Ui.Get<global::System.Func<object, object>>(api, "Acrux.Core.VisualElement.get_DataContext");
-            m40 = global::Acrux.Toolkit.Ui.Get<global::System.Action<object, object>>(api, "Acrux.Core.VisualElement.set_DataContext");
-            m41 = global::Acrux.Toolkit.Ui.Get<global::System.Action<object>>(api, "Acrux.Core.VisualElement.ClearDataContext`0()");
-            m42 = global::Acrux.Toolkit.Ui.Get<global::System.Func<object, global::System.Func<object, object>, global::System.Action<object>, string, object>>(api, "Acrux.Core.VisualElement.Bind`2(global::System.Func<object, object>,global::System.Action<object>,string)");
-            m43 = global::Acrux.Toolkit.Ui.Get<global::System.Func<object, object, object>>(api, "Acrux.Core.VisualElement.Add`1(object)");
-            m44 = global::Acrux.Toolkit.Ui.Get<global::System.Func<object, object, object>>(api, "Acrux.Core.VisualElement.AddChild`1(object)");
-            m45 = global::Acrux.Toolkit.Ui.Get<global::System.Action<object, object>>(api, "Acrux.Core.VisualElement.ValidateChildForAdd`0(object)");
-            m46 = global::Acrux.Toolkit.Ui.Get<global::System.Action<object, object>>(api, "Acrux.Core.VisualElement.AddChildren`0(object)");
-            m47 = global::Acrux.Toolkit.Ui.Get<global::System.Func<object, object, bool>>(api, "Acrux.Core.VisualElement.RemoveChild`0(object)");
-            m48 = global::Acrux.Toolkit.Ui.Get<global::System.Action<object>>(api, "Acrux.Core.VisualElement.ClearChildren`0()");
-            m49 = global::Acrux.Toolkit.Ui.Get<global::System.Func<object, object, int, bool>>(api, "Acrux.Core.VisualElement.MoveChild`0(object,int)");
-            m50 = global::Acrux.Toolkit.Ui.Get<global::System.Action<object, object>>(api, "Acrux.Core.VisualElement.InheritDataContext`0(object)");
-            m51 = global::Acrux.Toolkit.Ui.Get<global::System.Func<object, global::System.Func<object, object>, string, object>>(api, "Acrux.Core.VisualElement.BindDataContext`2(global::System.Func<object, object>,string)");
-            m52 = global::Acrux.Toolkit.Ui.Get<global::System.Func<object, global::VRageMath.Vector2, object>>(api, "Acrux.Core.VisualElement.HitTest`0(global::VRageMath.Vector2)");
-            m53 = global::Acrux.Toolkit.Ui.Get<global::System.Func<object, global::VRageMath.Vector2, bool>>(api, "Acrux.Core.VisualElement.HitTestSelf`0(global::VRageMath.Vector2)");
-            m54 = global::Acrux.Toolkit.Ui.Get<global::System.Func<object, global::VRageMath.Vector2, global::VRageMath.Vector2>>(api, "Acrux.Core.VisualElement.MapPointToChildren`0(global::VRageMath.Vector2)");
-            m55 = global::Acrux.Toolkit.Ui.Get<global::System.Action<object, object>>(api, "Acrux.Core.VisualElement.DrawTree`0(object)");
-            m56 = global::Acrux.Toolkit.Ui.Get<global::System.Func<object, object, object, global::System.IDisposable>>(api, "Acrux.Core.VisualElement.BeginChildDraw`0(object,object)");
-            m57 = global::Acrux.Toolkit.Ui.Get<global::System.Action<object, object>>(api, "Acrux.Core.VisualElement.DrawSelf`0(object)");
-            m58 = global::Acrux.Toolkit.Ui.Get<global::System.Func<object, global::VRageMath.Vector2, bool>>(api, "Acrux.Core.VisualElement.OverlayContains`0(global::VRageMath.Vector2)");
-            m59 = global::Acrux.Toolkit.Ui.Get<global::System.Action<object, global::VRageMath.Vector2>>(api, "Acrux.Core.VisualElement.PointerPressed`0(global::VRageMath.Vector2)");
-            m60 = global::Acrux.Toolkit.Ui.Get<global::System.Action<object, global::VRageMath.Vector2, global::VRageMath.Vector2>>(api, "Acrux.Core.VisualElement.PointerMoved`0(global::VRageMath.Vector2,global::VRageMath.Vector2)");
-            m61 = global::Acrux.Toolkit.Ui.Get<global::System.Action<object, global::VRageMath.Vector2, bool>>(api, "Acrux.Core.VisualElement.PointerReleased`0(global::VRageMath.Vector2,bool)");
-            m62 = global::Acrux.Toolkit.Ui.Get<global::System.Action<object>>(api, "Acrux.Core.VisualElement.PointerCaptureLost`0()");
-            m63 = global::Acrux.Toolkit.Ui.Get<global::System.Action<object, global::VRageMath.Vector2>>(api, "Acrux.Core.VisualElement.PointerHovered`0(global::VRageMath.Vector2)");
-            m64 = global::Acrux.Toolkit.Ui.Get<global::System.Func<object, global::VRageMath.Vector2, byte>>(api, "Acrux.Core.VisualElement.GetPointerCursor`0(global::VRageMath.Vector2)");
-            m65 = global::Acrux.Toolkit.Ui.Get<global::System.Func<object, global::VRageMath.Vector2, int, bool>>(api, "Acrux.Core.VisualElement.PointerScrolled`0(global::VRageMath.Vector2,int)");
-            m66 = global::Acrux.Toolkit.Ui.Get<global::System.Action<object, object>>(api, "Acrux.Core.VisualElement.KeyboardInput`0(object)");
-            m67 = global::Acrux.Toolkit.Ui.Get<global::System.Action<object, global::VRageMath.Vector2>>(api, "Acrux.Core.VisualElement.MiddlePointerPressed`0(global::VRageMath.Vector2)");
-            m68 = global::Acrux.Toolkit.Ui.Get<global::System.Action<object, global::VRageMath.Vector2, global::VRageMath.Vector2>>(api, "Acrux.Core.VisualElement.MiddlePointerMoved`0(global::VRageMath.Vector2,global::VRageMath.Vector2)");
-            m69 = global::Acrux.Toolkit.Ui.Get<global::System.Action<object, global::VRageMath.Vector2>>(api, "Acrux.Core.VisualElement.MiddlePointerReleased`0(global::VRageMath.Vector2)");
-            m70 = global::Acrux.Toolkit.Ui.Get<global::System.Action<object, global::VRageMath.Vector2>>(api, "Acrux.Core.VisualElement.SecondaryPointerPressed`0(global::VRageMath.Vector2)");
-            m71 = global::Acrux.Toolkit.Ui.Get<global::System.Action<object, global::VRageMath.Vector2, global::VRageMath.Vector2>>(api, "Acrux.Core.VisualElement.SecondaryPointerMoved`0(global::VRageMath.Vector2,global::VRageMath.Vector2)");
-            m72 = global::Acrux.Toolkit.Ui.Get<global::System.Action<object, global::VRageMath.Vector2, bool>>(api, "Acrux.Core.VisualElement.SecondaryPointerReleased`0(global::VRageMath.Vector2,bool)");
-            m73 = global::Acrux.Toolkit.Ui.Get<global::System.Func<object, bool>>(api, "Acrux.Core.VisualElement.get_HandlesSecondaryClick");
-            m74 = global::Acrux.Toolkit.Ui.Get<global::System.Func<object, global::System.Action>>(api, "Acrux.Core.VisualElement.get_ContextRequested");
-            m75 = global::Acrux.Toolkit.Ui.Get<global::System.Action<object, global::System.Action>>(api, "Acrux.Core.VisualElement.set_ContextRequested");
-            m76 = global::Acrux.Toolkit.Ui.Get<global::System.Func<object, object>>(api, "Acrux.Core.VisualElement.ctor()#remote");
+            m27 = global::Acrux.Toolkit.Ui.Get<global::System.Func<object>>(api, "Acrux.Core.VisualElement.field_PointerEnteredEvent");
+            m28 = global::Acrux.Toolkit.Ui.Get<global::System.Func<object>>(api, "Acrux.Core.VisualElement.field_PointerExitedEvent");
+            m29 = global::Acrux.Toolkit.Ui.Get<global::System.Action<object, global::System.Action<object, object>>>(api, "Acrux.Core.VisualElement.add_PointerEntered");
+            m30 = global::Acrux.Toolkit.Ui.Get<global::System.Action<object, global::System.Action<object, object>>>(api, "Acrux.Core.VisualElement.add_PointerExited");
+            m31 = global::Acrux.Toolkit.Ui.Get<global::System.Func<object, bool>>(api, "Acrux.Core.VisualElement.get_IsPointerOver");
+            m32 = global::Acrux.Toolkit.Ui.Get<global::System.Action<object, bool>>(api, "Acrux.Core.VisualElement.set_IsPointerOver");
+            m33 = global::Acrux.Toolkit.Ui.Get<global::System.Func<object, bool>>(api, "Acrux.Core.VisualElement.get_IsPressed");
+            m34 = global::Acrux.Toolkit.Ui.Get<global::System.Action<object, bool>>(api, "Acrux.Core.VisualElement.set_IsPressed");
+            m35 = global::Acrux.Toolkit.Ui.Get<global::System.Func<object, bool>>(api, "Acrux.Core.VisualElement.get_IsFocused");
+            m36 = global::Acrux.Toolkit.Ui.Get<global::System.Action<object, bool>>(api, "Acrux.Core.VisualElement.set_IsFocused");
+            m37 = global::Acrux.Toolkit.Ui.Get<global::System.Func<object, bool>>(api, "Acrux.Core.VisualElement.get_IsFocusWithin");
+            m38 = global::Acrux.Toolkit.Ui.Get<global::System.Action<object, bool>>(api, "Acrux.Core.VisualElement.set_IsFocusWithin");
+            m39 = global::Acrux.Toolkit.Ui.Get<global::System.Func<object, bool>>(api, "Acrux.Core.VisualElement.get_IsFocusVisible");
+            m40 = global::Acrux.Toolkit.Ui.Get<global::System.Action<object, bool>>(api, "Acrux.Core.VisualElement.set_IsFocusVisible");
+            m41 = global::Acrux.Toolkit.Ui.Get<global::System.Func<object, bool>>(api, "Acrux.Core.VisualElement.get_AcceptsKeyboardFocus");
+            m42 = global::Acrux.Toolkit.Ui.Get<global::System.Func<object, bool>>(api, "Acrux.Core.VisualElement.get_IsEffectivelyEnabled");
+            m43 = global::Acrux.Toolkit.Ui.Get<global::System.Func<object, object>>(api, "Acrux.Core.VisualElement.get_DataContext");
+            m44 = global::Acrux.Toolkit.Ui.Get<global::System.Action<object, object>>(api, "Acrux.Core.VisualElement.set_DataContext");
+            m45 = global::Acrux.Toolkit.Ui.Get<global::System.Action<object>>(api, "Acrux.Core.VisualElement.ClearDataContext`0()");
+            m46 = global::Acrux.Toolkit.Ui.Get<global::System.Func<object, global::System.Func<object, object>, global::System.Action<object>, string, object>>(api, "Acrux.Core.VisualElement.Bind`2(global::System.Func<object, object>,global::System.Action<object>,string)");
+            m47 = global::Acrux.Toolkit.Ui.Get<global::System.Func<object, object, object>>(api, "Acrux.Core.VisualElement.Add`1(object)");
+            m48 = global::Acrux.Toolkit.Ui.Get<global::System.Func<object, object, object>>(api, "Acrux.Core.VisualElement.AddChild`1(object)");
+            m49 = global::Acrux.Toolkit.Ui.Get<global::System.Action<object, object>>(api, "Acrux.Core.VisualElement.ValidateChildForAdd`0(object)");
+            m50 = global::Acrux.Toolkit.Ui.Get<global::System.Action<object, object>>(api, "Acrux.Core.VisualElement.AddChildren`0(object)");
+            m51 = global::Acrux.Toolkit.Ui.Get<global::System.Func<object, object, bool>>(api, "Acrux.Core.VisualElement.RemoveChild`0(object)");
+            m52 = global::Acrux.Toolkit.Ui.Get<global::System.Action<object>>(api, "Acrux.Core.VisualElement.ClearChildren`0()");
+            m53 = global::Acrux.Toolkit.Ui.Get<global::System.Func<object, object, int, bool>>(api, "Acrux.Core.VisualElement.MoveChild`0(object,int)");
+            m54 = global::Acrux.Toolkit.Ui.Get<global::System.Action<object, object>>(api, "Acrux.Core.VisualElement.InheritDataContext`0(object)");
+            m55 = global::Acrux.Toolkit.Ui.Get<global::System.Func<object, global::System.Func<object, object>, string, object>>(api, "Acrux.Core.VisualElement.BindDataContext`2(global::System.Func<object, object>,string)");
+            m56 = global::Acrux.Toolkit.Ui.Get<global::System.Func<object, global::VRageMath.Vector2, object>>(api, "Acrux.Core.VisualElement.HitTest`0(global::VRageMath.Vector2)");
+            m57 = global::Acrux.Toolkit.Ui.Get<global::System.Func<object, global::VRageMath.Vector2, bool>>(api, "Acrux.Core.VisualElement.HitTestSelf`0(global::VRageMath.Vector2)");
+            m58 = global::Acrux.Toolkit.Ui.Get<global::System.Func<object, global::VRageMath.Vector2, global::VRageMath.Vector2>>(api, "Acrux.Core.VisualElement.MapPointToChildren`0(global::VRageMath.Vector2)");
+            m59 = global::Acrux.Toolkit.Ui.Get<global::System.Action<object, object>>(api, "Acrux.Core.VisualElement.DrawTree`0(object)");
+            m60 = global::Acrux.Toolkit.Ui.Get<global::System.Func<object, object, object, global::System.IDisposable>>(api, "Acrux.Core.VisualElement.BeginChildDraw`0(object,object)");
+            m61 = global::Acrux.Toolkit.Ui.Get<global::System.Action<object, object>>(api, "Acrux.Core.VisualElement.DrawSelf`0(object)");
+            m62 = global::Acrux.Toolkit.Ui.Get<global::System.Func<object, global::VRageMath.Vector2, bool>>(api, "Acrux.Core.VisualElement.OverlayContains`0(global::VRageMath.Vector2)");
+            m63 = global::Acrux.Toolkit.Ui.Get<global::System.Action<object, global::VRageMath.Vector2>>(api, "Acrux.Core.VisualElement.PointerPressed`0(global::VRageMath.Vector2)");
+            m64 = global::Acrux.Toolkit.Ui.Get<global::System.Action<object, global::VRageMath.Vector2, global::VRageMath.Vector2>>(api, "Acrux.Core.VisualElement.PointerMoved`0(global::VRageMath.Vector2,global::VRageMath.Vector2)");
+            m65 = global::Acrux.Toolkit.Ui.Get<global::System.Action<object, global::VRageMath.Vector2, bool>>(api, "Acrux.Core.VisualElement.PointerReleased`0(global::VRageMath.Vector2,bool)");
+            m66 = global::Acrux.Toolkit.Ui.Get<global::System.Action<object>>(api, "Acrux.Core.VisualElement.PointerCaptureLost`0()");
+            m67 = global::Acrux.Toolkit.Ui.Get<global::System.Action<object, global::VRageMath.Vector2>>(api, "Acrux.Core.VisualElement.PointerHovered`0(global::VRageMath.Vector2)");
+            m68 = global::Acrux.Toolkit.Ui.Get<global::System.Func<object, global::VRageMath.Vector2, byte>>(api, "Acrux.Core.VisualElement.GetPointerCursor`0(global::VRageMath.Vector2)");
+            m69 = global::Acrux.Toolkit.Ui.Get<global::System.Func<object, global::VRageMath.Vector2, int, bool>>(api, "Acrux.Core.VisualElement.PointerScrolled`0(global::VRageMath.Vector2,int)");
+            m70 = global::Acrux.Toolkit.Ui.Get<global::System.Action<object, object>>(api, "Acrux.Core.VisualElement.KeyboardInput`0(object)");
+            m71 = global::Acrux.Toolkit.Ui.Get<global::System.Action<object, global::VRageMath.Vector2>>(api, "Acrux.Core.VisualElement.MiddlePointerPressed`0(global::VRageMath.Vector2)");
+            m72 = global::Acrux.Toolkit.Ui.Get<global::System.Action<object, global::VRageMath.Vector2, global::VRageMath.Vector2>>(api, "Acrux.Core.VisualElement.MiddlePointerMoved`0(global::VRageMath.Vector2,global::VRageMath.Vector2)");
+            m73 = global::Acrux.Toolkit.Ui.Get<global::System.Action<object, global::VRageMath.Vector2>>(api, "Acrux.Core.VisualElement.MiddlePointerReleased`0(global::VRageMath.Vector2)");
+            m74 = global::Acrux.Toolkit.Ui.Get<global::System.Action<object, global::VRageMath.Vector2>>(api, "Acrux.Core.VisualElement.SecondaryPointerPressed`0(global::VRageMath.Vector2)");
+            m75 = global::Acrux.Toolkit.Ui.Get<global::System.Action<object, global::VRageMath.Vector2, global::VRageMath.Vector2>>(api, "Acrux.Core.VisualElement.SecondaryPointerMoved`0(global::VRageMath.Vector2,global::VRageMath.Vector2)");
+            m76 = global::Acrux.Toolkit.Ui.Get<global::System.Action<object, global::VRageMath.Vector2, bool>>(api, "Acrux.Core.VisualElement.SecondaryPointerReleased`0(global::VRageMath.Vector2,bool)");
+            m77 = global::Acrux.Toolkit.Ui.Get<global::System.Func<object, bool>>(api, "Acrux.Core.VisualElement.get_HandlesSecondaryClick");
+            m78 = global::Acrux.Toolkit.Ui.Get<global::System.Func<object, global::System.Action>>(api, "Acrux.Core.VisualElement.get_ContextRequested");
+            m79 = global::Acrux.Toolkit.Ui.Get<global::System.Action<object, global::System.Action>>(api, "Acrux.Core.VisualElement.set_ContextRequested");
+            m80 = global::Acrux.Toolkit.Ui.Get<global::System.Func<object, object>>(api, "Acrux.Core.VisualElement.ctor()#remote");
         }
     }
 }

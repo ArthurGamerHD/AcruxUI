@@ -6,7 +6,7 @@ namespace Acrux.Styling
         internal DataTemplate(global::Acrux.Toolkit.Deferred deferred) : base(deferred) { }
         public DataTemplate(global::System.Func<TData, global::Acrux.Core.VisualElement> @factory) : base(global::Acrux.Toolkit.Deferred.Value)
         {
-            __AttachNative(__UiBridge_Acrux_Styling_DataTemplate_TData_.m0(((global::System.Func<global::System.Func<TData, global::Acrux.Core.VisualElement>, global::System.Func<object, object>>)(__d229 => __d229 == null ? null : new global::System.Func<object, object>((__p229_0) => global::Acrux.Toolkit.Ui.Native(__d229(global::Acrux.Toolkit.Ui.FromWire<TData>(__p229_0))))))(@factory)));
+            __AttachNative(__UiBridge_Acrux_Styling_DataTemplate_TData_.m0(((global::System.Func<global::System.Func<TData, global::Acrux.Core.VisualElement>, global::System.Func<object, object>>)(__d233 => __d233 == null ? null : new global::System.Func<object, object>((__p233_0) => global::Acrux.Toolkit.Ui.Native(__d233(global::Acrux.Toolkit.Ui.FromWire<TData>(__p233_0))))))(@factory)));
         }
         public global::Acrux.Core.VisualElement Build(TData @value)  { return global::Acrux.Toolkit.Ui.Wrap<global::Acrux.Core.VisualElement>(__UiBridge_Acrux_Styling_DataTemplate_TData_.m1(Native, global::Acrux.Toolkit.Ui.ToWire(@value))); }
         global::Acrux.Core.VisualElement global::Acrux.Styling.IDataTemplate.Build(object @value) { return new global::Acrux.Styling.__Proxy_Acrux_Styling_IDataTemplate(Native, true).Build(@value); }

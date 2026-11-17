@@ -4,6 +4,7 @@ using Acrux.Animation;
 using Acrux.Core.Binding;
 using Acrux.Core.Input;
 using Acrux.Core.Invalidation;
+using Acrux.Interactivity;
 using Acrux.Rendering;
 using Acrux.Styling;
 using VRageMath;
@@ -173,6 +174,17 @@ namespace Acrux.Core
         bool _isFocusWithin;
         bool _isFocusVisible;
 
+        public static readonly RoutedEvent<PointerEventArgs> PointerEnteredEvent =
+            RoutedEvent.Register<VisualElement, PointerEventArgs>(nameof(PointerEntered), RoutingStrategies.Direct);
+        public static readonly RoutedEvent<PointerEventArgs> PointerExitedEvent =
+            RoutedEvent.Register<VisualElement, PointerEventArgs>(nameof(PointerExited), RoutingStrategies.Direct);
+
+        /// <summary>Raised on each element the pointer enters, after IsPointerOver turns on (direct, not bubbled).</summary>
+        public event Action<object, PointerEventArgs> PointerEntered;
+
+        /// <summary>Raised on each element the pointer leaves, after IsPointerOver turns off (direct, not bubbled).</summary>
+        public event Action<object, PointerEventArgs> PointerExited;
+
         public bool IsPointerOver
         {
             get { return _isPointerOver; }
@@ -181,6 +193,12 @@ namespace Acrux.Core
                 if (_isPointerOver == value) return;
                 _isPointerOver = value;
                 PseudoClasses.Set(PseudoClassNames.PointerOver, value);
+                RoutedEvent<PointerEventArgs> routed = value ? PointerEnteredEvent : PointerExitedEvent;
+                var e = new PointerEventArgs(routed, this);
+                Action<object, PointerEventArgs> handler = value ? PointerEntered : PointerExited;
+                if (handler != null)
+                    handler(this, e);
+                routed.RaiseClassHandlers(this, e);
             }
         }
         public bool IsPressed

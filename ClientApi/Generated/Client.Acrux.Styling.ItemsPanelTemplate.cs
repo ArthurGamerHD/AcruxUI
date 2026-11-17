@@ -6,7 +6,7 @@ namespace Acrux.Styling
         internal ItemsPanelTemplate(global::Acrux.Toolkit.Deferred deferred) : base(deferred) { }
         public ItemsPanelTemplate(global::System.Func<global::Acrux.Layout.Panel> @factory) : base(global::Acrux.Toolkit.Deferred.Value)
         {
-            __AttachNative(__UiBridge_Acrux_Styling_ItemsPanelTemplate.m0(((global::System.Func<global::System.Func<global::Acrux.Layout.Panel>, global::System.Func<object>>)(__d232 => __d232 == null ? null : new global::System.Func<object>(() => global::Acrux.Toolkit.Ui.Native(__d232()))))(@factory)));
+            __AttachNative(__UiBridge_Acrux_Styling_ItemsPanelTemplate.m0(((global::System.Func<global::System.Func<global::Acrux.Layout.Panel>, global::System.Func<object>>)(__d236 => __d236 == null ? null : new global::System.Func<object>(() => global::Acrux.Toolkit.Ui.Native(__d236()))))(@factory)));
         }
         public static global::Acrux.Styling.ItemsPanelTemplate Parse(string @xml)  { return global::Acrux.Toolkit.Ui.Wrap<global::Acrux.Styling.ItemsPanelTemplate>(__UiBridge_Acrux_Styling_ItemsPanelTemplate.m1(@xml)); }
         public global::Acrux.Layout.Panel Build()  { return global::Acrux.Toolkit.Ui.Wrap<global::Acrux.Layout.Panel>(__UiBridge_Acrux_Styling_ItemsPanelTemplate.m2(Native)); }

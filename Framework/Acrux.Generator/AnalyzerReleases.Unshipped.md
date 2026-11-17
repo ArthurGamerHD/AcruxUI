@@ -15,3 +15,4 @@ ACRUX008 | Acrux.Generator | Warning | XAML elements must be whitelisted base me
 ACRUX009 | Acrux.Generator | Warning | Styled-property enums clients cannot name must declare an explicit underlying type
 ACRUX010 | Acrux.Generator | Error | x:DataType view models must be observable (INotifyPropertyChanged)
 ACRUX011 | Acrux.Generator | Error | [PreviewWith] values must fit their member
+ACRUX012 | Acrux.Generator | Error | XAML event handlers must name a compatible method of the x:Class

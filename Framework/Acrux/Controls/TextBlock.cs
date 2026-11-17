@@ -19,7 +19,12 @@ namespace Acrux.Controls
     {
         None,
         CharacterEllipsis,
-        WordEllipsis
+        WordEllipsis,
+        /// <summary>
+        /// Keeps up to the first 8 characters, then the ellipsis, then as much of the end of the text as fits
+        /// (Avalonia's TextTrimming.PrefixCharacterEllipsis).
+        /// </summary>
+        PrefixCharacterEllipsis
     }
 
     /// <summary>
@@ -302,6 +307,9 @@ namespace Acrux.Controls
                 else high = middle - 1;
             }
 
+            if (trimming == TextTrimming.PrefixCharacterEllipsis)
+                return TrimWithSuffix(value, low, maximumWidth);
+
             if (trimming == TextTrimming.WordEllipsis)
             {
                 int boundary = FindWordBoundary(value, low);
@@ -309,6 +317,27 @@ namespace Acrux.Controls
                     low = boundary;
             }
             return value.Substring(0, low).TrimEnd() + Ellipsis;
+        }
+
+        const int EllipsisPrefixLength = 8;
+
+        // Same layout as Avalonia's TextLeadingPrefixCharacterEllipsis: the prefix is capped at 8 characters and the
+        // remaining width is filled from the end; when 8 characters or fewer fit, only the prefix is kept.
+        string TrimWithSuffix(string value, int fitting, float maximumWidth)
+        {
+            if (fitting <= EllipsisPrefixLength)
+                return value.Substring(0, fitting) + Ellipsis;
+
+            string prefix = value.Substring(0, EllipsisPrefixLength) + Ellipsis;
+            int low = 0;
+            int high = value.Length - EllipsisPrefixLength - 1;
+            while (low < high)
+            {
+                int middle = low + (high - low + 1) / 2;
+                if (MeasureWidth(prefix + value.Substring(value.Length - middle)) <= maximumWidth) low = middle;
+                else high = middle - 1;
+            }
+            return prefix + value.Substring(value.Length - low);
         }
 
         string Wrap(string value, float maximumWidth)

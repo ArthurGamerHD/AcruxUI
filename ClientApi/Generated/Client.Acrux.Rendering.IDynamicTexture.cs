@@ -15,7 +15,7 @@ namespace Acrux.Rendering
         public global::Acrux.Rendering.TextureSource Source { get { return global::Acrux.Toolkit.Ui.TextureFromWire(__UiBridge_Acrux_Rendering_IDynamicTexture.m0(Native)); } }
         public bool IsAvailable { get { return __UiBridge_Acrux_Rendering_IDynamicTexture.m1(Native); } }
         public global::VRageMath.Vector2I Size { get { return __UiBridge_Acrux_Rendering_IDynamicTexture.m2(Native); } }
-        public bool Update(global::System.Action<global::Acrux.Rendering.PixelCanvas> @paint)  { return __UiBridge_Acrux_Rendering_IDynamicTexture.m3(Native, ((global::System.Func<global::System.Action<global::Acrux.Rendering.PixelCanvas>, global::System.Action<object>>)(__d211 => __d211 == null ? null : new global::System.Action<object>((__p211_0) => __d211(global::Acrux.Toolkit.Ui.Wrap<global::Acrux.Rendering.PixelCanvas>(__p211_0)))))(@paint)); }
+        public bool Update(global::System.Action<global::Acrux.Rendering.PixelCanvas> @paint)  { return __UiBridge_Acrux_Rendering_IDynamicTexture.m3(Native, ((global::System.Func<global::System.Action<global::Acrux.Rendering.PixelCanvas>, global::System.Action<object>>)(__d215 => __d215 == null ? null : new global::System.Action<object>((__p215_0) => __d215(global::Acrux.Toolkit.Ui.Wrap<global::Acrux.Rendering.PixelCanvas>(__p215_0)))))(@paint)); }
         public void Dispose() { global::Acrux.Toolkit.Ui.DisposeNative(Native); }
     }
     internal static class __UiBridge_Acrux_Rendering_IDynamicTexture
@@ -29,7 +29,7 @@ namespace Acrux.Rendering
             if (__impl == null) return null;
             var __toolkit = __impl as global::Acrux.Toolkit.IToolkitObject;
             if (__toolkit != null) return __toolkit.Native;
-            return new object[] { "acrux.iface", __impl, new global::System.Action(__impl.Dispose), new global::System.Func<object>(() => global::Acrux.Toolkit.Ui.TextureToWire(__impl.Source)), new global::System.Func<bool>(() => __impl.IsAvailable), new global::System.Func<global::VRageMath.Vector2I>(() => __impl.Size), new global::System.Func<global::System.Action<object>, bool>((__w_paint) => __impl.Update(((global::System.Func<global::System.Action<object>, global::System.Action<global::Acrux.Rendering.PixelCanvas>>)(__d212 => __d212 == null ? null : new global::System.Action<global::Acrux.Rendering.PixelCanvas>((__p212_0) => __d212(global::Acrux.Toolkit.Ui.Native(__p212_0)))))(__w_paint))) };
+            return new object[] { "acrux.iface", __impl, new global::System.Action(__impl.Dispose), new global::System.Func<object>(() => global::Acrux.Toolkit.Ui.TextureToWire(__impl.Source)), new global::System.Func<bool>(() => __impl.IsAvailable), new global::System.Func<global::VRageMath.Vector2I>(() => __impl.Size), new global::System.Func<global::System.Action<object>, bool>((__w_paint) => __impl.Update(((global::System.Func<global::System.Action<object>, global::System.Action<global::Acrux.Rendering.PixelCanvas>>)(__d216 => __d216 == null ? null : new global::System.Action<global::Acrux.Rendering.PixelCanvas>((__p216_0) => __d216(global::Acrux.Toolkit.Ui.Native(__p216_0)))))(__w_paint))) };
         }
         internal static void Load(global::System.Collections.Generic.IDictionary<string, global::System.Delegate> api)
         {

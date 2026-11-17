@@ -10,7 +10,7 @@ namespace Acrux.ScreenSpace
         static bool __event_RedrawRequested_subscribed;
         public static event global::System.Action RedrawRequested
         {
-            add { __event_RedrawRequested += value; if (!__event_RedrawRequested_subscribed) { __event_RedrawRequested_subscribed = true; __UiBridge_Acrux_ScreenSpace_GuiAnimationSessionComponent.m2(new global::System.Action(() => { var __h = __event_RedrawRequested; if (__h != null) __h(); })); } }
+            add { __event_RedrawRequested += value; if (!__event_RedrawRequested_subscribed && __UiBridge_Acrux_ScreenSpace_GuiAnimationSessionComponent.m2 != null) { __event_RedrawRequested_subscribed = true; __UiBridge_Acrux_ScreenSpace_GuiAnimationSessionComponent.m2(new global::System.Action(() => { var __h = __event_RedrawRequested; if (__h != null) __h(); })); } }
             remove { __event_RedrawRequested -= value; }
         }
         public GuiAnimationSessionComponent() : base(global::Acrux.Toolkit.Deferred.Value)

@@ -120,7 +120,7 @@ namespace AcruxPreview
             var shell = new XElement(root.Name, root.Attributes().Where(a => a.IsNamespaceDeclaration || a.Name == Xaml + "DataType"),
                 root.Elements().FirstOrDefault(e => !e.Name.LocalName.Contains(".")));
 
-            var context = new HotReloadContext(ControlTemplate.CreateTypeRegistry());
+            var context = new HotReloadContext(ControlTemplate.CreateTypeRegistry()) { IgnoreMissingHandlers = true };
             string text = shell.ToString(SaveOptions.DisableFormatting);
             UiXmlLoader.Node node = UiXmlLoader.ParseNode(text);
             RegisterBindings(context, node);

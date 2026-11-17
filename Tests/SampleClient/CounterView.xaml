@@ -26,7 +26,8 @@
       </ItemsControl.ItemTemplate>
     </ItemsControl>
     <StackPanel Grid.Row="2" Orientation="Horizontal" Spacing="6">
-      <Button x:Name="Increment" Command="{Binding IncrementCommand}" Width="120" Height="40">
+      <Button x:Name="Increment" Command="{Binding IncrementCommand}" Width="120" Height="40"
+              PointerEntered="OnIncrementEntered" PointerExited="OnIncrementExited">
         <TextBlock Text="+1" />
       </Button>
       <local:Gauge x:Name="Meter" Value="{Binding Fraction}" Mode="{Binding Mode}" Width="200" Height="40" />

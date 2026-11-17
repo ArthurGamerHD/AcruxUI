@@ -21,6 +21,8 @@ namespace Acrux.Lcd
         readonly LcdTextureResolver _textures;
         readonly LcdDynamicTextureFactory _dynamicTextures;
         readonly BorderTextureCache _borderTextures;
+        readonly global::Acrux.Toolkit.GeneratedTexturePoolCache _poolCache =
+            new global::Acrux.Toolkit.GeneratedTexturePoolCache();
         readonly Stack<RectangleF> _clips = new Stack<RectangleF>();
         List<MySprite> _sprites;
 
@@ -30,7 +32,7 @@ namespace Acrux.Lcd
                 throw new ArgumentNullException(nameof(surface));
 
             _dynamicTextures = new LcdDynamicTextureFactory(
-                () => PoolOverride ?? global::Acrux.Toolkit.GeneratedTexturePool.ForVisual(OwnerRoot));
+                () => PoolOverride ?? _poolCache.ForVisual(OwnerRoot));
             _textMetrics = new LcdTextMetrics(surface);
             _textures = new LcdTextureResolver(surface, missingTexture);
             _borderTextures = new BorderTextureCache(_dynamicTextures);

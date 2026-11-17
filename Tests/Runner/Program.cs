@@ -123,6 +123,11 @@ static class Program
         host.SetPrimaryButton(true);
         host.SetPrimaryButton(false);
         Check(vm.Count == 1, "clicking the toolkit Button executed the client command (count=" + vm.Count + ")");
+        Check(view.PointerEnteredCount == 1 && view.PointerExitedCount == 0 && ReferenceEquals(view.LastPointerSender, view.IncrementButton),
+            "XAML PointerEntered reached the client code-behind once, with the Button as sender (" + view.PointerEnteredCount + ")");
+        host.MovePointer(new Vector2(500, 500));
+        Check(view.PointerExitedCount == 1, "XAML PointerExited ran a handler taking the base RoutedEventArgs (" + view.PointerExitedCount + ")");
+        host.MovePointer(center);
 
         sprites.Clear();
         host.Draw(sprites);
@@ -384,6 +389,7 @@ static class Program
 
         StyleAnimationChecks();
         TransformParseChecks();
+        TrimmingChecks();
 
         Console.WriteLine(_failures == 0 ? "ALL CHECKS PASSED" : _failures + " CHECK(S) FAILED");
         return _failures == 0 ? 0 : 1;
@@ -424,6 +430,26 @@ static class Program
         Check(vector(toolkit::Acrux.Styling.Transform.Parse("scale(0.95)"), "Offset") == Vector2.Zero &&
               vector(toolkit::Acrux.Styling.Transform.Parse("rotate(90deg)"), "Offset") == Vector2.Zero,
             "scale and rotate transforms carry no offset");
+    }
+
+    sealed class MonospaceMetrics : toolkit::Acrux.Rendering.ITextMetrics
+    {
+        public Vector2 Measure(string font, string text, float scale) => new Vector2(text.Length, 1f);
+    }
+
+    // One unit per character, so widths count characters; the ellipsis counts as one.
+    static void TrimmingChecks()
+    {
+        var flags = BindingFlags.Instance | BindingFlags.NonPublic;
+        var text = new toolkit::Acrux.Controls.TextBlock();
+        typeof(toolkit::Acrux.Core.VisualElement).GetField("_textMetrics", flags).SetValue(text, new MonospaceMetrics());
+        var trim = typeof(toolkit::Acrux.Controls.TextBlock).GetMethod("Trim", flags);
+        Func<string, float, toolkit::Acrux.Controls.TextTrimming, string> run = (value, width, mode) => (string)trim.Invoke(text, new object[] { value, width, mode });
+        var prefix = toolkit::Acrux.Controls.TextTrimming.PrefixCharacterEllipsis;
+        Check(run("Destination Pad", 15f, prefix) == "Destination Pad", "PrefixCharacterEllipsis leaves text that fits");
+        Check(run("Destination Pad", 12f, prefix) == "Destinat\u2026Pad", "PrefixCharacterEllipsis keeps 8 leading characters and fills the rest from the end");
+        Check(run("Destination Pad", 7f, prefix) == "Destin\u2026", "PrefixCharacterEllipsis keeps only the prefix when 8 characters or fewer fit");
+        Check(run("Destination Pad", 12f, toolkit::Acrux.Controls.TextTrimming.CharacterEllipsis) == "Destination\u2026", "CharacterEllipsis still trims at the end");
     }
 
     // Avalonia's <Style.Animations>, toolkit side, on a hand-driven frame clock.

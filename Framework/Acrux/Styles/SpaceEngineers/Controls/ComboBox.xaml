@@ -23,6 +23,7 @@
               <TextBlock Name="PART_HeaderText"
                          HorizontalAlignment="Left"
                          VerticalAlignment="Center"
+                         TextTrimming="PrefixCharacterEllipsis"
                          FontSize="0.72"
                          Foreground="{TemplateBinding Foreground}" />
               <!-- Shows the selection through SelectionBoxItemTemplate / ItemTemplate when one is set. -->

@@ -99,6 +99,7 @@
     <Compile Include="$(MSBuildThisFileDirectory)Core\Input\Key.cs" />
     <Compile Include="$(MSBuildThisFileDirectory)Core\Input\ICommand.cs" />
     <Compile Include="$(MSBuildThisFileDirectory)Core\Input\PointerCursor.cs" />
+    <Compile Include="$(MSBuildThisFileDirectory)Core\Input\PointerEventArgs.cs" />
     <Compile Include="$(MSBuildThisFileDirectory)Core\Invalidation\UiInvalidation.cs" />
     <Compile Include="$(MSBuildThisFileDirectory)Core\PropertySystem\PropertyStore.cs" />
     <Compile Include="$(MSBuildThisFileDirectory)Core\PropertySystem\StyledProperty.cs" />

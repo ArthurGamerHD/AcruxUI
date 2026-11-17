@@ -14,7 +14,7 @@ namespace Acrux.Styling
         }
         public TValue Convert<TValue>(string @value)  { return global::Acrux.Toolkit.Ui.FromWire<TValue>(__UiBridge_Acrux_Styling_StyleSetterContext.m2(Native, @value)); }
         public bool TryGetDynamicResourceKey(object @value, out string @key) { var __res = __UiBridge_Acrux_Styling_StyleSetterContext.m3(Native, global::Acrux.Toolkit.Ui.ToWire(@value)); @key = ((string)__res[1]); return ((bool)__res[0]); }
-        public global::System.Func<TValue> ConvertProvider<TValue>(object @value)  { return ((global::System.Func<global::System.Func<object>, global::System.Func<TValue>>)(__d236 => __d236 == null ? null : new global::System.Func<TValue>(() => global::Acrux.Toolkit.Ui.FromWire<TValue>(__d236()))))(__UiBridge_Acrux_Styling_StyleSetterContext.m4(Native, global::Acrux.Toolkit.Ui.ToWire(@value))); }
+        public global::System.Func<TValue> ConvertProvider<TValue>(object @value)  { return ((global::System.Func<global::System.Func<object>, global::System.Func<TValue>>)(__d240 => __d240 == null ? null : new global::System.Func<TValue>(() => global::Acrux.Toolkit.Ui.FromWire<TValue>(__d240()))))(__UiBridge_Acrux_Styling_StyleSetterContext.m4(Native, global::Acrux.Toolkit.Ui.ToWire(@value))); }
         internal static bool TryParseResource(string @value, out string @key, out bool @dynamic) { var __res = __UiBridge_Acrux_Styling_StyleSetterContext.m5(@value); @key = ((string)__res[1]); @dynamic = ((bool)__res[2]); return ((bool)__res[0]); }
     }
     internal static class __UiBridge_Acrux_Styling_StyleSetterContext

@@ -9,7 +9,7 @@ namespace Acrux.Styling
         bool __event_Changed_subscribed;
         public event global::System.Action<string> Changed
         {
-            add { __event_Changed += value; if (!__event_Changed_subscribed) { __event_Changed_subscribed = true; __UiBridge_Acrux_Styling_ResourceDictionary.m2(Native, new global::System.Action<string>((__a0) => { var __h = __event_Changed; if (__h != null) __h(__a0); })); } }
+            add { __event_Changed += value; if (!__event_Changed_subscribed && __UiBridge_Acrux_Styling_ResourceDictionary.m2 != null) { __event_Changed_subscribed = true; __UiBridge_Acrux_Styling_ResourceDictionary.m2(Native, new global::System.Action<string>((__a0) => { var __h = __event_Changed; if (__h != null) __h(__a0); })); } }
             remove { __event_Changed -= value; }
         }
         public void Add(string @key, object @value)  { __UiBridge_Acrux_Styling_ResourceDictionary.m3(Native, @key, global::Acrux.Toolkit.Ui.ToWire(@value)); }

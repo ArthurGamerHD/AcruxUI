@@ -127,6 +127,20 @@ namespace Sample
         public TextBlock TitleBlock => Title;
         public Gauge MeterControl => Meter;
         public Acrux.Controls.Border InlineBoxBorder => InlineBox;
+        public int PointerEnteredCount { get; private set; }
+        public int PointerExitedCount { get; private set; }
+        public object LastPointerSender { get; private set; }
+
+        void OnIncrementEntered(object sender, Acrux.Core.Input.PointerEventArgs e)
+        {
+            PointerEnteredCount++;
+            LastPointerSender = sender;
+        }
+
+        void OnIncrementExited(object sender, Acrux.Interactivity.RoutedEventArgs e)
+        {
+            PointerExitedCount++;
+        }
     }
 
     /// <summary>A client templated control whose look comes from a toolkit-parsed style with TemplateBindings.</summary>

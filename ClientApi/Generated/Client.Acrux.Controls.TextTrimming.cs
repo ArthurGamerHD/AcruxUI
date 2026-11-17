@@ -6,6 +6,7 @@ namespace Acrux.Controls
         None = 0,
         CharacterEllipsis = 1,
         WordEllipsis = 2,
+        PrefixCharacterEllipsis = 3,
     }
 }
 

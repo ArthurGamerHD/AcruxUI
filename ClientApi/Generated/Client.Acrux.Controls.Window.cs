@@ -49,14 +49,14 @@ namespace Acrux.Controls
         bool __event_Opened_subscribed;
         public event global::System.Action Opened
         {
-            add { __event_Opened += value; if (!__event_Opened_subscribed) { __event_Opened_subscribed = true; __UiBridge_Acrux_Controls_Window.m53(Native, new global::System.Action(() => { var __h = __event_Opened; if (__h != null) __h(); })); } }
+            add { __event_Opened += value; if (!__event_Opened_subscribed && __UiBridge_Acrux_Controls_Window.m53 != null) { __event_Opened_subscribed = true; __UiBridge_Acrux_Controls_Window.m53(Native, new global::System.Action(() => { var __h = __event_Opened; if (__h != null) __h(); })); } }
             remove { __event_Opened -= value; }
         }
         global::System.Action __event_Closed;
         bool __event_Closed_subscribed;
         public event global::System.Action Closed
         {
-            add { __event_Closed += value; if (!__event_Closed_subscribed) { __event_Closed_subscribed = true; __UiBridge_Acrux_Controls_Window.m54(Native, new global::System.Action(() => { var __h = __event_Closed; if (__h != null) __h(); })); } }
+            add { __event_Closed += value; if (!__event_Closed_subscribed && __UiBridge_Acrux_Controls_Window.m54 != null) { __event_Closed_subscribed = true; __UiBridge_Acrux_Controls_Window.m54(Native, new global::System.Action(() => { var __h = __event_Closed; if (__h != null) __h(); })); } }
             remove { __event_Closed -= value; }
         }
         public global::Acrux.Controls.Window BindOpen(global::Acrux.Core.Input.Key @key)  { return global::Acrux.Toolkit.Ui.Wrap<global::Acrux.Controls.Window>(__UiBridge_Acrux_Controls_Window.m55(Native, (byte)(@key))); }

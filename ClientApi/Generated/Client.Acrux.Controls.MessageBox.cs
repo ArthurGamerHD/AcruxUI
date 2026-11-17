@@ -35,7 +35,7 @@ namespace Acrux.Controls
         bool __event_Closed_subscribed;
         public event global::System.Action<global::Acrux.Controls.MessageBoxResult> Closed
         {
-            add { __event_Closed += value; if (!__event_Closed_subscribed) { __event_Closed_subscribed = true; __UiBridge_Acrux_Controls_MessageBox.m24(Native, ((global::System.Func<global::System.Action<global::Acrux.Controls.MessageBoxResult>, global::System.Action<int>>)(__d111 => __d111 == null ? null : new global::System.Action<int>((__p111_0) => __d111((global::Acrux.Controls.MessageBoxResult)(__p111_0)))))(new global::System.Action<global::Acrux.Controls.MessageBoxResult>((__a0) => { var __h = __event_Closed; if (__h != null) __h(__a0); }))); } }
+            add { __event_Closed += value; if (!__event_Closed_subscribed && __UiBridge_Acrux_Controls_MessageBox.m24 != null) { __event_Closed_subscribed = true; __UiBridge_Acrux_Controls_MessageBox.m24(Native, ((global::System.Func<global::System.Action<global::Acrux.Controls.MessageBoxResult>, global::System.Action<int>>)(__d111 => __d111 == null ? null : new global::System.Action<int>((__p111_0) => __d111((global::Acrux.Controls.MessageBoxResult)(__p111_0)))))(new global::System.Action<global::Acrux.Controls.MessageBoxResult>((__a0) => { var __h = __event_Closed; if (__h != null) __h(__a0); }))); } }
             remove { __event_Closed -= value; }
         }
         public global::VRageMath.Color OverlayColor { get { return __UiBridge_Acrux_Controls_MessageBox.m25(Native); } set { __UiBridge_Acrux_Controls_MessageBox.m26(Native, value); } }

@@ -50,7 +50,7 @@ namespace Acrux.Core
         bool __event_ResourcesChanged_subscribed;
         internal event global::System.Action<string> ResourcesChanged
         {
-            add { __event_ResourcesChanged += value; if (!__event_ResourcesChanged_subscribed) { __event_ResourcesChanged_subscribed = true; __UiBridge_Acrux_Core_Control.m53(Native, new global::System.Action<string>((__a0) => { var __h = __event_ResourcesChanged; if (__h != null) __h(__a0); })); } }
+            add { __event_ResourcesChanged += value; if (!__event_ResourcesChanged_subscribed && __UiBridge_Acrux_Core_Control.m53 != null) { __event_ResourcesChanged_subscribed = true; __UiBridge_Acrux_Core_Control.m53(Native, new global::System.Action<string>((__a0) => { var __h = __event_ResourcesChanged; if (__h != null) __h(__a0); })); } }
             remove { __event_ResourcesChanged -= value; }
         }
         protected virtual void OnResourceChanged(string @key)  { __UiBridge_Acrux_Core_Control.m54(Native, @key); }
@@ -61,14 +61,14 @@ namespace Acrux.Core
         bool __event_StyledPropertyChanged_subscribed;
         internal event global::System.Action<global::Acrux.Core.Control, global::Acrux.Core.PropertySystem.IStyledProperty> StyledPropertyChanged
         {
-            add { __event_StyledPropertyChanged += value; if (!__event_StyledPropertyChanged_subscribed) { __event_StyledPropertyChanged_subscribed = true; __UiBridge_Acrux_Core_Control.m59(Native, ((global::System.Func<global::System.Action<global::Acrux.Core.Control, global::Acrux.Core.PropertySystem.IStyledProperty>, global::System.Action<object, object>>)(__d143 => __d143 == null ? null : new global::System.Action<object, object>((__p143_0, __p143_1) => __d143(global::Acrux.Toolkit.Ui.Wrap<global::Acrux.Core.Control>(__p143_0), global::Acrux.Toolkit.Ui.WrapProperty(__p143_1)))))(new global::System.Action<global::Acrux.Core.Control, global::Acrux.Core.PropertySystem.IStyledProperty>((__a0, __a1) => { var __h = __event_StyledPropertyChanged; if (__h != null) __h(__a0, __a1); }))); } }
+            add { __event_StyledPropertyChanged += value; if (!__event_StyledPropertyChanged_subscribed && __UiBridge_Acrux_Core_Control.m59 != null) { __event_StyledPropertyChanged_subscribed = true; __UiBridge_Acrux_Core_Control.m59(Native, ((global::System.Func<global::System.Action<global::Acrux.Core.Control, global::Acrux.Core.PropertySystem.IStyledProperty>, global::System.Action<object, object>>)(__d143 => __d143 == null ? null : new global::System.Action<object, object>((__p143_0, __p143_1) => __d143(global::Acrux.Toolkit.Ui.Wrap<global::Acrux.Core.Control>(__p143_0), global::Acrux.Toolkit.Ui.WrapProperty(__p143_1)))))(new global::System.Action<global::Acrux.Core.Control, global::Acrux.Core.PropertySystem.IStyledProperty>((__a0, __a1) => { var __h = __event_StyledPropertyChanged; if (__h != null) __h(__a0, __a1); }))); } }
             remove { __event_StyledPropertyChanged -= value; }
         }
         global::System.Action<object, global::Acrux.Controls.SizeChangedEventArgs> __event_SizeChanged;
         bool __event_SizeChanged_subscribed;
         public event global::System.Action<object, global::Acrux.Controls.SizeChangedEventArgs> SizeChanged
         {
-            add { __event_SizeChanged += value; if (!__event_SizeChanged_subscribed) { __event_SizeChanged_subscribed = true; __UiBridge_Acrux_Core_Control.m60(Native, ((global::System.Func<global::System.Action<object, global::Acrux.Controls.SizeChangedEventArgs>, global::System.Action<object, object>>)(__d145 => __d145 == null ? null : new global::System.Action<object, object>((__p145_0, __p145_1) => __d145(global::Acrux.Toolkit.Ui.FromWire(__p145_0), global::Acrux.Toolkit.Ui.Wrap<global::Acrux.Controls.SizeChangedEventArgs>(__p145_1)))))(new global::System.Action<object, global::Acrux.Controls.SizeChangedEventArgs>((__a0, __a1) => { var __h = __event_SizeChanged; if (__h != null) __h(__a0, __a1); }))); } }
+            add { __event_SizeChanged += value; if (!__event_SizeChanged_subscribed && __UiBridge_Acrux_Core_Control.m60 != null) { __event_SizeChanged_subscribed = true; __UiBridge_Acrux_Core_Control.m60(Native, ((global::System.Func<global::System.Action<object, global::Acrux.Controls.SizeChangedEventArgs>, global::System.Action<object, object>>)(__d145 => __d145 == null ? null : new global::System.Action<object, object>((__p145_0, __p145_1) => __d145(global::Acrux.Toolkit.Ui.FromWire(__p145_0), global::Acrux.Toolkit.Ui.Wrap<global::Acrux.Controls.SizeChangedEventArgs>(__p145_1)))))(new global::System.Action<object, global::Acrux.Controls.SizeChangedEventArgs>((__a0, __a1) => { var __h = __event_SizeChanged; if (__h != null) __h(__a0, __a1); }))); } }
             remove { __event_SizeChanged -= value; }
         }
         internal void RaiseSizeChanged(global::VRageMath.Vector2 @previousSize, global::VRageMath.Vector2 @newSize)  { __UiBridge_Acrux_Core_Control.m61(Native, @previousSize, @newSize); }

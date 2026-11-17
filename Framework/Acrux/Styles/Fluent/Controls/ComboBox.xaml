@@ -15,8 +15,10 @@
           <Grid ColumnDefinitions="* Auto">
             <TextBlock Name="PART_HeaderText"
                        Grid.Column="0"
+                       Margin="0 0 8 0"
                        HorizontalAlignment="Left"
                        VerticalAlignment="Center"
+                       TextTrimming="PrefixCharacterEllipsis"
                        FontSize="0.68"
                        Foreground="{TemplateBinding Foreground}" />
             <!-- Shows the selection through SelectionBoxItemTemplate / ItemTemplate when one is set. -->

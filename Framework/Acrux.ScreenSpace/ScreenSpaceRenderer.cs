@@ -23,13 +23,15 @@ namespace Acrux.ScreenSpace
         readonly ScreenSpaceTextMetrics _textMetrics = new ScreenSpaceTextMetrics();
         readonly ScreenSpaceDynamicTextureFactory _dynamicTextures;
         readonly BorderTextureCache _borderTextures;
+        readonly global::Acrux.Toolkit.GeneratedTexturePoolCache _poolCache =
+            new global::Acrux.Toolkit.GeneratedTexturePoolCache();
         readonly MyScreenSpaceLayer _layer;
 
         public ScreenSpaceRenderer(MyScreenSpaceLayer layer = MyScreenSpaceLayer.BelowHud)
         {
             _layer = layer;
             _dynamicTextures = new ScreenSpaceDynamicTextureFactory(
-                () => global::Acrux.Toolkit.GeneratedTexturePool.ForVisual(OwnerRoot));
+                () => _poolCache.ForVisual(OwnerRoot));
             _borderTextures = new BorderTextureCache(_dynamicTextures);
         }
 

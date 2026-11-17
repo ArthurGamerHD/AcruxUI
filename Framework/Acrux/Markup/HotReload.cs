@@ -30,6 +30,7 @@ namespace Acrux.Markup
             new Dictionary<string, Func<object, object>>(StringComparer.Ordinal);
         readonly Dictionary<string, Action<object, object>> _setters =
             new Dictionary<string, Action<object, object>>(StringComparer.Ordinal);
+        readonly Dictionary<string, Delegate> _handlers = new Dictionary<string, Delegate>(StringComparer.Ordinal);
 
         public HotReloadContext(TypeRegistry types)
         {
@@ -56,6 +57,23 @@ namespace Acrux.Markup
         {
             if (!Types.Contains(alias))
                 Types.RegisterAlias(alias, name);
+        }
+
+        // The IDE preview builds views without their code-behind, so it leaves event attributes unsubscribed.
+        public bool IgnoreMissingHandlers { get; set; }
+
+        public void Handler(string eventName, string method, Delegate handler)
+        {
+            _handlers[eventName + "|" + method] = handler;
+        }
+
+        internal Delegate GetHandler(string eventName, string method)
+        {
+            Delegate handler;
+            if (_handlers.TryGetValue(eventName + "|" + method, out handler) || IgnoreMissingHandlers)
+                return handler;
+            throw new InvalidOperationException("Event handler '" + method + "' for '" + eventName +
+                                                "' is not available to hot reload; rebuild the mod.");
         }
 
         public void Getter(string dataType, string property, Func<object, object> getter)
@@ -447,6 +465,16 @@ namespace Acrux.Markup
                 if (Names.ContainsKey(value))
                     throw new FormatException("Duplicate x:Name '" + value + "'.");
                 Names.Add(value, target);
+                return;
+            }
+
+            if (TypeRegistry.IsEvent(target, name))
+            {
+                if (insideTemplate)
+                    throw new FormatException("Event handlers inside DataTemplate are not supported yet ('" + name + "').");
+                Delegate handler = _context.GetHandler(name, value.Trim());
+                if (handler != null)
+                    TypeRegistry.Subscribe(target, name, handler);
                 return;
             }
 

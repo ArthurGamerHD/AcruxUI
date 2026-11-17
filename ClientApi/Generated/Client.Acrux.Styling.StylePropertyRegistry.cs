@@ -13,12 +13,12 @@ namespace Acrux.Styling
         bool __event_MetadataChanged_subscribed;
         internal event global::System.Action<string> MetadataChanged
         {
-            add { __event_MetadataChanged += value; if (!__event_MetadataChanged_subscribed) { __event_MetadataChanged_subscribed = true; __UiBridge_Acrux_Styling_StylePropertyRegistry.m2(Native, new global::System.Action<string>((__a0) => { var __h = __event_MetadataChanged; if (__h != null) __h(__a0); })); } }
+            add { __event_MetadataChanged += value; if (!__event_MetadataChanged_subscribed && __UiBridge_Acrux_Styling_StylePropertyRegistry.m2 != null) { __event_MetadataChanged_subscribed = true; __UiBridge_Acrux_Styling_StylePropertyRegistry.m2(Native, new global::System.Action<string>((__a0) => { var __h = __event_MetadataChanged; if (__h != null) __h(__a0); })); } }
             remove { __event_MetadataChanged -= value; }
         }
         internal int Generation { get { return __UiBridge_Acrux_Styling_StylePropertyRegistry.m3(Native); } }
         public void RegisterType<TControl>(string @selectorName) where TControl : global::Acrux.Core.Control { __UiBridge_Acrux_Styling_StylePropertyRegistry.m4(Native, @selectorName); }
-        internal void RegisterExternalType(string @selectorName, global::System.Type @ownerType, global::System.Func<global::Acrux.Core.Control, bool> @matches)  { __UiBridge_Acrux_Styling_StylePropertyRegistry.m5(Native, @selectorName, @ownerType, ((global::System.Func<global::System.Func<global::Acrux.Core.Control, bool>, global::System.Func<object, bool>>)(__d234 => __d234 == null ? null : new global::System.Func<object, bool>((__p234_0) => __d234(global::Acrux.Toolkit.Ui.Wrap<global::Acrux.Core.Control>(__p234_0)))))(@matches)); }
+        internal void RegisterExternalType(string @selectorName, global::System.Type @ownerType, global::System.Func<global::Acrux.Core.Control, bool> @matches)  { __UiBridge_Acrux_Styling_StylePropertyRegistry.m5(Native, @selectorName, @ownerType, ((global::System.Func<global::System.Func<global::Acrux.Core.Control, bool>, global::System.Func<object, bool>>)(__d238 => __d238 == null ? null : new global::System.Func<object, bool>((__p238_0) => __d238(global::Acrux.Toolkit.Ui.Wrap<global::Acrux.Core.Control>(__p238_0)))))(@matches)); }
         internal void TryRegisterType<TControl>(string @selectorName) where TControl : global::Acrux.Core.Control { __UiBridge_Acrux_Styling_StylePropertyRegistry.m6(Native, @selectorName); }
         public void Register<TControl, TValue>(string @selectorName, global::Acrux.Core.PropertySystem.StyledProperty<TValue> @property) where TControl : global::Acrux.Core.Control { __UiBridge_Acrux_Styling_StylePropertyRegistry.m7(Native, @selectorName, global::Acrux.Toolkit.Ui.Native(@property)); }
         internal bool ContainsType(string @selectorName)  { return __UiBridge_Acrux_Styling_StylePropertyRegistry.m8(Native, @selectorName); }

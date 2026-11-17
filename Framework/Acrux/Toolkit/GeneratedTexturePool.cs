@@ -13,6 +13,9 @@ namespace Acrux.Toolkit
     internal sealed class GeneratedTexturePool
     {
         static readonly List<GeneratedTexturePool> Clients = new List<GeneratedTexturePool>();
+        static int _version;
+
+        internal static int Version => _version;
 
         readonly Func<string, Vector2I, bool, object> _create;
         readonly Func<bool> _isSupported;
@@ -60,19 +63,28 @@ namespace Acrux.Toolkit
             if (pool == null)
                 return;
             lock (Clients)
+            {
                 Clients.Add(pool);
+                _version++;
+            }
         }
 
         internal static void Unregister(GeneratedTexturePool pool)
         {
             lock (Clients)
+            {
                 Clients.Remove(pool);
+                _version++;
+            }
         }
 
         internal static void Clear()
         {
             lock (Clients)
+            {
                 Clients.Clear();
+                _version++;
+            }
         }
 
         // The pool of the mod that created visual or its nearest client-created ancestor; null for UI that belongs to
@@ -111,6 +123,30 @@ namespace Acrux.Toolkit
                 }
             }
             return null;
+        }
+    }
+
+    // Renderers ask for the pool on every bordered element they draw; resolving it walks the visual's ancestors and
+    // calls each client's ownership delegate across the bridge, so the result is kept until the root or the set of
+    // registered pools changes. A null result is not kept: the root's peer may only be attached after the first draw.
+    internal sealed class GeneratedTexturePoolCache
+    {
+        Visual _visual;
+        GeneratedTexturePool _pool;
+        int _version;
+
+        internal GeneratedTexturePool ForVisual(Visual visual)
+        {
+            int version = GeneratedTexturePool.Version;
+            GeneratedTexturePool pool = _pool;
+            if (pool != null && ReferenceEquals(_visual, visual) && _version == version)
+                return pool;
+
+            pool = GeneratedTexturePool.ForVisual(visual);
+            _visual = visual;
+            _version = version;
+            _pool = pool;
+            return pool;
         }
     }
 }

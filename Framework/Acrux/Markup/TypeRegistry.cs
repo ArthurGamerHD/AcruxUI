@@ -367,6 +367,26 @@ namespace Acrux.Markup
             }
         }
 
+        // The events XAML may name on any element (Avalonia InputElement) or on a Button.
+        internal static bool IsEvent(VisualElement element, string name)
+        {
+            return name == "PointerEntered" || name == "PointerExited" || name == "Click" && element is Acrux.Controls.Button;
+        }
+
+        internal static void Subscribe(VisualElement element, string name, Delegate handler)
+        {
+            var pointer = handler as Action<object, PointerEventArgs>;
+            var routed = handler as Action<object, Acrux.Interactivity.RoutedEventArgs>;
+            if (name == "PointerEntered" && pointer != null)
+                element.PointerEntered += pointer;
+            else if (name == "PointerExited" && pointer != null)
+                element.PointerExited += pointer;
+            else if (name == "Click" && routed != null && element is Acrux.Controls.Button)
+                ((Acrux.Controls.Button)element).Click += routed;
+            else
+                throw new FormatException("Handler for '" + name + "' has the wrong signature.");
+        }
+
         static Action<object> GetCommonSetter(Control control, string propertyName)
         {
             switch (propertyName)

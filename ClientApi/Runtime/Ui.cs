@@ -30,8 +30,12 @@ namespace Acrux.Toolkit
     {
         object _native;
 
+        // Every wrapper constructor chains here: generated public constructors would otherwise call a null bridge
+        // delegate and fail with a bare NullReferenceException when the toolkit mod is absent from the world.
         protected ToolkitObject(Deferred deferred)
         {
+            if (!Ui.IsLoaded)
+                AcruxUiToolkitClient.ThrowNotLoaded(GetType().FullName);
         }
 
         /// <summary>The toolkit object. Null only while a wrapper is being constructed.</summary>

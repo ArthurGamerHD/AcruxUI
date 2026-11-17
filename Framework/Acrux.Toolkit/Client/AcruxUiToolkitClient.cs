@@ -1,6 +1,10 @@
 using System;
 using System.Collections.Generic;
+using System.IO;
 using Sandbox.ModAPI;
+using VRage;
+using VRage.Game;
+using VRage.Game.ModAPI;
 using VRage.Utils;
 
 namespace Acrux.Toolkit
@@ -129,6 +133,262 @@ namespace Acrux.Toolkit
             StopListening();
             _onReady = null;
             Ui.Unload();
+            _crashScheduled = false;
+            _modContext = null;
+        }
+
+        /// <summary>Workshop page of the Acrux UI Toolkit mod.</summary>
+        public const string ToolkitWorkshopUrl = "https://steamcommunity.com/sharedfiles/filedetails/?id=3841029557";
+
+        static IMyModContext _modContext;
+
+        /// <summary>
+        /// The context of the mod this ClientApi copy is compiled into; null outside a session (or outside the game).
+        /// </summary>
+        public static IMyModContext ModContext
+        {
+            get
+            {
+                if (_modContext == null)
+                    _modContext = FindModContext();
+                return _modContext;
+            }
+        }
+
+        // ModScopeName is the calling assembly's name, and this code is compiled into the client mod's own assembly. The
+        // game names a mod's script assemblies "[Service_]ModId_<Data/Scripts folder>" (Steam omits the service), with
+        // ModId the mod item's Name, so the mod is the one whose prefix matches (longest wins if names nest).
+        static IMyModContext FindModContext()
+        {
+            if (MyAPIGateway.Utilities == null || MyAPIGateway.Utilities.GamePaths == null || MyAPIGateway.Session == null ||
+                MyAPIGateway.Session.Mods == null)
+                return null;
+            string scope = MyAPIGateway.Utilities.GamePaths.ModScopeName;
+            if (string.IsNullOrEmpty(scope))
+                return null;
+            var best = default(MyObjectBuilder_Checkpoint.ModItem);
+            int bestLength = -1;
+            foreach (var mod in MyAPIGateway.Session.Mods)
+            {
+                string service = mod.PublishedServiceName;
+                string prefix = (string.IsNullOrEmpty(service) || string.Equals(service, "steam", StringComparison.OrdinalIgnoreCase)
+                    ? "" : service + "_") + mod.Name + "_";
+                if (prefix.Length > bestLength && scope.StartsWith(prefix, StringComparison.Ordinal))
+                {
+                    best = mod;
+                    bestLength = prefix.Length;
+                }
+            }
+            return bestLength < 0 ? null : new ModItemContext(best);
+        }
+
+        /// <summary>A mod context built from its mod item, as the game builds its own.</summary>
+        sealed class ModItemContext : IMyModContext
+        {
+            public ModItemContext(MyObjectBuilder_Checkpoint.ModItem mod)
+            {
+                ModItem = mod;
+                ModName = mod.FriendlyName;
+                ModId = mod.Name;
+                ModServiceName = mod.PublishedServiceName;
+                ModPath = mod.GetPath();
+                ModPathData = Path.Combine(ModPath, "Data");
+            }
+
+            public string ModName { get; private set; }
+            public string ModId { get; private set; }
+            public string ModServiceName { get; private set; }
+            public string ModPath { get; private set; }
+            public string ModPathData { get; private set; }
+            public bool IsBaseGame { get { return false; } }
+            public MyObjectBuilder_Checkpoint.ModItem ModItem { get; private set; }
+        }
+
+        static bool _crashScheduled;
+        static ModCrashedException _pendingCrash;
+        // Replacement for the dialog's text (MyCommonTexts.ModCrashedTheGameInfo), or null to keep the game's.
+        static string _pendingDialogText;
+        // MyAPIGateway.Utilities is cleared when the session unloads, but the object keeps queueing on the game thread.
+        static IMyUtilities _utilities;
+
+        // Next game-thread frame; also arms the menu fallback below. A failed world load unloads the session first, and
+        // MySession.Unload drains this queue (frame counter at int.MaxValue) inside a catch: throwing there aborts the
+        // unload halfway and the game later dies on the half-unloaded world with an unrelated error. So during unload the
+        // crash waits for the menu instead.
+        static void ThrowPendingCrashInSession()
+        {
+            if (_pendingCrash != null && MyAPIGateway.Gui != null)
+                MyAPIGateway.Gui.GuiControlCreated += ThrowPendingCrashAfterUnload;
+            var session = MyAPIGateway.Session;
+            if (_pendingCrash == null || session == null || session.GameplayFrameCounter == int.MaxValue)
+                return;
+            ThrowPendingCrash();
+        }
+
+        // The game never clears GUI subscriptions on unload, so the first screen of the menu (MyAPIGateway.Session is null
+        // by then) tells that the session unloaded cleanly. Not thrown here: menu screens are created by reflection, and
+        // the game only shows its mod crash dialog when the exception it gets is the ModCrashedException itself, not a
+        // TargetInvocationException around it. The game thread's invoke queue runs outside any catch and wrapper.
+        static void ThrowPendingCrashAfterUnload(object screen)
+        {
+            if (_pendingCrash == null || MyAPIGateway.Session != null)
+                return;
+            if (MyAPIGateway.Gui != null)
+                MyAPIGateway.Gui.GuiControlCreated -= ThrowPendingCrashAfterUnload;
+            if (_utilities != null)
+                _utilities.InvokeOnGameThread(ThrowPendingCrash, "AcruxUiToolkitClient");
+            else
+                ThrowPendingCrash();
+        }
+
+        static void ThrowPendingCrash()
+        {
+            ModCrashedException crash = _pendingCrash;
+            if (crash == null)
+                return;
+            _pendingCrash = null;
+            if (MyAPIGateway.Gui != null)
+                MyAPIGateway.Gui.GuiControlCreated -= ThrowPendingCrashAfterUnload;
+            if (_pendingDialogText != null)
+                OverrideDialogText(_pendingDialogText);
+            _pendingDialogText = null;
+            _utilities = null;
+            throw crash;
+        }
+
+        // The game formats its mod crash dialog from the localized ModCrashedTheGameInfo text ({0} mod name, {1} service,
+        // {2} mod id, {3} "log", whose last three characters link to the log file). Mods cannot set a text directly, but
+        // MyTexts.LoadTexts overwrites texts from .resx files on disk, so the text is written to this mod's local storage
+        // and loaded from there (the override culture loads only MyTexts.override.resx). Done right before the crash: it
+        // replaces the text for every mod until the game restarts.
+        static void OverrideDialogText(string text)
+        {
+            try
+            {
+                IMyUtilities utilities = _utilities ?? MyAPIGateway.Utilities;
+                if (utilities == null || utilities.GamePaths == null)
+                    return;
+                const string file = "MyTexts.override.resx";
+                using (TextWriter writer = utilities.WriteFileInLocalStorage(file, typeof(AcruxUiToolkitClient)))
+                {
+                    writer.Write("<?xml version=\"1.0\" encoding=\"utf-8\"?>\r\n<root>\r\n" +
+                        "  <resheader name=\"resmimetype\"><value>text/microsoft-resx</value></resheader>\r\n" +
+                        "  <resheader name=\"version\"><value>2.0</value></resheader>\r\n" +
+                        "  <resheader name=\"reader\"><value>System.Resources.ResXResourceReader, System.Windows.Forms, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b77a5c561934e089</value></resheader>\r\n" +
+                        "  <resheader name=\"writer\"><value>System.Resources.ResXResourceWriter, System.Windows.Forms, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b77a5c561934e089</value></resheader>\r\n" +
+                        "  <data name=\"ModCrashedTheGameInfo\" xml:space=\"preserve\">\r\n    <value>" +
+                        text.Replace("&", "&amp;").Replace("<", "&lt;").Replace(">", "&gt;") +
+                        "</value>\r\n  </data>\r\n</root>\r\n");
+                }
+                // WriteFileInLocalStorage writes to <user data>/Storage/<this assembly's scope name>/.
+                string folder = Path.Combine(utilities.GamePaths.UserDataPath, "Storage", utilities.GamePaths.ModScopeName);
+                MyTexts.LoadTexts(folder, "override", null);
+            }
+            catch (Exception e)
+            {
+                MyLog.Default.WriteLineAndConsole("Acrux UI: could not replace the crash dialog text: " + e.Message);
+            }
+        }
+
+        /// <summary>
+        /// Crashes the game with Space Engineers' "mod crashed the game" dialog naming this mod (see <see cref="ModContext"/>)
+        /// instead of the generic crash report.
+        /// </summary>
+        /// <param name="innerException">The actual error; it is written to the game log.</param>
+        /// <param name="schedule">
+        /// Also queue the crash on the game thread. The dialog only appears for an exception nothing catches, and the game
+        /// catches exceptions in many places (LCD scripts are created inside entity init, which logs and swallows them), so
+        /// pass true from constructors, loading code and other threads. Only one crash is queued per session; if the
+        /// session unloads first (a failed world load), it is raised once the game is back at the main menu.
+        /// </param>
+        public static void Crash(Exception innerException, bool schedule)
+        {
+            if (innerException == null)
+                throw new ArgumentNullException("innerException");
+            string name = DescribeClient();
+            // The dialog never wraps and continues {0} with " (ModId: {1}:{2})": after a URL that would run off the
+            // window, so it gets a line of its own.
+            if (name.Contains("\r\n"))
+                name += "\r\n";
+            throw CreateCrash(innerException, name, null, schedule);
+        }
+
+        // Name of this mod for messages, with its workshop page on the next line when it is published on Steam.
+        static string DescribeClient()
+        {
+            IMyModContext mod = ModContext;
+            string name = mod != null ? mod.ModName : (Ui.ClientName ?? "An Acrux UI client");
+            if (mod == null || mod.ModItem.PublishedFileId == 0 ||
+                !string.Equals(mod.ModItem.PublishedServiceName, "steam", StringComparison.OrdinalIgnoreCase))
+                return name;
+            return name + "\r\nhttps://steamcommunity.com/sharedfiles/filedetails/?id=" + mod.ModItem.PublishedFileId;
+        }
+
+        static ModCrashedException CreateCrash(Exception innerException, string dialogName, string dialogText, bool schedule)
+        {
+            var crash = new ModCrashedException(innerException, new CrashContext(ModContext, dialogName));
+            if (schedule && !_crashScheduled)
+            {
+                _crashScheduled = true;
+                MyLog.Default.WriteLineAndConsole(crash.ModContext.ModName.Replace("\r\n", " ").TrimEnd() + " crashed: " + innerException);
+                _pendingCrash = crash;
+                _pendingDialogText = dialogText;
+                _utilities = MyAPIGateway.Utilities;
+                // Wrappers are often built on worker threads (parallel entity loading): everything else runs on the game thread.
+                if (MyAPIGateway.Utilities != null)
+                    MyAPIGateway.Utilities.InvokeOnGameThread(ThrowPendingCrashInSession, "AcruxUiToolkitClient");
+            }
+            return crash;
+        }
+
+        // Called by every wrapper constructor while the toolkit is not loaded: the mod used Acrux UI without it.
+        internal static void ThrowNotLoaded(string typeName)
+        {
+            IMyModContext mod = ModContext;
+            string name = mod != null ? mod.ModName : (Ui.ClientName ?? "An Acrux UI client");
+            bool workshop = mod != null && mod.ModItem.PublishedFileId != 0;
+
+            // One line each: the dialog is a fixed-size window that never wraps (about 70 characters a line).
+            string text;
+            if (Error != null)
+                text = "Mod {0} called Acrux API with an incompatible Toolkit Mod\r\n" +
+                       "Update Acrux UI Toolkit and this mod to their latest versions\r\n" +
+                       ToolkitWorkshopUrl + "\r\n";
+            else
+                text = "Mod {0} called Acrux API without the Toolkit Mod\r\n" +
+                       "Acrux UI Toolkit is required to display UI\r\n" +
+                       ToolkitWorkshopUrl + "\r\n\r\n" +
+                       (workshop
+                           ? "Please contact the mod author and ask him/her to add\r\nAcrux UI Toolkit as dependency on Steam\r\n"
+                           : "Please add the Acrux UI Toolkit to the mod list\r\n");
+            text += "\r\nYou can find more info in the {3}";
+
+            var error = new InvalidOperationException("Mod " + name + " called Acrux API (" + typeName +
+                ") without the Toolkit Mod. " + (Error ?? "The Acrux UI Toolkit mod is not loaded in this world.") +
+                " Acrux UI Toolkit: " + ToolkitWorkshopUrl);
+            throw CreateCrash(error, name, text, true);
+        }
+
+        /// <summary>
+        /// The mod named by the crash dialog ({0} in its text): this mod's name as given, its real service and id.
+        /// </summary>
+        sealed class CrashContext : IMyModContext
+        {
+            readonly IMyModContext _mod;
+
+            public CrashContext(IMyModContext mod, string dialogName)
+            {
+                _mod = mod;
+                ModName = dialogName;
+            }
+
+            public string ModName { get; private set; }
+            public string ModId { get { return _mod != null ? _mod.ModId : "unknown"; } }
+            public string ModServiceName { get { return _mod != null ? _mod.ModServiceName : "Steam"; } }
+            public string ModPath { get { return _mod != null ? _mod.ModPath : string.Empty; } }
+            public string ModPathData { get { return _mod != null ? _mod.ModPathData : string.Empty; } }
+            public bool IsBaseGame { get { return false; } }
+            public MyObjectBuilder_Checkpoint.ModItem ModItem { get { return _mod != null ? _mod.ModItem : default(MyObjectBuilder_Checkpoint.ModItem); } }
         }
     }
 }

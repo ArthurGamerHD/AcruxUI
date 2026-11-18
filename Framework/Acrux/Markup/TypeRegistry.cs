@@ -236,6 +236,8 @@ namespace Acrux.Markup
                 case "MaxWidth":
                 case "MaxHeight": return typeof(float);
                 case "Margin": return typeof(VRageMath.Vector4);
+                // VisualElement's handler for a secondary click: only ever bound, to the view model's Action.
+                case "ContextRequested": return typeof(Action);
                 case "OpacityMask": return typeof(Acrux.Styling.BackgroundBrush);
                 case "RenderTransform": return typeof(Acrux.Styling.Transform);
                 case "ToolTip.Tip": return typeof(object);
@@ -403,6 +405,9 @@ namespace Acrux.Markup
                 case "MaxWidth": return value => control.MaxWidth = (float)value;
                 case "MaxHeight": return value => control.MaxHeight = (float)value;
                 case "Margin": return value => control.Margin = (VRageMath.Vector4)value;
+                case "ContextRequested":
+                    var element = control as VisualElement;
+                    return element == null ? (Action<object>)null : value => element.ContextRequested = value as Action;
                 case "ClipToBounds": return value => control.ClipToBounds = (bool)value;
                 case "OpacityMask": return value => control.OpacityMask = value as Acrux.Styling.BackgroundBrush;
                 case "RenderTransform": return value => control.RenderTransform = value as Acrux.Styling.Transform;

@@ -39,6 +39,9 @@ namespace Acrux.Core
         // styles and resources they inherit, like popup placement target.
         internal VisualElement OverlayOwner { get; set; }
 
+        // The flyout last shown at this element (Flyout.ShowAt): the tree finds it here while it is open.
+        internal Acrux.Controls.Primitives.Popup AttachedFlyout { get; set; }
+
         // The tree this element is the root of, set by VisualTree.
         internal VisualTree RootTree { get; set; }
 

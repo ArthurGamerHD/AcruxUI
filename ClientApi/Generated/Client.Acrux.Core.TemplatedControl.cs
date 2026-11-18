@@ -17,8 +17,8 @@ namespace Acrux.Core
         {
             __AttachNative(__UiBridge_Acrux_Core_TemplatedControl.m10(this));
         }
-        internal void __Hook_Acrux_Core_TemplatedControl_OnApplyTemplate_147() { OnApplyTemplate(); }
-        internal void __Hook_Acrux_Core_TemplatedControl_OnTemplateChanging_148() { OnTemplateChanging(); }
+        internal void __Hook_Acrux_Core_TemplatedControl_OnApplyTemplate_148() { OnApplyTemplate(); }
+        internal void __Hook_Acrux_Core_TemplatedControl_OnTemplateChanging_149() { OnTemplateChanging(); }
     }
     internal static class __UiBridge_Acrux_Core_TemplatedControl
     {

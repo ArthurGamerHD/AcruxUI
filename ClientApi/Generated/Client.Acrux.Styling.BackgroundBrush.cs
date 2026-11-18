@@ -8,7 +8,7 @@ namespace Acrux.Styling
         public static implicit operator global::Acrux.Styling.BackgroundBrush(global::VRageMath.Color @color) { return global::Acrux.Toolkit.Ui.Wrap<global::Acrux.Styling.BackgroundBrush>(__UiBridge_Acrux_Styling_BackgroundBrush.m1(@color)); }
         public bool Equals(global::Acrux.Styling.BackgroundBrush @other)  { return __UiBridge_Acrux_Styling_BackgroundBrush.m2(Native, global::Acrux.Toolkit.Ui.Native(@other)); }
         protected abstract bool EqualsCore(global::Acrux.Styling.BackgroundBrush @other) ;
-        internal bool __Hook_Acrux_Styling_BackgroundBrush_EqualsCore_220(object __w_other) { return EqualsCore(global::Acrux.Toolkit.Ui.Wrap<global::Acrux.Styling.BackgroundBrush>(__w_other)); }
+        internal bool __Hook_Acrux_Styling_BackgroundBrush_EqualsCore_221(object __w_other) { return EqualsCore(global::Acrux.Toolkit.Ui.Wrap<global::Acrux.Styling.BackgroundBrush>(__w_other)); }
     }
     internal static class __UiBridge_Acrux_Styling_BackgroundBrush
     {

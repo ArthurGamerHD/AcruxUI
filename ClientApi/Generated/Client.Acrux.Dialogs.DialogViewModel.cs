@@ -23,10 +23,10 @@ namespace Acrux.Dialogs
         public virtual void OnClosed()  { __UiBridge_Acrux_Dialogs_DialogViewModel.m18(Native); }
         protected string Loc(string @key)  { return __UiBridge_Acrux_Dialogs_DialogViewModel.m19(Native, @key); }
         protected string Loc(string @key, object @argument)  { return __UiBridge_Acrux_Dialogs_DialogViewModel.m20(Native, @key, global::Acrux.Toolkit.Ui.ToWire(@argument)); }
-        internal void __Hook_Acrux_Dialogs_DialogViewModel_OnLocalizerChanged_184() { OnLocalizerChanged(); }
-        internal void __Hook_Acrux_Dialogs_DialogViewModel_OnFontSizeChanged_185() { OnFontSizeChanged(); }
-        internal void __Hook_Acrux_Dialogs_DialogViewModel_OnCompactChanged_186() { OnCompactChanged(); }
-        internal void __Hook_Acrux_Dialogs_DialogViewModel_OnClosed_187() { OnClosed(); }
+        internal void __Hook_Acrux_Dialogs_DialogViewModel_OnLocalizerChanged_185() { OnLocalizerChanged(); }
+        internal void __Hook_Acrux_Dialogs_DialogViewModel_OnFontSizeChanged_186() { OnFontSizeChanged(); }
+        internal void __Hook_Acrux_Dialogs_DialogViewModel_OnCompactChanged_187() { OnCompactChanged(); }
+        internal void __Hook_Acrux_Dialogs_DialogViewModel_OnClosed_188() { OnClosed(); }
     }
     internal static class __UiBridge_Acrux_Dialogs_DialogViewModel
     {

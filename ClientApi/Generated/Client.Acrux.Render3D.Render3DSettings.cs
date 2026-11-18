@@ -11,12 +11,17 @@ namespace Acrux.Render3D
         public int VoxelTriangles { get { return __UiBridge_Acrux_Render3D_Render3DSettings.m8(Native); } set { __UiBridge_Acrux_Render3D_Render3DSettings.m9(Native, value); } }
         public int VoxelJobs { get { return __UiBridge_Acrux_Render3D_Render3DSettings.m10(Native); } set { __UiBridge_Acrux_Render3D_Render3DSettings.m11(Native, value); } }
         public double VoxelPixelsPerCell { get { return __UiBridge_Acrux_Render3D_Render3DSettings.m12(Native); } set { __UiBridge_Acrux_Render3D_Render3DSettings.m13(Native, value); } }
-        public int PaintThreads { get { return __UiBridge_Acrux_Render3D_Render3DSettings.m14(Native); } set { __UiBridge_Acrux_Render3D_Render3DSettings.m15(Native, value); } }
-        internal static global::Acrux.Render3D.Render3DSettings Current { get { return global::Acrux.Toolkit.Ui.Wrap<global::Acrux.Render3D.Render3DSettings>(__UiBridge_Acrux_Render3D_Render3DSettings.m16()); } }
-        internal void Clamp()  { __UiBridge_Acrux_Render3D_Render3DSettings.m17(Native); }
+        public int VegetationTriangles { get { return __UiBridge_Acrux_Render3D_Render3DSettings.m14(Native); } set { __UiBridge_Acrux_Render3D_Render3DSettings.m15(Native, value); } }
+        public int ForageableTriangles { get { return __UiBridge_Acrux_Render3D_Render3DSettings.m16(Native); } set { __UiBridge_Acrux_Render3D_Render3DSettings.m17(Native, value); } }
+        public int CharacterTriangles { get { return __UiBridge_Acrux_Render3D_Render3DSettings.m18(Native); } set { __UiBridge_Acrux_Render3D_Render3DSettings.m19(Native, value); } }
+        public int PropModelLoadsPerFrame { get { return __UiBridge_Acrux_Render3D_Render3DSettings.m20(Native); } set { __UiBridge_Acrux_Render3D_Render3DSettings.m21(Native, value); } }
+        public double MinimumPropPixels { get { return __UiBridge_Acrux_Render3D_Render3DSettings.m22(Native); } set { __UiBridge_Acrux_Render3D_Render3DSettings.m23(Native, value); } }
+        public int PaintThreads { get { return __UiBridge_Acrux_Render3D_Render3DSettings.m24(Native); } set { __UiBridge_Acrux_Render3D_Render3DSettings.m25(Native, value); } }
+        internal static global::Acrux.Render3D.Render3DSettings Current { get { return global::Acrux.Toolkit.Ui.Wrap<global::Acrux.Render3D.Render3DSettings>(__UiBridge_Acrux_Render3D_Render3DSettings.m26()); } }
+        internal void Clamp()  { __UiBridge_Acrux_Render3D_Render3DSettings.m27(Native); }
         public Render3DSettings() : base(global::Acrux.Toolkit.Deferred.Value)
         {
-            __AttachNative(__UiBridge_Acrux_Render3D_Render3DSettings.m18());
+            __AttachNative(__UiBridge_Acrux_Render3D_Render3DSettings.m28());
         }
     }
     internal static class __UiBridge_Acrux_Render3D_Render3DSettings
@@ -37,9 +42,19 @@ namespace Acrux.Render3D
         internal static global::System.Action<object, double> m13;
         internal static global::System.Func<object, int> m14;
         internal static global::System.Action<object, int> m15;
-        internal static global::System.Func<object> m16;
-        internal static global::System.Action<object> m17;
-        internal static global::System.Func<object> m18;
+        internal static global::System.Func<object, int> m16;
+        internal static global::System.Action<object, int> m17;
+        internal static global::System.Func<object, int> m18;
+        internal static global::System.Action<object, int> m19;
+        internal static global::System.Func<object, int> m20;
+        internal static global::System.Action<object, int> m21;
+        internal static global::System.Func<object, double> m22;
+        internal static global::System.Action<object, double> m23;
+        internal static global::System.Func<object, int> m24;
+        internal static global::System.Action<object, int> m25;
+        internal static global::System.Func<object> m26;
+        internal static global::System.Action<object> m27;
+        internal static global::System.Func<object> m28;
         internal static void Load(global::System.Collections.Generic.IDictionary<string, global::System.Delegate> api)
         {
             m0 = global::Acrux.Toolkit.Ui.Get<global::System.Func<object, int>>(api, "Acrux.Render3D.Render3DSettings.field_BlockTriangles");
@@ -56,11 +71,21 @@ namespace Acrux.Render3D
             m11 = global::Acrux.Toolkit.Ui.Get<global::System.Action<object, int>>(api, "Acrux.Render3D.Render3DSettings.setfield_VoxelJobs");
             m12 = global::Acrux.Toolkit.Ui.Get<global::System.Func<object, double>>(api, "Acrux.Render3D.Render3DSettings.field_VoxelPixelsPerCell");
             m13 = global::Acrux.Toolkit.Ui.Get<global::System.Action<object, double>>(api, "Acrux.Render3D.Render3DSettings.setfield_VoxelPixelsPerCell");
-            m14 = global::Acrux.Toolkit.Ui.Get<global::System.Func<object, int>>(api, "Acrux.Render3D.Render3DSettings.field_PaintThreads");
-            m15 = global::Acrux.Toolkit.Ui.Get<global::System.Action<object, int>>(api, "Acrux.Render3D.Render3DSettings.setfield_PaintThreads");
-            m16 = global::Acrux.Toolkit.Ui.Get<global::System.Func<object>>(api, "Acrux.Render3D.Render3DSettings.get_Current");
-            m17 = global::Acrux.Toolkit.Ui.Get<global::System.Action<object>>(api, "Acrux.Render3D.Render3DSettings.Clamp`0()");
-            m18 = global::Acrux.Toolkit.Ui.Get<global::System.Func<object>>(api, "Acrux.Render3D.Render3DSettings.ctor()");
+            m14 = global::Acrux.Toolkit.Ui.Get<global::System.Func<object, int>>(api, "Acrux.Render3D.Render3DSettings.field_VegetationTriangles");
+            m15 = global::Acrux.Toolkit.Ui.Get<global::System.Action<object, int>>(api, "Acrux.Render3D.Render3DSettings.setfield_VegetationTriangles");
+            m16 = global::Acrux.Toolkit.Ui.Get<global::System.Func<object, int>>(api, "Acrux.Render3D.Render3DSettings.field_ForageableTriangles");
+            m17 = global::Acrux.Toolkit.Ui.Get<global::System.Action<object, int>>(api, "Acrux.Render3D.Render3DSettings.setfield_ForageableTriangles");
+            m18 = global::Acrux.Toolkit.Ui.Get<global::System.Func<object, int>>(api, "Acrux.Render3D.Render3DSettings.field_CharacterTriangles");
+            m19 = global::Acrux.Toolkit.Ui.Get<global::System.Action<object, int>>(api, "Acrux.Render3D.Render3DSettings.setfield_CharacterTriangles");
+            m20 = global::Acrux.Toolkit.Ui.Get<global::System.Func<object, int>>(api, "Acrux.Render3D.Render3DSettings.field_PropModelLoadsPerFrame");
+            m21 = global::Acrux.Toolkit.Ui.Get<global::System.Action<object, int>>(api, "Acrux.Render3D.Render3DSettings.setfield_PropModelLoadsPerFrame");
+            m22 = global::Acrux.Toolkit.Ui.Get<global::System.Func<object, double>>(api, "Acrux.Render3D.Render3DSettings.field_MinimumPropPixels");
+            m23 = global::Acrux.Toolkit.Ui.Get<global::System.Action<object, double>>(api, "Acrux.Render3D.Render3DSettings.setfield_MinimumPropPixels");
+            m24 = global::Acrux.Toolkit.Ui.Get<global::System.Func<object, int>>(api, "Acrux.Render3D.Render3DSettings.field_PaintThreads");
+            m25 = global::Acrux.Toolkit.Ui.Get<global::System.Action<object, int>>(api, "Acrux.Render3D.Render3DSettings.setfield_PaintThreads");
+            m26 = global::Acrux.Toolkit.Ui.Get<global::System.Func<object>>(api, "Acrux.Render3D.Render3DSettings.get_Current");
+            m27 = global::Acrux.Toolkit.Ui.Get<global::System.Action<object>>(api, "Acrux.Render3D.Render3DSettings.Clamp`0()");
+            m28 = global::Acrux.Toolkit.Ui.Get<global::System.Func<object>>(api, "Acrux.Render3D.Render3DSettings.ctor()");
         }
     }
 }

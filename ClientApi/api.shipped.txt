@@ -777,10 +777,12 @@ member Acrux.Cartography.Maps.MapData.set_ReferenceProvider : System.Action<obje
 member Acrux.Cartography.Maps.MapViewState.ctor() : System.Func<object>
 member Acrux.Cartography.Maps.MapViewState.field_AtmosphereVisible : System.Func<object, bool>
 member Acrux.Cartography.Maps.MapViewState.field_BlocksVisible : System.Func<object, bool>
+member Acrux.Cartography.Maps.MapViewState.field_CharactersVisible : System.Func<object, bool>
 member Acrux.Cartography.Maps.MapViewState.field_FixedStarCamera : System.Func<object, VRageMath.MatrixD>
 member Acrux.Cartography.Maps.MapViewState.field_FixedStarCameraVerticalFovRadians : System.Func<object, float>
 member Acrux.Cartography.Maps.MapViewState.field_FocusedPlanetId : System.Func<object, long>
 member Acrux.Cartography.Maps.MapViewState.field_FollowPlayer : System.Func<object, bool>
+member Acrux.Cartography.Maps.MapViewState.field_ForageablesVisible : System.Func<object, bool>
 member Acrux.Cartography.Maps.MapViewState.field_HasFixedStarCamera : System.Func<object, bool>
 member Acrux.Cartography.Maps.MapViewState.field_HasPlanetFreeReferenceUpWorld : System.Func<object, bool>
 member Acrux.Cartography.Maps.MapViewState.field_HasStaticCameraPosition : System.Func<object, bool>
@@ -802,6 +804,7 @@ member Acrux.Cartography.Maps.MapViewState.field_SurfaceViewDistance : System.Fu
 member Acrux.Cartography.Maps.MapViewState.field_SurfaceViewOnly : System.Func<object, bool>
 member Acrux.Cartography.Maps.MapViewState.field_SurfaceViewPitch : System.Func<object, float>
 member Acrux.Cartography.Maps.MapViewState.field_SurfaceViewYaw : System.Func<object, float>
+member Acrux.Cartography.Maps.MapViewState.field_VegetationVisible : System.Func<object, bool>
 member Acrux.Cartography.Maps.MapViewState.field_VisibleEntityIds : System.Func<object, long[]>
 member Acrux.Cartography.Maps.MapViewState.field_VoxelMapsVisible : System.Func<object, bool>
 member Acrux.Cartography.Maps.MapViewState.field_WaterVisible : System.Func<object, bool>
@@ -821,10 +824,12 @@ member Acrux.Cartography.Maps.MapViewState.set_StarOrbitUp : System.Action<objec
 member Acrux.Cartography.Maps.MapViewState.set_StarOrbitView : System.Action<object, VRageMath.Vector3>
 member Acrux.Cartography.Maps.MapViewState.setfield_AtmosphereVisible : System.Action<object, bool>
 member Acrux.Cartography.Maps.MapViewState.setfield_BlocksVisible : System.Action<object, bool>
+member Acrux.Cartography.Maps.MapViewState.setfield_CharactersVisible : System.Action<object, bool>
 member Acrux.Cartography.Maps.MapViewState.setfield_FixedStarCamera : System.Action<object, VRageMath.MatrixD>
 member Acrux.Cartography.Maps.MapViewState.setfield_FixedStarCameraVerticalFovRadians : System.Action<object, float>
 member Acrux.Cartography.Maps.MapViewState.setfield_FocusedPlanetId : System.Action<object, long>
 member Acrux.Cartography.Maps.MapViewState.setfield_FollowPlayer : System.Action<object, bool>
+member Acrux.Cartography.Maps.MapViewState.setfield_ForageablesVisible : System.Action<object, bool>
 member Acrux.Cartography.Maps.MapViewState.setfield_HasFixedStarCamera : System.Action<object, bool>
 member Acrux.Cartography.Maps.MapViewState.setfield_HasPlanetFreeReferenceUpWorld : System.Action<object, bool>
 member Acrux.Cartography.Maps.MapViewState.setfield_HasStaticCameraPosition : System.Action<object, bool>
@@ -846,6 +851,7 @@ member Acrux.Cartography.Maps.MapViewState.setfield_SurfaceViewDistance : System
 member Acrux.Cartography.Maps.MapViewState.setfield_SurfaceViewOnly : System.Action<object, bool>
 member Acrux.Cartography.Maps.MapViewState.setfield_SurfaceViewPitch : System.Action<object, float>
 member Acrux.Cartography.Maps.MapViewState.setfield_SurfaceViewYaw : System.Action<object, float>
+member Acrux.Cartography.Maps.MapViewState.setfield_VegetationVisible : System.Action<object, bool>
 member Acrux.Cartography.Maps.MapViewState.setfield_VisibleEntityIds : System.Action<object, long[]>
 member Acrux.Cartography.Maps.MapViewState.setfield_VoxelMapsVisible : System.Action<object, bool>
 member Acrux.Cartography.Maps.MapViewState.setfield_WaterVisible : System.Action<object, bool>
@@ -1332,6 +1338,16 @@ member Acrux.Controls.DropDownButton.ctor() : System.Func<object>
 member Acrux.Controls.DropDownButton.field_IsDropDownOpenProperty : System.Func<object>
 member Acrux.Controls.DropDownButton.get_IsDropDownOpen : System.Func<object, bool>
 member Acrux.Controls.DropDownButton.set_IsDropDownOpen : System.Action<object, bool>
+member Acrux.Controls.Flyout.Hide`0() : System.Action<object>
+member Acrux.Controls.Flyout.ShowAt`0(object) : System.Action<object, object>
+member Acrux.Controls.Flyout.ctor() : System.Func<object>
+member Acrux.Controls.Flyout.field_ContentProperty : System.Func<object>
+member Acrux.Controls.Flyout.field_FlyoutPresenterClassesProperty : System.Func<object>
+member Acrux.Controls.Flyout.get_Content : System.Func<object, object>
+member Acrux.Controls.Flyout.get_FlyoutPresenterClasses : System.Func<object, string>
+member Acrux.Controls.Flyout.get_Target : System.Func<object, object>
+member Acrux.Controls.Flyout.set_Content : System.Action<object, object>
+member Acrux.Controls.Flyout.set_FlyoutPresenterClasses : System.Action<object, string>
 member Acrux.Controls.IWindowImpl.BindOpen`0(byte) : System.Action<object, byte>
 member Acrux.Controls.IWindowImpl.Close`0() : System.Action<object>
 member Acrux.Controls.IWindowImpl.Open`0() : System.Action<object>
@@ -1567,9 +1583,11 @@ member Acrux.Controls.NumericUpDown.set_Step : System.Action<object, double>
 member Acrux.Controls.NumericUpDown.set_Value : System.Action<object, double>
 member Acrux.Controls.NumericUpDown.set_ValueChanged : System.Action<object, System.Action<double>>
 member Acrux.Controls.Primitives.Popup.Close`0() : System.Action<object>
+member Acrux.Controls.Primitives.Popup.OnOpening`0() : System.Action<object>
 member Acrux.Controls.Primitives.Popup.Open`0() : System.Action<object>
 member Acrux.Controls.Primitives.Popup.Position`0(global::VRageMath.RectangleF,global::VRageMath.Vector2,int,int,global::VRageMath.Vector2,global::VRageMath.RectangleF,int)s : System.Func<VRageMath.RectangleF, VRageMath.Vector2, int, int, VRageMath.Vector2, VRageMath.RectangleF, int, VRageMath.RectangleF>
 member Acrux.Controls.Primitives.Popup.ctor() : System.Func<object>
+member Acrux.Controls.Primitives.Popup.ctor()#remote : System.Func<object, object>
 member Acrux.Controls.Primitives.Popup.field_ChildProperty : System.Func<object>
 member Acrux.Controls.Primitives.Popup.field_HorizontalOffsetProperty : System.Func<object>
 member Acrux.Controls.Primitives.Popup.field_InheritsTransformProperty : System.Func<object>
@@ -1609,6 +1627,7 @@ member Acrux.Controls.Primitives.Popup.get_TakesFocusFromNativeControl : System.
 member Acrux.Controls.Primitives.Popup.get_Topmost : System.Func<object, bool>
 member Acrux.Controls.Primitives.Popup.get_VerticalOffset : System.Func<object, float>
 member Acrux.Controls.Primitives.Popup.get_WindowManagerAddShadowHint : System.Func<object, bool>
+member Acrux.Controls.Primitives.Popup.hook.OnOpening() : System.Action<System.Action<object>>
 member Acrux.Controls.Primitives.Popup.set_Child : System.Action<object, object>
 member Acrux.Controls.Primitives.Popup.set_Closed : System.Action<object, System.Action>
 member Acrux.Controls.Primitives.Popup.set_HorizontalOffset : System.Action<object, float>
@@ -2336,6 +2355,7 @@ member Acrux.Core.VisualElement.field_PointerEnteredEvent : System.Func<object>
 member Acrux.Core.VisualElement.field_PointerExitedEvent : System.Func<object>
 member Acrux.Core.VisualElement.get_AcceptsKeyboardFocus : System.Func<object, bool>
 member Acrux.Core.VisualElement.get_AnimationController : System.Func<object, object>
+member Acrux.Core.VisualElement.get_AttachedFlyout : System.Func<object, object>
 member Acrux.Core.VisualElement.get_AttachedTextMetrics : System.Func<object, object>
 member Acrux.Core.VisualElement.get_ContextRequested : System.Func<object, System.Action>
 member Acrux.Core.VisualElement.get_DataContext : System.Func<object, object>
@@ -2382,6 +2402,7 @@ member Acrux.Core.VisualElement.hook.SecondaryPointerReleased(global::VRageMath.
 member Acrux.Core.VisualElement.hook.SetEnabled(bool) : System.Action<System.Func<object, bool, object>>
 member Acrux.Core.VisualElement.hook.SetRect(global::VRageMath.RectangleF) : System.Action<System.Action<object, VRageMath.RectangleF>>
 member Acrux.Core.VisualElement.hook.ValidateChildForAdd(object) : System.Action<System.Action<object, object>>
+member Acrux.Core.VisualElement.set_AttachedFlyout : System.Action<object, object>
 member Acrux.Core.VisualElement.set_ContextRequested : System.Action<object, System.Action>
 member Acrux.Core.VisualElement.set_DataContext : System.Action<object, object>
 member Acrux.Core.VisualElement.set_GridColumn : System.Action<object, int>
@@ -3134,8 +3155,13 @@ member Acrux.Render3D.Render3DSettings.ctor() : System.Func<object>
 member Acrux.Render3D.Render3DSettings.field_BlockInstances : System.Func<object, int>
 member Acrux.Render3D.Render3DSettings.field_BlockModelLoadsPerFrame : System.Func<object, int>
 member Acrux.Render3D.Render3DSettings.field_BlockTriangles : System.Func<object, int>
+member Acrux.Render3D.Render3DSettings.field_CharacterTriangles : System.Func<object, int>
+member Acrux.Render3D.Render3DSettings.field_ForageableTriangles : System.Func<object, int>
 member Acrux.Render3D.Render3DSettings.field_MinimumBlockPixels : System.Func<object, double>
+member Acrux.Render3D.Render3DSettings.field_MinimumPropPixels : System.Func<object, double>
 member Acrux.Render3D.Render3DSettings.field_PaintThreads : System.Func<object, int>
+member Acrux.Render3D.Render3DSettings.field_PropModelLoadsPerFrame : System.Func<object, int>
+member Acrux.Render3D.Render3DSettings.field_VegetationTriangles : System.Func<object, int>
 member Acrux.Render3D.Render3DSettings.field_VoxelJobs : System.Func<object, int>
 member Acrux.Render3D.Render3DSettings.field_VoxelPixelsPerCell : System.Func<object, double>
 member Acrux.Render3D.Render3DSettings.field_VoxelTriangles : System.Func<object, int>
@@ -3143,8 +3169,13 @@ member Acrux.Render3D.Render3DSettings.get_Current : System.Func<object>
 member Acrux.Render3D.Render3DSettings.setfield_BlockInstances : System.Action<object, int>
 member Acrux.Render3D.Render3DSettings.setfield_BlockModelLoadsPerFrame : System.Action<object, int>
 member Acrux.Render3D.Render3DSettings.setfield_BlockTriangles : System.Action<object, int>
+member Acrux.Render3D.Render3DSettings.setfield_CharacterTriangles : System.Action<object, int>
+member Acrux.Render3D.Render3DSettings.setfield_ForageableTriangles : System.Action<object, int>
 member Acrux.Render3D.Render3DSettings.setfield_MinimumBlockPixels : System.Action<object, double>
+member Acrux.Render3D.Render3DSettings.setfield_MinimumPropPixels : System.Action<object, double>
 member Acrux.Render3D.Render3DSettings.setfield_PaintThreads : System.Action<object, int>
+member Acrux.Render3D.Render3DSettings.setfield_PropModelLoadsPerFrame : System.Action<object, int>
+member Acrux.Render3D.Render3DSettings.setfield_VegetationTriangles : System.Action<object, int>
 member Acrux.Render3D.Render3DSettings.setfield_VoxelJobs : System.Action<object, int>
 member Acrux.Render3D.Render3DSettings.setfield_VoxelPixelsPerCell : System.Action<object, double>
 member Acrux.Render3D.Render3DSettings.setfield_VoxelTriangles : System.Action<object, int>

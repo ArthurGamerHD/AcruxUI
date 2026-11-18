@@ -446,8 +446,12 @@ namespace Acrux.Markup
                 }
                 VisualElement built = Build(child, dataType, insideTemplate);
                 var grid = element as Grid;
+                var flyout = element as Acrux.Controls.Flyout;
                 if (grid != null)
                     grid.Set(built, built.GridColumn, built.GridRow, built.GridColumnSpan, built.GridRowSpan);
+                else if (flyout != null)
+                    // A flyout's one child is its content, as the compiled view sets it.
+                    flyout.Content = built;
                 else
                     element.AddChild(built);
             }
@@ -598,7 +602,8 @@ namespace Acrux.Markup
             else if (value.Name == "ImageBrush" || value.Name == "SolidColorBrush")
                 built = UiXmlLoader.BuildValue(value);
             else
-                throw new FormatException("Unsupported property element '" + node.Name + "'.");
+                // A single visual, as the compiled view assigns one (Button.Flyout holding a Flyout).
+                built = Build(value, dataType, false);
 
             Action<object> setter;
             Type valueType;

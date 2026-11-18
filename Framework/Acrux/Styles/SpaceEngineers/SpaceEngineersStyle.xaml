@@ -7,6 +7,7 @@
   <StyleInclude Source="./Controls/TextBlock.xaml" />
   <StyleInclude Source="./Controls/TextBox.xaml" />
   <StyleInclude Source="./Controls/ComboBox.xaml" />
+  <StyleInclude Source="./Controls/Flyout.xaml" />
   <StyleInclude Source="./Controls/ScrollBar.xaml" />
   <StyleInclude Source="./Controls/ScrollViewer.xaml" />
   <StyleInclude Source="./Controls/Window.xaml" />

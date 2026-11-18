@@ -1,0 +1,10 @@
+<?xml version="1.0" encoding="utf-8"?>
+<!-- The Flyout's surface: the presenter Border around its content (Flyout.FlyoutPresenterClasses adds classes),
+     with Keen's drop-down fill, as the combo box popup. -->
+<Styles xmlns="https://github.com/ArthurGamerHD/AcruxUI"
+        xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml">
+  <Style Selector="Border.flyout-presenter">
+    <Setter Property="Background"><ImageBrush Source="Acrux_SE_ComboBox_Dropdown_Center" /></Setter>
+    <Setter Property="Padding" Value="8" />
+  </Style>
+</Styles>

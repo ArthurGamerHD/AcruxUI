@@ -39,12 +39,15 @@ namespace Acrux.Cartography.Maps
         public bool SurfaceViewOnly { get { return __UiBridge_Acrux_Cartography_Maps_MapViewState.m64(Native); } set { __UiBridge_Acrux_Cartography_Maps_MapViewState.m65(Native, value); } }
         public bool BlocksVisible { get { return __UiBridge_Acrux_Cartography_Maps_MapViewState.m66(Native); } set { __UiBridge_Acrux_Cartography_Maps_MapViewState.m67(Native, value); } }
         public bool VoxelMapsVisible { get { return __UiBridge_Acrux_Cartography_Maps_MapViewState.m68(Native); } set { __UiBridge_Acrux_Cartography_Maps_MapViewState.m69(Native, value); } }
-        public bool AtmosphereVisible { get { return __UiBridge_Acrux_Cartography_Maps_MapViewState.m70(Native); } set { __UiBridge_Acrux_Cartography_Maps_MapViewState.m71(Native, value); } }
-        public long[] VisibleEntityIds { get { return __UiBridge_Acrux_Cartography_Maps_MapViewState.m72(Native); } set { __UiBridge_Acrux_Cartography_Maps_MapViewState.m73(Native, value); } }
-        public bool MissilesVisible { get { return __UiBridge_Acrux_Cartography_Maps_MapViewState.m74(Native); } set { __UiBridge_Acrux_Cartography_Maps_MapViewState.m75(Native, value); } }
+        public bool VegetationVisible { get { return __UiBridge_Acrux_Cartography_Maps_MapViewState.m70(Native); } set { __UiBridge_Acrux_Cartography_Maps_MapViewState.m71(Native, value); } }
+        public bool ForageablesVisible { get { return __UiBridge_Acrux_Cartography_Maps_MapViewState.m72(Native); } set { __UiBridge_Acrux_Cartography_Maps_MapViewState.m73(Native, value); } }
+        public bool CharactersVisible { get { return __UiBridge_Acrux_Cartography_Maps_MapViewState.m74(Native); } set { __UiBridge_Acrux_Cartography_Maps_MapViewState.m75(Native, value); } }
+        public bool AtmosphereVisible { get { return __UiBridge_Acrux_Cartography_Maps_MapViewState.m76(Native); } set { __UiBridge_Acrux_Cartography_Maps_MapViewState.m77(Native, value); } }
+        public long[] VisibleEntityIds { get { return __UiBridge_Acrux_Cartography_Maps_MapViewState.m78(Native); } set { __UiBridge_Acrux_Cartography_Maps_MapViewState.m79(Native, value); } }
+        public bool MissilesVisible { get { return __UiBridge_Acrux_Cartography_Maps_MapViewState.m80(Native); } set { __UiBridge_Acrux_Cartography_Maps_MapViewState.m81(Native, value); } }
         public MapViewState() : base(global::Acrux.Toolkit.Deferred.Value)
         {
-            __AttachNative(__UiBridge_Acrux_Cartography_Maps_MapViewState.m76());
+            __AttachNative(__UiBridge_Acrux_Cartography_Maps_MapViewState.m82());
         }
     }
     internal static class __UiBridge_Acrux_Cartography_Maps_MapViewState
@@ -121,11 +124,17 @@ namespace Acrux.Cartography.Maps
         internal static global::System.Action<object, bool> m69;
         internal static global::System.Func<object, bool> m70;
         internal static global::System.Action<object, bool> m71;
-        internal static global::System.Func<object, long[]> m72;
-        internal static global::System.Action<object, long[]> m73;
+        internal static global::System.Func<object, bool> m72;
+        internal static global::System.Action<object, bool> m73;
         internal static global::System.Func<object, bool> m74;
         internal static global::System.Action<object, bool> m75;
-        internal static global::System.Func<object> m76;
+        internal static global::System.Func<object, bool> m76;
+        internal static global::System.Action<object, bool> m77;
+        internal static global::System.Func<object, long[]> m78;
+        internal static global::System.Action<object, long[]> m79;
+        internal static global::System.Func<object, bool> m80;
+        internal static global::System.Action<object, bool> m81;
+        internal static global::System.Func<object> m82;
         internal static void Load(global::System.Collections.Generic.IDictionary<string, global::System.Delegate> api)
         {
             m0 = global::Acrux.Toolkit.Ui.Get<global::System.Func<object, float>>(api, "Acrux.Cartography.Maps.MapViewState.field_Yaw");
@@ -198,13 +207,19 @@ namespace Acrux.Cartography.Maps
             m67 = global::Acrux.Toolkit.Ui.Get<global::System.Action<object, bool>>(api, "Acrux.Cartography.Maps.MapViewState.setfield_BlocksVisible");
             m68 = global::Acrux.Toolkit.Ui.Get<global::System.Func<object, bool>>(api, "Acrux.Cartography.Maps.MapViewState.field_VoxelMapsVisible");
             m69 = global::Acrux.Toolkit.Ui.Get<global::System.Action<object, bool>>(api, "Acrux.Cartography.Maps.MapViewState.setfield_VoxelMapsVisible");
-            m70 = global::Acrux.Toolkit.Ui.Get<global::System.Func<object, bool>>(api, "Acrux.Cartography.Maps.MapViewState.field_AtmosphereVisible");
-            m71 = global::Acrux.Toolkit.Ui.Get<global::System.Action<object, bool>>(api, "Acrux.Cartography.Maps.MapViewState.setfield_AtmosphereVisible");
-            m72 = global::Acrux.Toolkit.Ui.Get<global::System.Func<object, long[]>>(api, "Acrux.Cartography.Maps.MapViewState.field_VisibleEntityIds");
-            m73 = global::Acrux.Toolkit.Ui.Get<global::System.Action<object, long[]>>(api, "Acrux.Cartography.Maps.MapViewState.setfield_VisibleEntityIds");
-            m74 = global::Acrux.Toolkit.Ui.Get<global::System.Func<object, bool>>(api, "Acrux.Cartography.Maps.MapViewState.field_MissilesVisible");
-            m75 = global::Acrux.Toolkit.Ui.Get<global::System.Action<object, bool>>(api, "Acrux.Cartography.Maps.MapViewState.setfield_MissilesVisible");
-            m76 = global::Acrux.Toolkit.Ui.Get<global::System.Func<object>>(api, "Acrux.Cartography.Maps.MapViewState.ctor()");
+            m70 = global::Acrux.Toolkit.Ui.Get<global::System.Func<object, bool>>(api, "Acrux.Cartography.Maps.MapViewState.field_VegetationVisible");
+            m71 = global::Acrux.Toolkit.Ui.Get<global::System.Action<object, bool>>(api, "Acrux.Cartography.Maps.MapViewState.setfield_VegetationVisible");
+            m72 = global::Acrux.Toolkit.Ui.Get<global::System.Func<object, bool>>(api, "Acrux.Cartography.Maps.MapViewState.field_ForageablesVisible");
+            m73 = global::Acrux.Toolkit.Ui.Get<global::System.Action<object, bool>>(api, "Acrux.Cartography.Maps.MapViewState.setfield_ForageablesVisible");
+            m74 = global::Acrux.Toolkit.Ui.Get<global::System.Func<object, bool>>(api, "Acrux.Cartography.Maps.MapViewState.field_CharactersVisible");
+            m75 = global::Acrux.Toolkit.Ui.Get<global::System.Action<object, bool>>(api, "Acrux.Cartography.Maps.MapViewState.setfield_CharactersVisible");
+            m76 = global::Acrux.Toolkit.Ui.Get<global::System.Func<object, bool>>(api, "Acrux.Cartography.Maps.MapViewState.field_AtmosphereVisible");
+            m77 = global::Acrux.Toolkit.Ui.Get<global::System.Action<object, bool>>(api, "Acrux.Cartography.Maps.MapViewState.setfield_AtmosphereVisible");
+            m78 = global::Acrux.Toolkit.Ui.Get<global::System.Func<object, long[]>>(api, "Acrux.Cartography.Maps.MapViewState.field_VisibleEntityIds");
+            m79 = global::Acrux.Toolkit.Ui.Get<global::System.Action<object, long[]>>(api, "Acrux.Cartography.Maps.MapViewState.setfield_VisibleEntityIds");
+            m80 = global::Acrux.Toolkit.Ui.Get<global::System.Func<object, bool>>(api, "Acrux.Cartography.Maps.MapViewState.field_MissilesVisible");
+            m81 = global::Acrux.Toolkit.Ui.Get<global::System.Action<object, bool>>(api, "Acrux.Cartography.Maps.MapViewState.setfield_MissilesVisible");
+            m82 = global::Acrux.Toolkit.Ui.Get<global::System.Func<object>>(api, "Acrux.Cartography.Maps.MapViewState.ctor()");
         }
     }
 }

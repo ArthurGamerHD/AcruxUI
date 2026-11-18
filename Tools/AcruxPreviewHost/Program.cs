@@ -36,6 +36,8 @@ static class Program
     static int Main(string[] args)
     {
         Log("started: " + string.Join(" ", args));
+        // The view models' preview clones report their stubbed commands and handlers through Trace.
+        System.Diagnostics.Trace.Listeners.Add(new PreviewTraceListener());
         if (args.Length >= 3 && args[0] == "--render")
             return RenderToFile(args);
         Uri transport = null;
@@ -275,6 +277,26 @@ static class Program
         catch (Exception error)
         {
             Log("error: " + error);
+        }
+    }
+
+    // Forwards what the preview clones write under their category (a bound command or handler called) to the log.
+    sealed class PreviewTraceListener : System.Diagnostics.TraceListener
+    {
+        const string CATEGORY = "Acrux preview";
+
+        public override void Write(string message)
+        {
+        }
+
+        public override void WriteLine(string message)
+        {
+        }
+
+        public override void WriteLine(string message, string category)
+        {
+            if (category == CATEGORY)
+                Log("invoked " + message);
         }
     }
 

@@ -22,9 +22,13 @@
                        FontSize="0.68"
                        Foreground="{TemplateBinding Foreground}" />
             <!-- Shows the selection through SelectionBoxItemTemplate / ItemTemplate when one is set. -->
+            <!-- Clipped to its column: a template wider than the box is cut before the arrow, not drawn over it;
+                 a TextBlock in it with TextTrimming trims to the width it is arranged at. -->
             <ContentPresenter Name="PART_ContentPresenter"
                               Grid.Column="0"
+                              Margin="0 0 8 0"
                               VerticalAlignment="Center"
+                              ClipToBounds="True"
                               IsVisible="False" />
             <Border Name="PART_Indicator"
                     Grid.Column="1"

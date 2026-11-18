@@ -639,6 +639,10 @@ namespace Acrux.Core
             if (contextMenu != null && contextMenu.IsOpen)
                 return contextMenu;
 
+            Acrux.Controls.Primitives.Popup flyout = element.AttachedFlyout;
+            if (flyout != null && ((IOverlayProvider)flyout).IsOverlayOpen)
+                return flyout;
+
             IOverlayProvider provider = element as IOverlayProvider;
             return provider != null && provider.IsOverlayOpen ? provider : null;
         }

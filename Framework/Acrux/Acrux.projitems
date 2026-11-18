@@ -47,6 +47,7 @@
     <Compile Include="$(MSBuildThisFileDirectory)Controls\Button.cs" />
     <Compile Include="$(MSBuildThisFileDirectory)Controls\Carousel.cs" />
     <Compile Include="$(MSBuildThisFileDirectory)Controls\ContextMenu.cs" />
+    <Compile Include="$(MSBuildThisFileDirectory)Controls\Flyout.cs" />
     <Compile Include="$(MSBuildThisFileDirectory)Controls\Menu.cs" />
     <Compile Include="$(MSBuildThisFileDirectory)Controls\ToolTip.cs" />
     <Compile Include="$(MSBuildThisFileDirectory)Controls\Shapes\Shape.cs" />

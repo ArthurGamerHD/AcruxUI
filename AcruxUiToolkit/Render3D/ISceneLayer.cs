@@ -40,7 +40,8 @@ namespace Acrux.Render3D
         public Vector3 Light;
         // Its own block is left out (the screen a first-person camera looks out of).
         public Vector3D? ExcludeWorld;
-        // When set, only the entities with these ids are gathered (grids by their own id, voxel maps by theirs).
+        // When set, only the entities with these ids are gathered (grids, voxel maps and characters by their own
+        // ids; planets' vegetation and forageables draw anyway, as their terrain does).
         public HashSet<long> Only;
     }
 
@@ -51,6 +52,7 @@ namespace Acrux.Render3D
         {
             Blocks.BlockLayer.ReleaseShared();
             Voxels.VoxelLayer.ReleaseShared();
+            Models.MeshAssets.Release();
         }
     }
 }

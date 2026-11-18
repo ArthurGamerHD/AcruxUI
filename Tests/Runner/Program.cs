@@ -391,6 +391,8 @@ static class Program
         TransformParseChecks();
         TrimmingChecks();
         ComboBoxPlacementChecks();
+        FlyoutChecks();
+        ComboBoxTemplateChecks();
 
         Console.WriteLine(_failures == 0 ? "ALL CHECKS PASSED" : _failures + " CHECK(S) FAILED");
         return _failures == 0 ? 0 : 1;
@@ -451,6 +453,82 @@ static class Program
         Check(run("Destination Pad", 12f, prefix) == "Destinat\u2026Pad", "PrefixCharacterEllipsis keeps 8 leading characters and fills the rest from the end");
         Check(run("Destination Pad", 7f, prefix) == "Destin\u2026", "PrefixCharacterEllipsis keeps only the prefix when 8 characters or fewer fit");
         Check(run("Destination Pad", 12f, toolkit::Acrux.Controls.TextTrimming.CharacterEllipsis) == "Destination\u2026", "CharacterEllipsis still trims at the end");
+    }
+
+    // A selection shown through an item template stays inside the box: the presenter clips it, and a TextBlock with
+    // TextTrimming in a grid's star column trims to the room before the arrow.
+    static void ComboBoxTemplateChecks()
+    {
+        var flags = BindingFlags.Instance | BindingFlags.NonPublic;
+        toolkit::Acrux.Controls.TextBlock text = null;
+        var combo = new toolkit::Acrux.Controls.ComboBox(new[] { new string('m', 400) }) { Width = 120, Height = 24 };
+        combo.ItemTemplate = new toolkit::Acrux.Styling.DataTemplate<string>(item =>
+        {
+            var row = new toolkit::Acrux.Layout.Grid();
+            row.SetColumnDefinitions(toolkit::Acrux.Layout.GridLength.Auto, toolkit::Acrux.Layout.GridLength.Star);
+            row.Set(new toolkit::Acrux.Controls.Border { Width = 10, Height = 10 }, 0, 0, 1, 1);
+            text = new toolkit::Acrux.Controls.TextBlock { Text = item, TextTrimming = toolkit::Acrux.Controls.TextTrimming.CharacterEllipsis };
+            row.Set(text, 1, 0, 1, 1);
+            return row;
+        });
+        combo.SelectedIndex = 0;
+        var panel = new toolkit::Acrux.Layout.StackPanel();
+        panel.Add(combo);
+        var host = new toolkit::Acrux.Lcd.LcdGuiHost(SurfaceMock.Create(new Vector2(256, 64)), panel);
+        for (int i = 0; i < 3; i++)
+        {
+            host.Arrange(new RectangleF(0, 0, 256, 64));
+            host.Draw(new List<MySprite>());
+        }
+        var presenter = (toolkit::Acrux.Core.VisualElement)typeof(toolkit::Acrux.Controls.ComboBox)
+            .GetField("_headerContent", flags).GetValue(combo);
+        var indicator = (toolkit::Acrux.Core.VisualElement)typeof(toolkit::Acrux.Controls.ComboBox)
+            .GetField("_headerIndicator", flags).GetValue(combo);
+        Check(text != null && presenter != null && presenter.Visible, "the templated selection is shown");
+        if (text == null || presenter == null)
+            return;
+        Check(presenter.ClipToBounds, "the selection box clips templated content");
+        Check(text.Bounds.Right <= combo.Bounds.Right + 0.5f, "templated selection text stays inside the box (" + text.Bounds + " in " + combo.Bounds + ")");
+        Check(indicator == null || text.Bounds.Right <= indicator.Bounds.X + 0.5f,
+            "templated selection text stops before the arrow (" + text.Bounds + ", arrow " + (indicator == null ? "none" : indicator.Bounds.ToString()) + ")");
+        string shown = (string)typeof(toolkit::Acrux.Controls.TextBlock).GetField("_trimmedText", flags).GetValue(text);
+        Check(shown != null && shown.EndsWith("\u2026"), "templated selection text is trimmed with an ellipsis (" + (shown == null ? "null" : shown.Length + " characters") + ")");
+    }
+
+    // A Flyout takes its content's size, sits against its target, and takes the target's data context; ShowAt opens one
+    // at an element that is not a button, which the tree finds through the element.
+    static void FlyoutChecks()
+    {
+        Func<bool, Tuple<RectangleF, RectangleF, object, bool>> open = viaButton =>
+        {
+            var content = new toolkit::Acrux.Controls.Border { Width = 60, Height = 30 };
+            var flyout = new toolkit::Acrux.Controls.Flyout { Content = content };
+            toolkit::Acrux.Core.VisualElement target = viaButton
+                ? (toolkit::Acrux.Core.VisualElement)new toolkit::Acrux.Controls.Button { Width = 20, Height = 20, Flyout = flyout }
+                : new toolkit::Acrux.Controls.Border { Width = 20, Height = 20 };
+            target.DataContext = "target context";
+            var panel = new toolkit::Acrux.Layout.StackPanel();
+            panel.Add(new toolkit::Acrux.Controls.Border { Height = 80 });
+            panel.Add(target);
+            var host = new toolkit::Acrux.Lcd.LcdGuiHost(SurfaceMock.Create(new Vector2(128, 128)), panel);
+            host.Arrange(new RectangleF(0, 0, 128, 128));
+            host.Draw(new List<MySprite>());
+            flyout.ShowAt(target);
+            host.Draw(new List<MySprite>());
+            return Tuple.Create(flyout.Child.Bounds, target.Bounds, content.DataContext, flyout.IsOpen);
+        };
+        foreach (bool viaButton in new[] { true, false })
+        {
+            string at = viaButton ? "a button's flyout" : "a flyout shown at a border";
+            var result = open(viaButton);
+            RectangleF presenter = result.Item1;
+            RectangleF target = result.Item2;
+            Check(result.Item4, at + " opens");
+            Check(presenter.Width >= 60f && presenter.Width <= 100f && presenter.Height >= 30f && presenter.Height <= 70f,
+                at + " takes its content's size plus the presenter's padding (" + presenter + ")");
+            Check(presenter.Bottom <= target.Y + 0.5f, at + " opens above its target (" + presenter + " over " + target + ")");
+            Check(Equals(result.Item3, "target context"), at + " inherits the target's data context");
+        }
     }
 
     // The drop-down opens on the side with room and is shortened to fit the surface.

@@ -1,8 +1,6 @@
 using System;
 using System.Collections.Generic;
-using System.IO;
 using Acrux.Rendering;
-using Adk.Image;
 using Acrux.Render3D.Models;
 using Sandbox.Definitions;
 using Sandbox.Game.Entities;
@@ -15,6 +13,8 @@ using VRageMath;
 
 namespace Acrux.Render3D.Blocks
 {
+    using BlockModel = MeshAsset;
+
     // One grid of an explicit capture. Highlights map block positions (IMySlimBlock.Position) to a flat color
     // replacing the block's paint; the dictionary is read by the paint threads, so it is never changed once
     // captured (a new one replaces it).
@@ -66,18 +66,6 @@ namespace Acrux.Render3D.Blocks
         // Subpart nesting followed below a block (a piston's top, a turret's barrel on its base).
         const int MAXIMUM_SUBPART_DEPTH = 3;
 
-        sealed class BlockModel
-        {
-            public Vector3[] Vertices;
-            public int[][] PartIndices;
-            public Vector3[] PartTints;
-            public int TriangleCount;
-            // Glass was left out of it (windows, canopies): its box would close what the model leaves open.
-            public bool HasGlass;
-            // Its outline (FindEdges) as pairs of ends, built the first time a wireframe asks for it.
-            public volatile Vector3[] Edges;
-        }
-
         struct Instance
         {
             // Model (or grid) space to scene space.
@@ -92,10 +80,6 @@ namespace Acrux.Render3D.Blocks
             public bool Unlit;
         }
 
-        static readonly Dictionary<string, BlockModel> Models =
-            new Dictionary<string, BlockModel>(StringComparer.OrdinalIgnoreCase);
-        static readonly Dictionary<string, Vector3> TextureTints =
-            new Dictionary<string, Vector3>(StringComparer.OrdinalIgnoreCase);
         static readonly int[] BoxTriangles =
         {
             0, 3, 2, 0, 2, 1, 4, 5, 6, 4, 6, 7, 0, 1, 5, 0, 5, 4,
@@ -306,9 +290,6 @@ namespace Acrux.Render3D.Blocks
                 Requests.Clear();
             ArmorParts.Clear();
             FailedArmor.Clear();
-            FailedModels.Clear();
-            Models.Clear();
-            TextureTints.Clear();
         }
 
 
@@ -703,7 +684,7 @@ namespace Acrux.Render3D.Blocks
                     block.Model = model;
                     block.Pending = false;
                 }
-                else if (FailedModels.ContainsKey(block.Asset))
+                else if (MeshAssets.HasFailed(block.Asset))
                 {
                     block.Pending = false;
                 }
@@ -1053,7 +1034,7 @@ namespace Acrux.Render3D.Blocks
                     continue;
                 if (ResolveModel(parts[i].Model, ref loads) == null)
                 {
-                    failed = FailedModels.ContainsKey(parts[i].Model);
+                    failed = MeshAssets.HasFailed(parts[i].Model);
                     return null;
                 }
                 shown++;
@@ -1067,8 +1048,7 @@ namespace Acrux.Render3D.Blocks
             {
                 if (parts[i].HasSide && full.Contains(position + parts[i].Side))
                     continue;
-                BlockModel mesh;
-                Models.TryGetValue(parts[i].Model, out mesh);
+                BlockModel mesh = MeshAssets.Loaded(parts[i].Model);
                 armor.Models[index] = mesh;
                 armor.Locals[index] = parts[i].Local * cell;
                 armor.Triangles += mesh.TriangleCount;
@@ -1092,8 +1072,6 @@ namespace Acrux.Render3D.Blocks
         static readonly List<string> PartModels = new List<string>();
         // Failed loads and when to try them again.
         const double RETRY_SECONDS = 20d;
-        static readonly Dictionary<string, DateTime> FailedModels =
-            new Dictionary<string, DateTime>(StringComparer.OrdinalIgnoreCase);
         static readonly Dictionary<string, DateTime> FailedArmor = new Dictionary<string, DateTime>();
 
         static string ArmorKey(MyCubeBlockDefinition definition, int orientation)
@@ -1921,144 +1899,7 @@ namespace Acrux.Render3D.Blocks
 
         static BlockModel ResolveModel(string assetName, ref int loads)
         {
-            if (string.IsNullOrEmpty(assetName))
-                return null;
-            BlockModel model;
-            if (Models.TryGetValue(assetName, out model))
-                return model;
-            // A failed load waits before it is tried again: the block keeps its box meanwhile, and a model the
-            // game was still streaming at startup is picked up later instead of never.
-            DateTime retry;
-            DateTime now = DateTime.UtcNow;
-            if (FailedModels.TryGetValue(assetName, out retry) && now < retry)
-                return null;
-            if (loads <= 0)
-                return null;
-            loads--;
-
-            model = LoadModel(assetName);
-            if (model != null)
-            {
-                Models[assetName] = model;
-                FailedModels.Remove(assetName);
-            }
-            else
-            {
-                FailedModels[assetName] = now.AddSeconds(RETRY_SECONDS);
-            }
-            return model;
-        }
-
-        // The lowest-detail LOD the model lists, or the model itself: a map needs the whole shape, not its detail.
-        static MinimalMwmMesh ReadLowestLod(string modelPath)
-        {
-            List<string> lodPaths = null;
-            MinimalMwmMesh mesh = null;
-            using (BinaryReader reader = ContentFiles.Open(modelPath))
-            {
-                if (reader == null)
-                    return null;
-                MinimalMwmReader.TryReadLodPaths(reader, out lodPaths);
-                reader.BaseStream.Position = 0;
-                if (lodPaths == null || lodPaths.Count == 0)
-                    return MinimalMwmReader.TryReadMesh(reader, out mesh) ? mesh : null;
-            }
-            for (int i = lodPaths.Count - 1; i >= 0; i--)
-            {
-                string lodPath = ContentFiles.ToModelPath(lodPaths[i] + ".mwm");
-                if (string.IsNullOrWhiteSpace(lodPath))
-                    continue;
-                using (BinaryReader reader = ContentFiles.Open(lodPath))
-                {
-                    if (reader != null && MinimalMwmReader.TryReadMesh(reader, out mesh))
-                        return mesh;
-                }
-            }
-            using (BinaryReader reader = ContentFiles.Open(modelPath))
-                return reader != null && MinimalMwmReader.TryReadMesh(reader, out mesh) ? mesh : null;
-        }
-
-        static BlockModel LoadModel(string assetName)
-        {
-            try
-            {
-                MinimalMwmMesh mesh = ReadLowestLod(ContentFiles.ToModelPath(assetName));
-                if (mesh == null)
-                    return null;
-
-                // Glass would draw as an opaque white sheet: the rasterizer has no transparency, so windows
-                // are left open and what is behind them shows through.
-                var parts = new List<MinimalMwmMeshPart>(mesh.Parts.Count);
-                bool glass = false;
-                for (int i = 0; i < mesh.Parts.Count; i++)
-                {
-                    if (IsGlass(mesh.Parts[i]))
-                        glass = true;
-                    else
-                        parts.Add(mesh.Parts[i]);
-                }
-
-                var model = new BlockModel
-                {
-                    HasGlass = glass,
-                    Vertices = mesh.Vertices,
-                    PartIndices = new int[parts.Count][],
-                    PartTints = new Vector3[parts.Count]
-                };
-                for (int i = 0; i < parts.Count; i++)
-                {
-                    model.PartIndices[i] = parts[i].Indices;
-                    model.PartTints[i] = ResolveTextureTint(parts[i].ColorMetalTexture);
-                    model.TriangleCount += parts[i].Indices.Length / 3;
-                }
-                return model;
-            }
-            catch
-            {
-                return null;
-            }
-        }
-
-        // Vanilla window, cockpit and canopy glass materials are all named for it (Glass, CockpitGlass,
-        // GlassOutside, ...), as are their textures.
-        static bool IsGlass(MinimalMwmMeshPart part)
-        {
-            // By technique first: a model's far LODs keep the GLASS technique but may rename the material.
-            return string.Equals(part.Technique, "GLASS", StringComparison.OrdinalIgnoreCase) ||
-                   Contains(part.Material, "glass") || Contains(part.ColorMetalTexture, "glass");
-        }
-
-        static bool Contains(string text, string word)
-        {
-            return text != null && text.IndexOf(word, StringComparison.OrdinalIgnoreCase) >= 0;
-        }
-
-        static Vector3 ResolveTextureTint(string texture)
-        {
-            if (string.IsNullOrEmpty(texture))
-                return Vector3.One;
-            Vector3 tint;
-            if (TextureTints.TryGetValue(texture, out tint))
-                return tint;
-
-            tint = Vector3.One;
-            try
-            {
-                using (BinaryReader reader = ContentFiles.Open(texture))
-                {
-                    byte r;
-                    byte g;
-                    byte b;
-                    if (reader != null && DdsAverageColor.TryAverageSmallestMip(reader.BaseStream, out r, out g, out b))
-                        tint = new Vector3(r / 255f, g / 255f, b / 255f);
-                }
-            }
-            catch
-            {
-                tint = Vector3.One;
-            }
-            TextureTints[texture] = tint;
-            return tint;
+            return MeshAssets.Resolve(assetName, ref loads);
         }
     }
 }

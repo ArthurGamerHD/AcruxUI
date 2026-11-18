@@ -5,6 +5,7 @@ using Acrux.Render3D;
 using Acrux.Render3D.Blocks;
 using Acrux.Render3D.Missiles;
 using Acrux.Render3D.Models;
+using Acrux.Render3D.Props;
 using Acrux.Render3D.Voxels;
 using Acrux.Rendering;
 using Sandbox.Game;
@@ -451,6 +452,9 @@ namespace Acrux.Cartography.Maps
                 AddBlockLayer(frame, camera, planet, surface.Target, Math.Max(250d, distance * 2d), light, null);
             if (state.VoxelMapsVisible)
                 AddVoxelLayer(frame, camera, planet, surface.Target, distance * VOXEL_SCENE_DISTANCE_FACTOR, light);
+            AddPropLayers(frame, state, PlanetCapture(camera, planet, surface.Target,
+                MathHelper.Clamp(distance * PROP_SCENE_DISTANCE_FACTOR, PROP_SCENE_MINIMUM_RADIUS,
+                    PROP_SCENE_MAXIMUM_RADIUS), light, null), true);
             AddModelLayer(frame, camera, MatrixD.Invert(planet.WorldMatrix), light);
             // Only where the layers above left sky, and under the atmosphere that blends over it.
             FlushSkybox();
@@ -530,7 +534,11 @@ namespace Acrux.Cartography.Maps
                 AddBlockLayer(frame, sceneCamera, entity, position, HudBlockRadius(), light,
                     camera.PositionWorld);
             if (firstTerrain)
+            {
+                AddPropLayers(frame, state, PlanetCapture(sceneCamera, entity, position, HudBlockRadius(), light,
+                    camera.PositionWorld), true);
                 AddModelLayer(frame, sceneCamera, MatrixD.Invert(entity.WorldMatrix), light);
+            }
             if (state.AtmosphereVisible && firstTerrain)
                 _hudAtmosphere = CreateAtmosphereScene(entity, sceneCamera, 1);
             return true;
@@ -556,7 +564,7 @@ namespace Acrux.Cartography.Maps
         // camera-space metres the planets use.
         void AddHudSpaceEntities(SceneFrame frame, MapViewState state, StarCamera camera, int width, int height)
         {
-            if (!state.BlocksVisible && !state.VoxelMapsVisible && _models.Count == 0)
+            if (!state.BlocksVisible && !state.VoxelMapsVisible && !state.CharactersVisible && _models.Count == 0)
                 return;
             _frameHas3D = true;
             var sceneCamera = new SceneCamera
@@ -613,7 +621,57 @@ namespace Acrux.Cartography.Maps
                 AddMissileLines(_slot.Blocks, sceneCamera, worldToScene, state);
                 AddLayer(frame, _slot.Blocks);
             }
+            // Away from every planet's terrain there is no ground for vegetation to stand on: characters only.
+            AddPropLayers(frame, state, new SceneCapture
+            {
+                Camera = sceneCamera,
+                WorldToScene = worldToScene,
+                CenterWorld = camera.PositionWorld,
+                Radius = HudBlockRadius(),
+                Light = light
+            }, false);
             AddModelLayer(frame, sceneCamera, worldToScene, light);
+        }
+
+        // Surface view capture radius for vegetation, forageables and characters, in camera-to-target distances,
+        // and its bounds in metres. The game streams environment items in only a few kilometres around players.
+        const double PROP_SCENE_DISTANCE_FACTOR = 3d;
+        const double PROP_SCENE_MINIMUM_RADIUS = 300d;
+        const double PROP_SCENE_MAXIMUM_RADIUS = 6000d;
+
+        // Vegetation and forageables (when the scene has a planet's terrain to stand on) and characters, after the
+        // terrain, voxels and blocks. A layer joins the frame when it placed something or is still loading models,
+        // so the loading report keeps the frame coming until they are in.
+        void AddPropLayers(SceneFrame frame, MapViewState state, SceneCapture capture, bool planetProps)
+        {
+            if (planetProps && state.VegetationVisible)
+            {
+                if (_slot.Vegetation == null)
+                    _slot.Vegetation = new VegetationLayer();
+                _slot.Vegetation.Capture(ref capture);
+                AddPropLayer(frame, _slot.Vegetation);
+            }
+            if (planetProps && state.ForageablesVisible)
+            {
+                if (_slot.Forageables == null)
+                    _slot.Forageables = new ForageableLayer();
+                _slot.Forageables.Capture(ref capture);
+                AddPropLayer(frame, _slot.Forageables);
+            }
+            if (state.CharactersVisible)
+            {
+                if (_slot.Characters == null)
+                    _slot.Characters = new CharacterLayer();
+                capture.Only = _entityFilter;
+                _slot.Characters.Capture(ref capture);
+                AddPropLayer(frame, _slot.Characters);
+            }
+        }
+
+        void AddPropLayer(SceneFrame frame, PropLayer layer)
+        {
+            if (layer.HasContent || layer.PendingWork != null)
+                AddLayer(frame, layer);
         }
 
         // The client meshes (AddModel), after the scene's own solid layers so a blended model lies over them.

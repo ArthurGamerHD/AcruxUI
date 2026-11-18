@@ -138,6 +138,12 @@ public sealed class PreviewCloneGenerator : IIncrementalGenerator
             }
         }
 
+        // Commands and handlers have no design value: the clone stubs them, so what binds them (ContextRequested, a
+        // button's Command) reacts in the preview and reports the call.
+        string stub = InvocationStub(clone, member);
+        if (stub != null)
+            return stub;
+
         string type = member.CloneTypeName;
         INamedTypeSymbol element = PreviewClones.ElementType(member.Type);
         if (element != null)
@@ -333,6 +339,37 @@ public sealed class PreviewCloneGenerator : IIncrementalGenerator
         if (values.Length > 0)
             Report(output, clone, member, values[0], "has no preview value form for " + member.Type.Name);
         return null;
+    }
+
+    // The category the preview host forwards to its log (Trace, so the clone needs nothing of the host).
+    internal const string PreviewTraceCategory = "Acrux preview";
+
+    // An Acrux ICommand, or a delegate returning nothing (Action, Action<T>, custom handlers), as a stub that writes
+    // "Owner.Member(arguments)" to the preview's trace. Null for anything else: a Func may be polled every frame and
+    // stays unset; so does a delegate with ref or out parameters, which a lambda would have to assign.
+    static string InvocationStub(PreviewClones.Clone clone, PreviewClones.Member member)
+    {
+        ITypeSymbol type = member.Type;
+        string label = clone.Original.Name + "." + member.Name;
+        string category = SymbolDisplay.FormatLiteral(PreviewTraceCategory, true);
+        string full = type.OriginalDefinition.ToDisplayString();
+        if (full == "Acrux.Core.Input.ICommand" || full == "Acrux.Core.Input.DelegateCommand")
+            return "new global::Acrux.Core.Input.DelegateCommand(__parameter => global::System.Diagnostics.Trace.WriteLine(" +
+                   SymbolDisplay.FormatLiteral(label + "(", true) + " + global::System.Convert.ToString(__parameter, " +
+                   "global::System.Globalization.CultureInfo.InvariantCulture) + \")\", " + category + "))";
+
+        var named = type as INamedTypeSymbol;
+        IMethodSymbol invoke = named == null || named.TypeKind != TypeKind.Delegate ? null : named.DelegateInvokeMethod;
+        if (invoke == null || !invoke.ReturnsVoid || invoke.Parameters.Any(p => p.RefKind != RefKind.None))
+            return null;
+        var parameters = invoke.Parameters.Select((p, i) => "__p" + i).ToList();
+        string arguments = parameters.Count == 0
+            ? SymbolDisplay.FormatLiteral(label + "()", true)
+            : SymbolDisplay.FormatLiteral(label + "(", true) + " + " + string.Join(" + \", \" + ", parameters.Select(p =>
+                  "global::System.Convert.ToString(" + p + ", global::System.Globalization.CultureInfo.InvariantCulture)")) +
+              " + \")\"";
+        return "new " + type.ToDisplayString(SymbolDisplayFormat.FullyQualifiedFormat) + "((" + string.Join(", ", parameters) +
+               ") => global::System.Diagnostics.Trace.WriteLine(" + arguments + ", " + category + "))";
     }
 
     // Design properties the Rider plugin edits (string, bool, numbers, enums, Color), and vectors.

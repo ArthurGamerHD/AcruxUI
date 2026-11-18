@@ -40,6 +40,7 @@ internal static class BaseMembers
         "Ellipse|Shape||",
         "Expander|HeaderedContentControl|Collapsed,Collapsing,ContentTransition,ExpandDirection,Expanded,Expanding,IsExpanded|",
         "FlexPanel|Panel|AlignContent,AlignItems,ColumnSpacing,Direction,JustifyContent,RowSpacing,Wrap|",
+        "Flyout|Popup|Content,FlyoutPresenterClasses,Hide,ShowAt,Target|",
         "Geometry||Bounds,Changed,ContourLength,Transform|",
         "Grid|Panel|ColumnDefinitions,ColumnSpacing,RowDefinitions,RowSpacing,ShowGridLines|Column,ColumnSpan,IsSharedSizeScope,Row,RowSpan",
         "GridSplitter|Thumb|DragIncrement,KeyboardIncrement,PreviewContent,ResizeBehavior,ResizeDirection,ShowsPreview|",

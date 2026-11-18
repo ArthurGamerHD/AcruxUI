@@ -10,7 +10,7 @@ namespace Acrux.Core
         public void Invalidate(global::Acrux.Core.Invalidation.UiInvalidation @invalidation)  { __UiBridge_Acrux_Core_Visual.m5(Native, (int)(@invalidation)); }
         protected void ClearInvalidation(global::Acrux.Core.Invalidation.UiInvalidation @invalidation)  { __UiBridge_Acrux_Core_Visual.m6(Native, (int)(@invalidation)); }
         public virtual void Dispose()  { __UiBridge_Acrux_Core_Visual.m7(Native); }
-        internal void __Hook_Acrux_Core_Visual_Dispose_149() { Dispose(); }
+        internal void __Hook_Acrux_Core_Visual_Dispose_150() { Dispose(); }
     }
     internal static class __UiBridge_Acrux_Core_Visual
     {

@@ -27,8 +27,11 @@
                          FontSize="0.72"
                          Foreground="{TemplateBinding Foreground}" />
               <!-- Shows the selection through SelectionBoxItemTemplate / ItemTemplate when one is set. -->
+              <!-- Clipped to the header's content area: a template wider than the box is cut before the arrow; a
+                   TextBlock in it with TextTrimming trims to the width it is arranged at. -->
               <ContentPresenter Name="PART_ContentPresenter"
                                 VerticalAlignment="Center"
+                                ClipToBounds="True"
                                 IsVisible="False" />
             </Grid>
           </Border>

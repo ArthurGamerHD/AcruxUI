@@ -21,8 +21,8 @@ namespace Acrux.Core
         internal void ArrangeInSlot(global::VRageMath.RectangleF @slot)  { __UiBridge_Acrux_Core_FrameworkElement.m23(Native, @slot); }
         internal void ArrangeInSlot(global::VRageMath.RectangleF @slot, global::VRageMath.Vector2 @desiredSize)  { __UiBridge_Acrux_Core_FrameworkElement.m24(Native, @slot, @desiredSize); }
         protected virtual void ArrangeChildren(global::VRageMath.RectangleF @bounds)  { __UiBridge_Acrux_Core_FrameworkElement.m25(Native, @bounds); }
-        internal global::VRageMath.Vector2 __Hook_Acrux_Core_FrameworkElement_MeasureOverride_145(global::VRageMath.Vector2 __w_availableSize) { return MeasureOverride(__w_availableSize); }
-        internal void __Hook_Acrux_Core_FrameworkElement_ArrangeChildren_146(global::VRageMath.RectangleF __w_bounds) { ArrangeChildren(__w_bounds); }
+        internal global::VRageMath.Vector2 __Hook_Acrux_Core_FrameworkElement_MeasureOverride_146(global::VRageMath.Vector2 __w_availableSize) { return MeasureOverride(__w_availableSize); }
+        internal void __Hook_Acrux_Core_FrameworkElement_ArrangeChildren_147(global::VRageMath.RectangleF __w_bounds) { ArrangeChildren(__w_bounds); }
     }
     internal static class __UiBridge_Acrux_Core_FrameworkElement
     {

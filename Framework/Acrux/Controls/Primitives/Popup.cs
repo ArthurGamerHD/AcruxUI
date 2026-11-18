@@ -9,7 +9,7 @@ using VRageMath;
 namespace Acrux.Controls.Primitives
 {
     /// <summary>A renderer-neutral overlay primitive positioned relative to another visual.</summary>
-    public sealed class Popup : VisualElement, IOverlayProvider, ILightDismissOverlayProvider
+    public class Popup : VisualElement, IOverlayProvider, ILightDismissOverlayProvider
     {
         static readonly IReadOnlyList<VisualElement> NoVisualChildren =
             new VisualElement[0];
@@ -179,6 +179,7 @@ namespace Acrux.Controls.Primitives
         {
             if (IsOpen || Child == null)
                 return;
+            OnOpening();
             IsOpen = true;
             if (Opened != null) Opened();
         }
@@ -189,6 +190,11 @@ namespace Acrux.Controls.Primitives
                 return;
             IsOpen = false;
             if (Closed != null) Closed();
+        }
+
+        /// <summary>Right before the popup opens, once its placement target is set.</summary>
+        protected virtual void OnOpening()
+        {
         }
 
         protected override Vector2 MeasureOverride(Vector2 availableSize)

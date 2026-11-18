@@ -92,11 +92,19 @@ namespace Acrux.Cartography.Maps
         // Draws nearby asteroids and boulders (voxel maps other than planets) into the 3D surface view and the
         // first-person terrain.
         public bool VoxelMapsVisible = true;
+        // Draws the trees and bushes the planet has loaded around the view into the 3D surface view and the
+        // first-person terrain.
+        public bool VegetationVisible = true;
+        // Draws the plants and items a player can forage (until picked) into the same views.
+        public bool ForageablesVisible = true;
+        // Draws characters (players, and bots such as wolves and spiders) into the 3D surface view and the
+        // first-person views, painted by their controller's relation to the local player.
+        public bool CharactersVisible = true;
         // Overlays the 3D surface view and the first-person terrain with the planet's atmospheric scattering.
         public bool AtmosphereVisible = true;
         /// <summary>
-        /// When set, the only grids, voxel maps (asteroids, boulders) and missiles the 3D views draw, by entity id;
-        /// planets draw anyway. A sensor view sets what its cameras can see. Replace the array to change it.
+        /// When set, the only grids, voxel maps (asteroids, boulders), characters and missiles the 3D views draw, by
+        /// entity id; planets, with their vegetation and forageables, draw anyway. A sensor view sets what its cameras can see. Replace the array to change it.
         /// </summary>
         public long[] VisibleEntityIds;
         /// <summary>
@@ -254,6 +262,9 @@ namespace Acrux.Cartography.Maps
             public Acrux.Render3D.Blocks.BlockLayer Blocks;
             public Acrux.Render3D.Voxels.VoxelLayer Voxels;
             public Acrux.Render3D.Models.ModelLayer Models;
+            public Acrux.Render3D.Props.VegetationLayer Vegetation;
+            public Acrux.Render3D.Props.ForageableLayer Forageables;
+            public Acrux.Render3D.Props.CharacterLayer Characters;
         }
 
         readonly SceneFramePipeline<FrameSlot> _pipeline = new SceneFramePipeline<FrameSlot>(() => new FrameSlot());

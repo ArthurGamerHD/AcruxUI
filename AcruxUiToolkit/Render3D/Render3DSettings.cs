@@ -29,6 +29,21 @@ namespace Acrux.Render3D
         /// <summary>Screen pixels per voxel mesh cell: higher is coarser and faster.</summary>
         public double VoxelPixelsPerCell = 4d;
 
+        /// <summary>Triangles of trees and bushes on planets.</summary>
+        public int VegetationTriangles = 60000;
+
+        /// <summary>Triangles of forageable plants and items on planets.</summary>
+        public int ForageableTriangles = 40000;
+
+        /// <summary>Triangles of characters (players and bots).</summary>
+        public int CharacterTriangles = 40000;
+
+        /// <summary>Vegetation, forageable and character models parsed from content files per frame, each.</summary>
+        public int PropModelLoadsPerFrame = 4;
+
+        /// <summary>Vegetation, forageables and characters smaller than this radius on screen, in pixels, are skipped.</summary>
+        public double MinimumPropPixels = 0.75d;
+
         /// <summary>Threads painting frames at once, shared by every renderer; 0 uses half the hardware threads.</summary>
         public int PaintThreads = 0;
 
@@ -46,6 +61,11 @@ namespace Acrux.Render3D
             VoxelTriangles = Math.Max(0, VoxelTriangles);
             VoxelJobs = Math.Max(1, Math.Min(16, VoxelJobs));
             VoxelPixelsPerCell = Math.Max(0.5d, VoxelPixelsPerCell);
+            VegetationTriangles = Math.Max(0, VegetationTriangles);
+            ForageableTriangles = Math.Max(0, ForageableTriangles);
+            CharacterTriangles = Math.Max(0, CharacterTriangles);
+            PropModelLoadsPerFrame = Math.Max(1, PropModelLoadsPerFrame);
+            MinimumPropPixels = Math.Max(0d, MinimumPropPixels);
             PaintThreads = Math.Max(0, Math.Min(256, PaintThreads));
         }
     }

@@ -6,7 +6,7 @@ namespace Acrux.Styling
         internal ControlTemplate(global::Acrux.Toolkit.Deferred deferred) : base(deferred) { }
         public ControlTemplate(global::System.Func<global::Acrux.Core.TemplatedControl, global::Acrux.Core.VisualElement> @factory) : base(global::Acrux.Toolkit.Deferred.Value)
         {
-            __AttachNative(__UiBridge_Acrux_Styling_ControlTemplate.m0(((global::System.Func<global::System.Func<global::Acrux.Core.TemplatedControl, global::Acrux.Core.VisualElement>, global::System.Func<object, object>>)(__d224 => __d224 == null ? null : new global::System.Func<object, object>((__p224_0) => global::Acrux.Toolkit.Ui.Native(__d224(global::Acrux.Toolkit.Ui.Wrap<global::Acrux.Core.TemplatedControl>(__p224_0))))))(@factory)));
+            __AttachNative(__UiBridge_Acrux_Styling_ControlTemplate.m0(((global::System.Func<global::System.Func<global::Acrux.Core.TemplatedControl, global::Acrux.Core.VisualElement>, global::System.Func<object, object>>)(__d225 => __d225 == null ? null : new global::System.Func<object, object>((__p225_0) => global::Acrux.Toolkit.Ui.Native(__d225(global::Acrux.Toolkit.Ui.Wrap<global::Acrux.Core.TemplatedControl>(__p225_0))))))(@factory)));
         }
         public static global::Acrux.Styling.ControlTemplate Parse(string @xml)  { return global::Acrux.Toolkit.Ui.Wrap<global::Acrux.Styling.ControlTemplate>(__UiBridge_Acrux_Styling_ControlTemplate.m1(@xml)); }
         internal global::Acrux.Styling.ControlTemplateInstance BuildInstance(global::Acrux.Core.TemplatedControl @owner)  { return global::Acrux.Toolkit.Ui.Wrap<global::Acrux.Styling.ControlTemplateInstance>(__UiBridge_Acrux_Styling_ControlTemplate.m2(Native, global::Acrux.Toolkit.Ui.Native(@owner))); }

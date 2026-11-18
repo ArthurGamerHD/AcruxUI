@@ -596,6 +596,8 @@ namespace Acrux.Controls
                 {
                     Interactive = true,
                     StyleClass = "combo-box-item",
+                    // A template wider than the drop-down is cut at its edge, as the selection box cuts it.
+                    ClipToBounds = true,
                     Child = content ?? text
                 });
                 border.Clicked = () => SelectOption(index, true);

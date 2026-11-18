@@ -16,7 +16,7 @@ namespace Acrux.Controls.Primitives
         {
             __AttachNative(GetType() == typeof(global::Acrux.Controls.Primitives.ToggleButton) ? __UiBridge_Acrux_Controls_Primitives_ToggleButton.m12() : __UiBridge_Acrux_Controls_Primitives_ToggleButton.m13(this));
         }
-        internal void __Hook_Acrux_Controls_Primitives_ToggleButton_Toggle_121() { Toggle(); }
+        internal void __Hook_Acrux_Controls_Primitives_ToggleButton_Toggle_122() { Toggle(); }
     }
     internal static class __UiBridge_Acrux_Controls_Primitives_ToggleButton
     {

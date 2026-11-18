@@ -69,6 +69,7 @@ public sealed class AcruxViewGenerator : IIncrementalGenerator
             ["ToolTip"] = "Acrux.Controls.ToolTip",
             ["Menu"] = "Acrux.Controls.Menu",
             ["ContextMenu"] = "Acrux.Controls.ContextMenu",
+            ["Flyout"] = "Acrux.Controls.Flyout",
             ["MenuItem"] = "Acrux.Controls.MenuItem",
             ["Border"] = "Acrux.Controls.Border",
             ["Button"] = "Acrux.Controls.Button",
@@ -1680,6 +1681,14 @@ public sealed class AcruxViewGenerator : IIncrementalGenerator
                 builder.Append(child.Variable);
                 builder.Append(".GridRowSpan");
                 builder.AppendLine(");");
+            }
+            else if (IsType(parentType, "Acrux.Controls.Flyout"))
+            {
+                // A flyout's one child is its content, as Avalonia's Flyout.Content.
+                builder.Append(parent);
+                builder.Append(".Content = ");
+                builder.Append(child.Variable);
+                builder.AppendLine(";");
             }
             else if (IsType(parentType, "Acrux.Controls.Menu") || IsType(parentType, "Acrux.Controls.ContextMenu") ||
                      IsType(parentType, "Acrux.Controls.MenuItem"))

@@ -127,6 +127,7 @@ namespace Sample
         public TextBlock TitleBlock => Title;
         public Gauge MeterControl => Meter;
         public Acrux.Controls.Border InlineBoxBorder => InlineBox;
+        public Acrux.Controls.Border GradientBorder => Gradient;
         public int PointerEnteredCount { get; private set; }
         public int PointerExitedCount { get; private set; }
         public object LastPointerSender { get; private set; }

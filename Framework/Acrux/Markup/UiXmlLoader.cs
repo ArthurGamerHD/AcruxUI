@@ -107,6 +107,10 @@ namespace Acrux.Markup
                         if (attribute.Name == "Color")
                             return new Acrux.Styling.SolidColorBrush((VRageMath.Color)converter.Convert(attribute.Value, typeof(VRageMath.Color)));
                     throw new FormatException("SolidColorBrush requires Color.");
+                case "LinearGradientBrush":
+                case "RadialGradientBrush":
+                case "ConicGradientBrush":
+                    return GradientBrushMarkup.Build(node);
                 default:
                     throw new FormatException("Unsupported property value element '" + node.Name + "'.");
             }

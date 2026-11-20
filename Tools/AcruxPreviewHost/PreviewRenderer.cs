@@ -38,6 +38,8 @@ namespace AcruxPreview
             StyleSheet.SourceLoadFailed = (source, error) => Program.Log("style '" + source + "' failed: " + error.Message);
             // As the game's definitions answer them in the mod (image sizes drive Stretch and natural sizes).
             Acrux.Toolkit.Server.ExternalInterop.Warning = message => Program.Log("warning: " + message);
+            Acrux.Toolkit.Server.ExternalInterop.LoadTexturePixels = (name, side) => () => GameTextures.Pixels(name, side);
+            Acrux.Toolkit.Server.ExternalInterop.RunInBackground = work => System.Threading.Tasks.Task.Run(work);
             PreviewGame.Install();
             LcdTextureResolver.IsTextureDefined = GameTextures.IsDefined;
             LcdTextureResolver.TextureSize = GameTextures.Size;
@@ -67,7 +69,8 @@ namespace AcruxPreview
             try
             {
                 VisualElement root = BuildView(xaml, theme, settings, assemblyPath);
-                host = new LcdGuiHost(PreviewSurface.Create(new Vector2(width, height)), root, animations);
+                _surface = PreviewSurface.Create(new Vector2(width, height));
+                host = new LcdGuiHost(_surface, root, animations);
                 host.Input.KeyboardEnabled = false;
                 // Templates (item templates) are built during layout: their errors surface here.
                 try
@@ -111,6 +114,25 @@ namespace AcruxPreview
         public Acrux.Core.Input.PointerCursor Cursor => _host == null ? Acrux.Core.Input.PointerCursor.Arrow : _host.PointerCursor;
 
         /// <summary>Paints the live tree into BGRA pixels at <paramref name="scale"/> (device pixels per surface pixel).</summary>
+        Sandbox.ModAPI.Ingame.IMyTextSurface _surface;
+        List<MySprite> _lastSprites;
+
+#if DEBUG
+        // The last drawn frame as "/acrux capture" saves one in game, to check a capture renders as the preview does.
+        internal void SaveCapture(string path)
+        {
+            if (_surface == null || _lastSprites == null)
+                return;
+            Acrux.Lcd.LcdSurfaceCapture.Frame frame =
+                Acrux.Lcd.LcdSurfaceCapture.Snapshot(_surface, "preview", _lastSprites, null);
+            frame.TextureSize = frame.SurfaceSize = new Vector2(_width, _height);
+            frame.ScriptBackground = _theme.Background;
+            using (var writer = new BinaryWriter(File.Create(path)))
+                Acrux.Lcd.LcdSurfaceCapture.Write(frame, writer,
+                    name => Adk.Compression.Zip.Zlib.DeflateZlib(frame.Textures[name].Rgba, Adk.Compression.Zip.DeflateLevel.Fast));
+        }
+#endif
+
         public byte[] Draw(float scale, out int pixelWidth, out int pixelHeight)
         {
             pixelWidth = Math.Max(1, (int)Math.Round(_width * scale));
@@ -132,6 +154,7 @@ namespace AcruxPreview
                     _drawError = message;
                 }
             }
+            _lastSprites = sprites;
             var info = new SKImageInfo(pixelWidth, pixelHeight, SKColorType.Bgra8888, SKAlphaType.Premul);
             using (var bitmap = new SKBitmap(info))
             using (var canvas = new SKCanvas(bitmap))

@@ -170,6 +170,7 @@ namespace Acrux.Toolkit
             global::Acrux.Render3D.__UiBridge_Acrux_Render3D_RelationPalette.Load(api);
             global::Acrux.Render3D.__UiBridge_Acrux_Render3D_Render3DSettings.Load(api);
             global::Acrux.Render3D.__UiBridge_Acrux_Render3D_SceneModel.Load(api);
+            global::Acrux.Render3D.__UiBridge_Acrux_Render3D_SceneVisibility.Load(api);
             global::Acrux.Rendering.__UiBridge_Acrux_Rendering_BorderTextureCache.Load(api);
             global::Acrux.Rendering.__UiBridge_Acrux_Rendering_IDynamicTexture.Load(api);
             global::Acrux.Rendering.__UiBridge_Acrux_Rendering_IDynamicTextureFactory.Load(api);
@@ -190,18 +191,24 @@ namespace Acrux.Toolkit
             global::Acrux.Sprites.__UiBridge_Acrux_Sprites_BlockSprites.Load(api);
             global::Acrux.Styling.__UiBridge_Acrux_Styling_BackgroundBrush.Load(api);
             global::Acrux.Styling.__UiBridge_Acrux_Styling_CompositeTextureBrush.Load(api);
+            global::Acrux.Styling.__UiBridge_Acrux_Styling_ConicGradientBrush.Load(api);
             global::Acrux.Styling.__UiBridge_Acrux_Styling_ControlTemplate.Load(api);
             global::Acrux.Styling.__UiBridge_Acrux_Styling_ControlTemplate_TControl_.Load(api);
             global::Acrux.Styling.__UiBridge_Acrux_Styling_ControlTemplateInstance.Load(api);
             global::Acrux.Styling.__UiBridge_Acrux_Styling_DataTemplate.Load(api);
             global::Acrux.Styling.__UiBridge_Acrux_Styling_DataTemplate_TData_.Load(api);
+            global::Acrux.Styling.__UiBridge_Acrux_Styling_GradientBrush.Load(api);
+            global::Acrux.Styling.__UiBridge_Acrux_Styling_GradientStop.Load(api);
+            global::Acrux.Styling.__UiBridge_Acrux_Styling_GradientStops.Load(api);
             global::Acrux.Styling.__UiBridge_Acrux_Styling_IDataTemplate.Load(api);
             global::Acrux.Styling.__UiBridge_Acrux_Styling_ITemplate_T_.Load(api);
             global::Acrux.Styling.__UiBridge_Acrux_Styling_ImageBrush.Load(api);
             global::Acrux.Styling.__UiBridge_Acrux_Styling_ItemsPanelTemplate.Load(api);
+            global::Acrux.Styling.__UiBridge_Acrux_Styling_LinearGradientBrush.Load(api);
             global::Acrux.Styling.__UiBridge_Acrux_Styling_NineSliceTextureBrush.Load(api);
             global::Acrux.Styling.__UiBridge_Acrux_Styling_PseudoClassCollection.Load(api);
             global::Acrux.Styling.__UiBridge_Acrux_Styling_PseudoClassNames.Load(api);
+            global::Acrux.Styling.__UiBridge_Acrux_Styling_RadialGradientBrush.Load(api);
             global::Acrux.Styling.__UiBridge_Acrux_Styling_ResourceDictionary.Load(api);
             global::Acrux.Styling.__UiBridge_Acrux_Styling_RotateTransform.Load(api);
             global::Acrux.Styling.__UiBridge_Acrux_Styling_ScaleTransform.Load(api);
@@ -372,17 +379,22 @@ namespace Acrux.Toolkit
             global::Acrux.Toolkit.Ui.RegisterFactory("Acrux.ScreenSpace.ScreenSpaceTextureResolver", native => { var w = new global::Acrux.ScreenSpace.ScreenSpaceTextureResolver(global::Acrux.Toolkit.Deferred.Value); w.__AttachNative(native); return w; });
             global::Acrux.Toolkit.Ui.RegisterFactory("Acrux.ScreenSpace.ScreenSpaceWindowPlatform", native => { var w = new global::Acrux.ScreenSpace.ScreenSpaceWindowPlatform(global::Acrux.Toolkit.Deferred.Value); w.__AttachNative(native); return w; });
             global::Acrux.Toolkit.Ui.RegisterFactory("Acrux.Styling.CompositeTextureBrush", native => { var w = new global::Acrux.Styling.CompositeTextureBrush(global::Acrux.Toolkit.Deferred.Value); w.__AttachNative(native); return w; });
+            global::Acrux.Toolkit.Ui.RegisterFactory("Acrux.Styling.ConicGradientBrush", native => { var w = new global::Acrux.Styling.ConicGradientBrush(global::Acrux.Toolkit.Deferred.Value); w.__AttachNative(native); return w; });
             global::Acrux.Toolkit.Ui.RegisterFactory("Acrux.Styling.ControlTemplate", native => { var w = new global::Acrux.Styling.ControlTemplate(global::Acrux.Toolkit.Deferred.Value); w.__AttachNative(native); return w; });
             global::Acrux.Toolkit.Ui.RegisterFactory("Acrux.Styling.ControlTemplate<TControl>", native => { var w = new global::Acrux.Styling.ControlTemplate<global::Acrux.Core.TemplatedControl>(global::Acrux.Toolkit.Deferred.Value); w.__AttachNative(native); return w; });
             global::Acrux.Toolkit.Ui.RegisterFactory("Acrux.Styling.ControlTemplateInstance", native => { var w = new global::Acrux.Styling.ControlTemplateInstance(global::Acrux.Toolkit.Deferred.Value); w.__AttachNative(native); return w; });
             global::Acrux.Toolkit.Ui.RegisterFactory("Acrux.Styling.DataTemplate", native => { var w = new global::Acrux.Styling.DataTemplate(global::Acrux.Toolkit.Deferred.Value); w.__AttachNative(native); return w; });
             global::Acrux.Toolkit.Ui.RegisterFactory("Acrux.Styling.DataTemplate<TData>", native => { var w = new global::Acrux.Styling.DataTemplate<object>(global::Acrux.Toolkit.Deferred.Value); w.__AttachNative(native); return w; });
+            global::Acrux.Toolkit.Ui.RegisterFactory("Acrux.Styling.GradientStop", native => { var w = new global::Acrux.Styling.GradientStop(global::Acrux.Toolkit.Deferred.Value); w.__AttachNative(native); return w; });
+            global::Acrux.Toolkit.Ui.RegisterFactory("Acrux.Styling.GradientStops", native => { var w = new global::Acrux.Styling.GradientStops(global::Acrux.Toolkit.Deferred.Value); w.__AttachNative(native); return w; });
             global::Acrux.Toolkit.Ui.RegisterFactory("Acrux.Styling.IDataTemplate", native => new global::Acrux.Styling.__Proxy_Acrux_Styling_IDataTemplate(native));
             global::Acrux.Toolkit.Ui.RegisterFactory("Acrux.Styling.ITemplate<T>", native => new global::Acrux.Styling.__Proxy_Acrux_Styling_ITemplate_T_<object>(native));
             global::Acrux.Toolkit.Ui.RegisterFactory("Acrux.Styling.ImageBrush", native => { var w = new global::Acrux.Styling.ImageBrush(global::Acrux.Toolkit.Deferred.Value); w.__AttachNative(native); return w; });
             global::Acrux.Toolkit.Ui.RegisterFactory("Acrux.Styling.ItemsPanelTemplate", native => { var w = new global::Acrux.Styling.ItemsPanelTemplate(global::Acrux.Toolkit.Deferred.Value); w.__AttachNative(native); return w; });
+            global::Acrux.Toolkit.Ui.RegisterFactory("Acrux.Styling.LinearGradientBrush", native => { var w = new global::Acrux.Styling.LinearGradientBrush(global::Acrux.Toolkit.Deferred.Value); w.__AttachNative(native); return w; });
             global::Acrux.Toolkit.Ui.RegisterFactory("Acrux.Styling.NineSliceTextureBrush", native => { var w = new global::Acrux.Styling.NineSliceTextureBrush(global::Acrux.Toolkit.Deferred.Value); w.__AttachNative(native); return w; });
             global::Acrux.Toolkit.Ui.RegisterFactory("Acrux.Styling.PseudoClassCollection", native => { var w = new global::Acrux.Styling.PseudoClassCollection(global::Acrux.Toolkit.Deferred.Value); w.__AttachNative(native); return w; });
+            global::Acrux.Toolkit.Ui.RegisterFactory("Acrux.Styling.RadialGradientBrush", native => { var w = new global::Acrux.Styling.RadialGradientBrush(global::Acrux.Toolkit.Deferred.Value); w.__AttachNative(native); return w; });
             global::Acrux.Toolkit.Ui.RegisterFactory("Acrux.Styling.ResourceDictionary", native => { var w = new global::Acrux.Styling.ResourceDictionary(global::Acrux.Toolkit.Deferred.Value); w.__AttachNative(native); return w; });
             global::Acrux.Toolkit.Ui.RegisterFactory("Acrux.Styling.RotateTransform", native => { var w = new global::Acrux.Styling.RotateTransform(global::Acrux.Toolkit.Deferred.Value); w.__AttachNative(native); return w; });
             global::Acrux.Toolkit.Ui.RegisterFactory("Acrux.Styling.ScaleTransform", native => { var w = new global::Acrux.Styling.ScaleTransform(global::Acrux.Toolkit.Deferred.Value); w.__AttachNative(native); return w; });
@@ -719,6 +731,7 @@ namespace Acrux.Toolkit
             global::Acrux.Toolkit.Ui.RegisterClientType("Acrux.Render3D.GridSnapshot", typeof(global::Acrux.Render3D.GridSnapshot));
             global::Acrux.Toolkit.Ui.RegisterClientType("Acrux.Render3D.GridSnapshotCapture", typeof(global::Acrux.Render3D.GridSnapshotCapture));
             global::Acrux.Toolkit.Ui.RegisterClientType("Acrux.Render3D.Render3DSettings", typeof(global::Acrux.Render3D.Render3DSettings));
+            global::Acrux.Toolkit.Ui.RegisterClientType("Acrux.Render3D.SceneCullingMode", typeof(global::Acrux.Render3D.SceneCullingMode));
             global::Acrux.Toolkit.Ui.RegisterClientType("Acrux.Render3D.SceneModel", typeof(global::Acrux.Render3D.SceneModel));
             global::Acrux.Toolkit.Ui.RegisterClientType("Acrux.Rendering.BorderTextureCache", typeof(global::Acrux.Rendering.BorderTextureCache));
             global::Acrux.Toolkit.Ui.RegisterClientType("Acrux.Rendering.DrawCommandKind", typeof(global::Acrux.Rendering.DrawCommandKind));
@@ -741,17 +754,25 @@ namespace Acrux.Toolkit
             global::Acrux.Toolkit.Ui.RegisterClientType("Acrux.Styling.BackgroundBrush", typeof(global::Acrux.Styling.BackgroundBrush));
             global::Acrux.Toolkit.Ui.RegisterClientType("Acrux.Styling.CompositeBrushOrientation", typeof(global::Acrux.Styling.CompositeBrushOrientation));
             global::Acrux.Toolkit.Ui.RegisterClientType("Acrux.Styling.CompositeTextureBrush", typeof(global::Acrux.Styling.CompositeTextureBrush));
+            global::Acrux.Toolkit.Ui.RegisterClientType("Acrux.Styling.ConicGradientBrush", typeof(global::Acrux.Styling.ConicGradientBrush));
             global::Acrux.Toolkit.Ui.RegisterClientType("Acrux.Styling.ControlTemplate", typeof(global::Acrux.Styling.ControlTemplate));
             global::Acrux.Toolkit.Ui.RegisterClientType("Acrux.Styling.ControlTemplateInstance", typeof(global::Acrux.Styling.ControlTemplateInstance));
             global::Acrux.Toolkit.Ui.RegisterClientType("Acrux.Styling.DataTemplate", typeof(global::Acrux.Styling.DataTemplate));
+            global::Acrux.Toolkit.Ui.RegisterClientType("Acrux.Styling.GradientBrush", typeof(global::Acrux.Styling.GradientBrush));
+            global::Acrux.Toolkit.Ui.RegisterClientType("Acrux.Styling.GradientSpreadMethod", typeof(global::Acrux.Styling.GradientSpreadMethod));
+            global::Acrux.Toolkit.Ui.RegisterClientType("Acrux.Styling.GradientStop", typeof(global::Acrux.Styling.GradientStop));
+            global::Acrux.Toolkit.Ui.RegisterClientType("Acrux.Styling.GradientStops", typeof(global::Acrux.Styling.GradientStops));
             global::Acrux.Toolkit.Ui.RegisterClientType("Acrux.Styling.IDataTemplate", typeof(global::Acrux.Styling.IDataTemplate));
             global::Acrux.Toolkit.Ui.RegisterClientType("Acrux.Styling.IResourceProvider", typeof(global::Acrux.Styling.IResourceProvider));
             global::Acrux.Toolkit.Ui.RegisterClientType("Acrux.Styling.ImageBrush", typeof(global::Acrux.Styling.ImageBrush));
             global::Acrux.Toolkit.Ui.RegisterClientType("Acrux.Styling.ItemsPanelTemplate", typeof(global::Acrux.Styling.ItemsPanelTemplate));
+            global::Acrux.Toolkit.Ui.RegisterClientType("Acrux.Styling.LinearGradientBrush", typeof(global::Acrux.Styling.LinearGradientBrush));
             global::Acrux.Toolkit.Ui.RegisterClientType("Acrux.Styling.NineSliceTextureBrush", typeof(global::Acrux.Styling.NineSliceTextureBrush));
             global::Acrux.Toolkit.Ui.RegisterClientType("Acrux.Styling.PseudoClassCollection", typeof(global::Acrux.Styling.PseudoClassCollection));
+            global::Acrux.Toolkit.Ui.RegisterClientType("Acrux.Styling.RadialGradientBrush", typeof(global::Acrux.Styling.RadialGradientBrush));
             global::Acrux.Toolkit.Ui.RegisterClientType("Acrux.Styling.RelativePoint", typeof(global::Acrux.Styling.RelativePoint));
             global::Acrux.Toolkit.Ui.RegisterClientType("Acrux.Styling.RelativeRect", typeof(global::Acrux.Styling.RelativeRect));
+            global::Acrux.Toolkit.Ui.RegisterClientType("Acrux.Styling.RelativeScalar", typeof(global::Acrux.Styling.RelativeScalar));
             global::Acrux.Toolkit.Ui.RegisterClientType("Acrux.Styling.RelativeUnit", typeof(global::Acrux.Styling.RelativeUnit));
             global::Acrux.Toolkit.Ui.RegisterClientType("Acrux.Styling.ResourceDictionary", typeof(global::Acrux.Styling.ResourceDictionary));
             global::Acrux.Toolkit.Ui.RegisterClientType("Acrux.Styling.RotateTransform", typeof(global::Acrux.Styling.RotateTransform));
@@ -986,6 +1007,7 @@ namespace Acrux.Toolkit
                 case "Acrux.Render3D.GridSnapshot": { global::Acrux.Render3D.GridSnapshot v; return p.TryGetResource<global::Acrux.Render3D.GridSnapshot>(key, out v) ? new object[] { global::Acrux.Toolkit.Ui.ToWire(v) } : null; }
                 case "Acrux.Render3D.GridSnapshotCapture": { global::Acrux.Render3D.GridSnapshotCapture v; return p.TryGetResource<global::Acrux.Render3D.GridSnapshotCapture>(key, out v) ? new object[] { global::Acrux.Toolkit.Ui.ToWire(v) } : null; }
                 case "Acrux.Render3D.Render3DSettings": { global::Acrux.Render3D.Render3DSettings v; return p.TryGetResource<global::Acrux.Render3D.Render3DSettings>(key, out v) ? new object[] { global::Acrux.Toolkit.Ui.ToWire(v) } : null; }
+                case "Acrux.Render3D.SceneCullingMode": { global::Acrux.Render3D.SceneCullingMode v; return p.TryGetResource<global::Acrux.Render3D.SceneCullingMode>(key, out v) ? new object[] { global::Acrux.Toolkit.Ui.ToWire(v) } : null; }
                 case "Acrux.Render3D.SceneModel": { global::Acrux.Render3D.SceneModel v; return p.TryGetResource<global::Acrux.Render3D.SceneModel>(key, out v) ? new object[] { global::Acrux.Toolkit.Ui.ToWire(v) } : null; }
                 case "Acrux.Rendering.BorderTextureCache": { global::Acrux.Rendering.BorderTextureCache v; return p.TryGetResource<global::Acrux.Rendering.BorderTextureCache>(key, out v) ? new object[] { global::Acrux.Toolkit.Ui.ToWire(v) } : null; }
                 case "Acrux.Rendering.DrawCommandKind": { global::Acrux.Rendering.DrawCommandKind v; return p.TryGetResource<global::Acrux.Rendering.DrawCommandKind>(key, out v) ? new object[] { global::Acrux.Toolkit.Ui.ToWire(v) } : null; }
@@ -1008,17 +1030,25 @@ namespace Acrux.Toolkit
                 case "Acrux.Styling.BackgroundBrush": { global::Acrux.Styling.BackgroundBrush v; return p.TryGetResource<global::Acrux.Styling.BackgroundBrush>(key, out v) ? new object[] { global::Acrux.Toolkit.Ui.ToWire(v) } : null; }
                 case "Acrux.Styling.CompositeBrushOrientation": { global::Acrux.Styling.CompositeBrushOrientation v; return p.TryGetResource<global::Acrux.Styling.CompositeBrushOrientation>(key, out v) ? new object[] { global::Acrux.Toolkit.Ui.ToWire(v) } : null; }
                 case "Acrux.Styling.CompositeTextureBrush": { global::Acrux.Styling.CompositeTextureBrush v; return p.TryGetResource<global::Acrux.Styling.CompositeTextureBrush>(key, out v) ? new object[] { global::Acrux.Toolkit.Ui.ToWire(v) } : null; }
+                case "Acrux.Styling.ConicGradientBrush": { global::Acrux.Styling.ConicGradientBrush v; return p.TryGetResource<global::Acrux.Styling.ConicGradientBrush>(key, out v) ? new object[] { global::Acrux.Toolkit.Ui.ToWire(v) } : null; }
                 case "Acrux.Styling.ControlTemplate": { global::Acrux.Styling.ControlTemplate v; return p.TryGetResource<global::Acrux.Styling.ControlTemplate>(key, out v) ? new object[] { global::Acrux.Toolkit.Ui.ToWire(v) } : null; }
                 case "Acrux.Styling.ControlTemplateInstance": { global::Acrux.Styling.ControlTemplateInstance v; return p.TryGetResource<global::Acrux.Styling.ControlTemplateInstance>(key, out v) ? new object[] { global::Acrux.Toolkit.Ui.ToWire(v) } : null; }
                 case "Acrux.Styling.DataTemplate": { global::Acrux.Styling.DataTemplate v; return p.TryGetResource<global::Acrux.Styling.DataTemplate>(key, out v) ? new object[] { global::Acrux.Toolkit.Ui.ToWire(v) } : null; }
+                case "Acrux.Styling.GradientBrush": { global::Acrux.Styling.GradientBrush v; return p.TryGetResource<global::Acrux.Styling.GradientBrush>(key, out v) ? new object[] { global::Acrux.Toolkit.Ui.ToWire(v) } : null; }
+                case "Acrux.Styling.GradientSpreadMethod": { global::Acrux.Styling.GradientSpreadMethod v; return p.TryGetResource<global::Acrux.Styling.GradientSpreadMethod>(key, out v) ? new object[] { global::Acrux.Toolkit.Ui.ToWire(v) } : null; }
+                case "Acrux.Styling.GradientStop": { global::Acrux.Styling.GradientStop v; return p.TryGetResource<global::Acrux.Styling.GradientStop>(key, out v) ? new object[] { global::Acrux.Toolkit.Ui.ToWire(v) } : null; }
+                case "Acrux.Styling.GradientStops": { global::Acrux.Styling.GradientStops v; return p.TryGetResource<global::Acrux.Styling.GradientStops>(key, out v) ? new object[] { global::Acrux.Toolkit.Ui.ToWire(v) } : null; }
                 case "Acrux.Styling.IDataTemplate": { global::Acrux.Styling.IDataTemplate v; return p.TryGetResource<global::Acrux.Styling.IDataTemplate>(key, out v) ? new object[] { global::Acrux.Toolkit.Ui.ToWire(v) } : null; }
                 case "Acrux.Styling.IResourceProvider": { global::Acrux.Styling.IResourceProvider v; return p.TryGetResource<global::Acrux.Styling.IResourceProvider>(key, out v) ? new object[] { global::Acrux.Toolkit.Ui.ToWire(v) } : null; }
                 case "Acrux.Styling.ImageBrush": { global::Acrux.Styling.ImageBrush v; return p.TryGetResource<global::Acrux.Styling.ImageBrush>(key, out v) ? new object[] { global::Acrux.Toolkit.Ui.ToWire(v) } : null; }
                 case "Acrux.Styling.ItemsPanelTemplate": { global::Acrux.Styling.ItemsPanelTemplate v; return p.TryGetResource<global::Acrux.Styling.ItemsPanelTemplate>(key, out v) ? new object[] { global::Acrux.Toolkit.Ui.ToWire(v) } : null; }
+                case "Acrux.Styling.LinearGradientBrush": { global::Acrux.Styling.LinearGradientBrush v; return p.TryGetResource<global::Acrux.Styling.LinearGradientBrush>(key, out v) ? new object[] { global::Acrux.Toolkit.Ui.ToWire(v) } : null; }
                 case "Acrux.Styling.NineSliceTextureBrush": { global::Acrux.Styling.NineSliceTextureBrush v; return p.TryGetResource<global::Acrux.Styling.NineSliceTextureBrush>(key, out v) ? new object[] { global::Acrux.Toolkit.Ui.ToWire(v) } : null; }
                 case "Acrux.Styling.PseudoClassCollection": { global::Acrux.Styling.PseudoClassCollection v; return p.TryGetResource<global::Acrux.Styling.PseudoClassCollection>(key, out v) ? new object[] { global::Acrux.Toolkit.Ui.ToWire(v) } : null; }
+                case "Acrux.Styling.RadialGradientBrush": { global::Acrux.Styling.RadialGradientBrush v; return p.TryGetResource<global::Acrux.Styling.RadialGradientBrush>(key, out v) ? new object[] { global::Acrux.Toolkit.Ui.ToWire(v) } : null; }
                 case "Acrux.Styling.RelativePoint": { global::Acrux.Styling.RelativePoint v; return p.TryGetResource<global::Acrux.Styling.RelativePoint>(key, out v) ? new object[] { global::Acrux.Toolkit.Ui.ToWire(v) } : null; }
                 case "Acrux.Styling.RelativeRect": { global::Acrux.Styling.RelativeRect v; return p.TryGetResource<global::Acrux.Styling.RelativeRect>(key, out v) ? new object[] { global::Acrux.Toolkit.Ui.ToWire(v) } : null; }
+                case "Acrux.Styling.RelativeScalar": { global::Acrux.Styling.RelativeScalar v; return p.TryGetResource<global::Acrux.Styling.RelativeScalar>(key, out v) ? new object[] { global::Acrux.Toolkit.Ui.ToWire(v) } : null; }
                 case "Acrux.Styling.RelativeUnit": { global::Acrux.Styling.RelativeUnit v; return p.TryGetResource<global::Acrux.Styling.RelativeUnit>(key, out v) ? new object[] { global::Acrux.Toolkit.Ui.ToWire(v) } : null; }
                 case "Acrux.Styling.ResourceDictionary": { global::Acrux.Styling.ResourceDictionary v; return p.TryGetResource<global::Acrux.Styling.ResourceDictionary>(key, out v) ? new object[] { global::Acrux.Toolkit.Ui.ToWire(v) } : null; }
                 case "Acrux.Styling.RotateTransform": { global::Acrux.Styling.RotateTransform v; return p.TryGetResource<global::Acrux.Styling.RotateTransform>(key, out v) ? new object[] { global::Acrux.Toolkit.Ui.ToWire(v) } : null; }

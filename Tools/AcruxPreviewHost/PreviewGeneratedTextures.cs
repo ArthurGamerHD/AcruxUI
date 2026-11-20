@@ -35,6 +35,19 @@ namespace AcruxPreview
             return texture;
         }
 
+#if DEBUG
+        // A texture from an in-game capture, under the name its sprites draw it by.
+        internal static void Inject(string name, Vector2I size, byte[] premultipliedRgba)
+        {
+            var texture = new Texture(name, size, MyGeneratedTextureFormat.Srgb);
+            byte[] pixels = texture.BeginUpdate();
+            Buffer.BlockCopy(premultipliedRgba, 0, pixels, 0, Math.Min(pixels.Length, premultipliedRgba.Length));
+            texture.EndUpdate(pixels);
+            lock (Sync)
+                Live[name] = texture;
+        }
+#endif
+
         /// <summary>The generated texture named <paramref name="name"/> as last updated; null when there is none.</summary>
         public static SKImage Image(string name)
         {

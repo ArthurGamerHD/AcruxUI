@@ -159,6 +159,14 @@ public sealed class AcruxUiToolkitMirrorGenerator : IIncrementalGenerator
                 SFrom = "new global::Acrux.Styling.RelativePoint(({0}).X, ({0}).Y, (global::Acrux.Styling.RelativeUnit)(int)({0}).Z)",
                 STo = "new global::VRageMath.Vector3(({0}).Point, (float)(int)({0}).Unit)",
             };
+            _codecs["Acrux.Styling.RelativeScalar"] = new Codec
+            {
+                Wire = "global::VRageMath.Vector2",
+                C2W = "new global::VRageMath.Vector2(({0}).Scalar, (float)(int)({0}).Unit)",
+                W2C = "new global::Acrux.Styling.RelativeScalar(({0}).X, (global::Acrux.Styling.RelativeUnit)(int)({0}).Y)",
+                SFrom = "new global::Acrux.Styling.RelativeScalar(({0}).X, (global::Acrux.Styling.RelativeUnit)(int)({0}).Y)",
+                STo = "new global::VRageMath.Vector2(({0}).Scalar, (float)(int)({0}).Unit)",
+            };
             _codecs["Acrux.Styling.RelativeRect"] = new Codec
             {
                 Wire = "global::VRage.MyTuple<global::VRageMath.Vector4, int>",

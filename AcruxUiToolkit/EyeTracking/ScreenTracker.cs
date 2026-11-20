@@ -360,7 +360,7 @@ namespace LcdEyeTrackingApi
                 ApplyUseInputEnabled(identityId, data[0] != 0);
         }
 
-        static bool TryGetCameraRay(out Vector3D origin, out Vector3D direction)
+        internal static bool TryGetCameraRay(out Vector3D origin, out Vector3D direction)
         {
             origin = Vector3D.Zero;
             direction = Vector3D.Zero;
@@ -392,7 +392,7 @@ namespace LcdEyeTrackingApi
         // LCD panels: selected rotation; other providers: the surface's index. Physics-less grids are allowed: the
         // registering client already decided the screen is usable (e.g. a mod's wrist pad spawned as a physics-less
         // preview grid).
-        static int ResolveSurfaceIndex(IMyCubeBlock block, IMyTextSurface surface)
+        internal static int ResolveSurfaceIndex(IMyCubeBlock block, Sandbox.ModAPI.Ingame.IMyTextSurface surface)
         {
             if (block == null || surface == null || block.CubeGrid == null)
                 return -1;

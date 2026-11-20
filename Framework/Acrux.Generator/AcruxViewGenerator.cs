@@ -1384,6 +1384,11 @@ public sealed class AcruxViewGenerator : IIncrementalGenerator
                 EmitBrush(builder, target, property, values[0], indent);
                 return;
             }
+            if (values.Length == 1 && IsGradientBrush(values[0].Name.LocalName))
+            {
+                EmitGradientBrush(builder, target, property, values[0], indent);
+                return;
+            }
             if (values.Length == 1 && values[0].Name.LocalName != "DataTemplate")
             {
                 INamedTypeSymbol valueType = ResolveElementType(values[0]);
@@ -1410,6 +1415,191 @@ public sealed class AcruxViewGenerator : IIncrementalGenerator
                 return;
             }
             EmitDataTemplate(builder, target, property, values[0], dataType, indent);
+        }
+
+        static bool IsGradientBrush(string name)
+        {
+            return name == "LinearGradientBrush" || name == "RadialGradientBrush" || name == "ConicGradientBrush";
+        }
+
+        // A literal gradient brush, as Avalonia writes one: its attributes, then its GradientStop children (directly
+        // or inside <Brush.GradientStops>, optionally wrapped in <GradientStops>), added one by one.
+        void EmitGradientBrush(
+            StringBuilder builder,
+            string target,
+            IPropertySymbol property,
+            XElement brush,
+            int indent)
+        {
+            string name = brush.Name.LocalName;
+            var setters = new List<string>();
+            foreach (XAttribute attribute in brush.Attributes())
+            {
+                if (attribute.IsNamespaceDeclaration || IsXamlNamespace(attribute.Name.NamespaceName))
+                    continue;
+                string member = attribute.Name.LocalName;
+                string value = attribute.Value.Trim();
+                if (TryParseBinding(value, out _) || TryParseDynamicResource(value, out _))
+                {
+                    Error(UnsupportedMarkup, name + " values must be literal; bind the brush property itself instead.");
+                    return;
+                }
+                string literal = null;
+                switch (member)
+                {
+                    case "SpreadMethod":
+                        if (value == "Pad" || value == "Reflect" || value == "Repeat")
+                            literal = "global::Acrux.Styling.GradientSpreadMethod." + value;
+                        break;
+                    case "Opacity":
+                        literal = FloatLiteral(value);
+                        break;
+                    case "Transform":
+                        literal = "global::Acrux.Styling.Transform.Parse(" + SymbolDisplay.FormatLiteral(value, true) + ")";
+                        break;
+                    case "TransformOrigin":
+                        literal = RelativePointLiteral(value);
+                        break;
+                    case "StartPoint":
+                    case "EndPoint":
+                        if (name == "LinearGradientBrush")
+                            literal = RelativePointLiteral(value);
+                        break;
+                    case "Center":
+                        if (name != "LinearGradientBrush")
+                            literal = RelativePointLiteral(value);
+                        break;
+                    case "GradientOrigin":
+                        if (name == "RadialGradientBrush")
+                            literal = RelativePointLiteral(value);
+                        break;
+                    case "RadiusX":
+                    case "RadiusY":
+                        if (name == "RadialGradientBrush")
+                            literal = RelativeScalarLiteral(value);
+                        break;
+                    case "Angle":
+                        if (name == "ConicGradientBrush")
+                            literal = FloatLiteral(value);
+                        break;
+                    default:
+                        Error(UnknownProperty, "Unknown property '" + name + "." + member + "'.");
+                        return;
+                }
+                if (literal == null)
+                {
+                    Error(UnsupportedMarkup, "Invalid or unsupported value '" + value + "' for " + name + "." + member + ".");
+                    return;
+                }
+                setters.Add(member + " = " + literal);
+            }
+
+            var stops = new List<XElement>();
+            if (!CollectGradientStops(brush, name, stops))
+                return;
+            ITypeSymbol colorType = _compilation.GetTypeByMetadataName("VRageMath.Color");
+            var adds = new List<string>();
+            foreach (XElement stop in stops)
+            {
+                string color = "default(global::VRageMath.Color)";
+                string offset = "0f";
+                foreach (XAttribute attribute in stop.Attributes())
+                {
+                    if (attribute.IsNamespaceDeclaration || IsXamlNamespace(attribute.Name.NamespaceName))
+                        continue;
+                    string value = attribute.Value.Trim();
+                    if (attribute.Name.LocalName == "Color")
+                        color = ConvertLiteral(value, colorType);
+                    else if (attribute.Name.LocalName == "Offset")
+                        offset = FloatLiteral(value);
+                    else
+                    {
+                        Error(UnknownProperty, "Unknown property 'GradientStop." + attribute.Name.LocalName + "'.");
+                        return;
+                    }
+                    if (color == null || offset == null)
+                    {
+                        Error(UnsupportedMarkup, "GradientStop." + attribute.Name.LocalName + " must be a literal; got '" + value + "'.");
+                        return;
+                    }
+                }
+                adds.Add("new global::Acrux.Styling.GradientStop(" + color + ", " + offset + ")");
+            }
+
+            string variable = "__gradient" + _nextVariable++;
+            AppendIndent(builder, indent);
+            builder.Append("var ").Append(variable).Append(" = new global::Acrux.Styling.").Append(name)
+                .Append(" { ").Append(string.Join(", ", setters)).AppendLine(" };");
+            foreach (string add in adds)
+            {
+                AppendIndent(builder, indent);
+                builder.Append(variable).Append(".GradientStops.Add(").Append(add).AppendLine(");");
+            }
+            AppendIndent(builder, indent);
+            builder.Append(target).Append('.').Append(property.Name).Append(" = ").Append(variable).AppendLine(";");
+        }
+
+        bool CollectGradientStops(XElement element, string brushName, List<XElement> stops)
+        {
+            foreach (XElement child in element.Elements())
+            {
+                string local = child.Name.LocalName;
+                if (local == "GradientStop")
+                    stops.Add(child);
+                else if (local == "GradientStops" || local == brushName + ".GradientStops")
+                {
+                    if (!CollectGradientStops(child, brushName, stops))
+                        return false;
+                }
+                else
+                {
+                    Error(UnsupportedMarkup, "Unexpected '" + local + "' in " + brushName + "; expected GradientStop elements.");
+                    return false;
+                }
+            }
+            return true;
+        }
+
+        static string FloatLiteral(string value)
+        {
+            float parsed;
+            return float.TryParse(value, NumberStyles.Float, CultureInfo.InvariantCulture, out parsed)
+                ? parsed.ToString("R", CultureInfo.InvariantCulture) + "f"
+                : null;
+        }
+
+        // "x,y" in layout units or "x%,y%" as fractions, as RelativePoint.Parse reads it.
+        static string RelativePointLiteral(string value)
+        {
+            string[] parts = value.Split(new[] { ',', ' ' }, StringSplitOptions.RemoveEmptyEntries);
+            if (parts.Length != 2 || parts[0].EndsWith("%", StringComparison.Ordinal) != parts[1].EndsWith("%", StringComparison.Ordinal))
+                return null;
+            bool relative = parts[0].EndsWith("%", StringComparison.Ordinal);
+            float x, y;
+            if (!float.TryParse(parts[0].TrimEnd('%'), NumberStyles.Float, CultureInfo.InvariantCulture, out x) ||
+                !float.TryParse(parts[1].TrimEnd('%'), NumberStyles.Float, CultureInfo.InvariantCulture, out y))
+                return null;
+            if (relative)
+            {
+                x /= 100f;
+                y /= 100f;
+            }
+            return "new global::Acrux.Styling.RelativePoint(" + x.ToString("R", CultureInfo.InvariantCulture) + "f, " +
+                   y.ToString("R", CultureInfo.InvariantCulture) + "f, global::Acrux.Styling.RelativeUnit." +
+                   (relative ? "Relative" : "Absolute") + ")";
+        }
+
+        // "x" in layout units or "x%" as a fraction, as RelativeScalar.Parse reads it.
+        static string RelativeScalarLiteral(string value)
+        {
+            bool relative = value.EndsWith("%", StringComparison.Ordinal);
+            float scalar;
+            if (!float.TryParse(value.TrimEnd('%'), NumberStyles.Float, CultureInfo.InvariantCulture, out scalar))
+                return null;
+            if (relative)
+                scalar /= 100f;
+            return "new global::Acrux.Styling.RelativeScalar(" + scalar.ToString("R", CultureInfo.InvariantCulture) +
+                   "f, global::Acrux.Styling.RelativeUnit." + (relative ? "Relative" : "Absolute") + ")";
         }
 
         void EmitBrush(

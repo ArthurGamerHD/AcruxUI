@@ -1287,6 +1287,12 @@ namespace Acrux.Styling
                         return new ImageBrushOpacityResource(imageBrush, opacityKey);
                     return imageBrush;
                 }
+                foreach (string gradient in GradientBrushNames)
+                {
+                    if (PeekElement(gradient))
+                        return Acrux.Markup.GradientBrushMarkup.Build(
+                            Acrux.Markup.UiXmlLoader.ParseNode(ReadElementXml(gradient), _namespaces));
+                }
                 if (PeekElement("TextureBrush"))
                 {
                     var attributes = new Dictionary<string, string>(StringComparer.Ordinal);
@@ -1347,9 +1353,11 @@ namespace Acrux.Styling
                         attributes.TryGetValue("Fallback", out fallback) ? ParseColor(fallback) : Color.Transparent,
                         attributes.TryGetValue("Tint", out tint) ? ParseColor(tint) : Color.White);
                 }
-                Fail("Only ControlTemplate, ItemsPanelTemplate, PageSlide, SolidColorBrush, ImageBrush, TextureBrush, CompositeTextureBrush, or NineSliceTextureBrush is supported as a Setter value.");
+                Fail("Only ControlTemplate, ItemsPanelTemplate, PageSlide, SolidColorBrush, ImageBrush, LinearGradientBrush, RadialGradientBrush, ConicGradientBrush, TextureBrush, CompositeTextureBrush, or NineSliceTextureBrush is supported as a Setter value.");
                 return null;
             }
+
+            static readonly string[] GradientBrushNames = { "LinearGradientBrush", "RadialGradientBrush", "ConicGradientBrush" };
 
             string ResolveSelector(string selector)
             {

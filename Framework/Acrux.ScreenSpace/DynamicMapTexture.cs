@@ -121,7 +121,8 @@ namespace Acrux.ScreenSpace
         }
     }
 
-    public sealed class ScreenSpaceDynamicTextureFactory : IDynamicTextureFactory, global::Acrux.Toolkit.IExternalPeerHost
+    public sealed class ScreenSpaceDynamicTextureFactory : IDynamicTextureFactory, ISharedTextureFactory,
+        global::Acrux.Toolkit.IExternalPeerHost
     {
         object _externalPeer;
         object global::Acrux.Toolkit.IExternalPeerHost.ExternalPeer { get { return _externalPeer; } set { _externalPeer = value; } }
@@ -139,6 +140,8 @@ namespace Acrux.ScreenSpace
         }
 
         global::Acrux.Toolkit.GeneratedTexturePool Pool => _pool == null ? null : _pool();
+
+        global::Acrux.Toolkit.GeneratedTexturePool ISharedTextureFactory.SharingScope => Pool;
 
         public Vector2I FitToSupportedSize(Vector2I requestedSize)
         {

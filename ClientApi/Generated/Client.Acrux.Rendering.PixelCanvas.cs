@@ -18,6 +18,7 @@ namespace Acrux.Rendering
         public void FillTriangle(global::VRageMath.Vector2I @a, global::VRageMath.Vector2I @b, global::VRageMath.Vector2I @c, global::VRageMath.Color @color)  { __UiBridge_Acrux_Rendering_PixelCanvas.m8(Native, @a, @b, @c, @color); }
         public void SetPixel(int @x, int @y, global::VRageMath.Color @color)  { __UiBridge_Acrux_Rendering_PixelCanvas.m9(Native, @x, @y, @color); }
         public void BlendPixel(int @x, int @y, global::VRageMath.Color @color, float @coverage)  { __UiBridge_Acrux_Rendering_PixelCanvas.m10(Native, @x, @y, @color, @coverage); }
+        internal void SetPixelDithered(int @x, int @y, global::VRageMath.Vector4 @straight)  { __UiBridge_Acrux_Rendering_PixelCanvas.m11(Native, @x, @y, @straight); }
     }
     internal static class __UiBridge_Acrux_Rendering_PixelCanvas
     {
@@ -32,6 +33,7 @@ namespace Acrux.Rendering
         internal static global::System.Action<object, global::VRageMath.Vector2I, global::VRageMath.Vector2I, global::VRageMath.Vector2I, global::VRageMath.Color> m8;
         internal static global::System.Action<object, int, int, global::VRageMath.Color> m9;
         internal static global::System.Action<object, int, int, global::VRageMath.Color, float> m10;
+        internal static global::System.Action<object, int, int, global::VRageMath.Vector4> m11;
         internal static void Load(global::System.Collections.Generic.IDictionary<string, global::System.Delegate> api)
         {
             m0 = global::Acrux.Toolkit.Ui.Get<global::System.Func<byte[], int, int, object>>(api, "Acrux.Rendering.PixelCanvas.ctor(byte[],int,int)");
@@ -45,6 +47,7 @@ namespace Acrux.Rendering
             m8 = global::Acrux.Toolkit.Ui.Get<global::System.Action<object, global::VRageMath.Vector2I, global::VRageMath.Vector2I, global::VRageMath.Vector2I, global::VRageMath.Color>>(api, "Acrux.Rendering.PixelCanvas.FillTriangle`0(global::VRageMath.Vector2I,global::VRageMath.Vector2I,global::VRageMath.Vector2I,global::VRageMath.Color)");
             m9 = global::Acrux.Toolkit.Ui.Get<global::System.Action<object, int, int, global::VRageMath.Color>>(api, "Acrux.Rendering.PixelCanvas.SetPixel`0(int,int,global::VRageMath.Color)");
             m10 = global::Acrux.Toolkit.Ui.Get<global::System.Action<object, int, int, global::VRageMath.Color, float>>(api, "Acrux.Rendering.PixelCanvas.BlendPixel`0(int,int,global::VRageMath.Color,float)");
+            m11 = global::Acrux.Toolkit.Ui.Get<global::System.Action<object, int, int, global::VRageMath.Vector4>>(api, "Acrux.Rendering.PixelCanvas.SetPixelDithered`0(int,int,global::VRageMath.Vector4)");
         }
     }
 }

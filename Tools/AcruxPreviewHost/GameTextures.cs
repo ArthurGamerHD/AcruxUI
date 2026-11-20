@@ -113,6 +113,31 @@ namespace AcruxPreview
             }
         }
 
+        internal static Acrux.Rendering.TexturePixels Pixels(string name, int maxSide)
+        {
+            SKImage image = Image(name);
+            if (image == null || image.Width < 1 || image.Height < 1)
+                return null;
+            float scale = Math.Min(1f, maxSide / (float)Math.Max(image.Width, image.Height));
+            var info = new SKImageInfo(
+                Math.Max(1, (int)Math.Round(image.Width * scale)),
+                Math.Max(1, (int)Math.Round(image.Height * scale)),
+                SKColorType.Rgba8888, SKAlphaType.Premul);
+            var pixels = new byte[info.Width * info.Height * 4];
+            var handle = System.Runtime.InteropServices.GCHandle.Alloc(pixels, System.Runtime.InteropServices.GCHandleType.Pinned);
+            try
+            {
+                using (var target = new SKPixmap(info, handle.AddrOfPinnedObject(), info.Width * 4))
+                    if (!image.ScalePixels(target, SKFilterQuality.Medium))
+                        return null;
+            }
+            finally
+            {
+                handle.Free();
+            }
+            return new Acrux.Rendering.TexturePixels(info.Width, info.Height, pixels);
+        }
+
         static string FindPath(string name)
         {
             if (string.IsNullOrEmpty(name))

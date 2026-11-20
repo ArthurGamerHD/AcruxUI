@@ -109,6 +109,8 @@ static class Program
         Check(sprites.Any(sp => sp.Data == "x2=0"), "client converter from a StaticResource ran inside a toolkit binding");
         Check(Math.Abs(view.InlineBoxBorder.Bounds.Width - 33f) < .5f,
             "an inline UserControl.Styles style reached a descendant (" + view.InlineBoxBorder.Bounds.Width + ")");
+        CheckGradients(view);
+        CheckGradientSharing();
         Check(view.MeterControl.Mode == GaugeMode.Low, "client enum crossed a binding (" + view.MeterControl.Mode + ")");
         Check(view.MeterControl.Draws > 0, "client DrawSelf override ran inside the toolkit render pass");
         Check(view.MeterControl.Bounds.Width > 0, "client control was arranged by the toolkit (" + view.MeterControl.Bounds + ")");
@@ -644,6 +646,235 @@ static class Program
             rejected = true;
         }
         Check(rejected, "an Animation attribute Acrux does not support is a parse error");
+    }
+
+    static void CheckGradients(CounterView view)
+    {
+        var gradient = view.GradientBorder.Background as Acrux.Styling.LinearGradientBrush;
+        Check(gradient != null && gradient.GradientStops.Count == 2 &&
+              gradient.GradientStops[1].Color == new Color(0, 0, 255) && gradient.GradientStops[1].Offset == 1f &&
+              gradient.EndPoint.Equals(new Acrux.Styling.RelativePoint(1f, 0f, Acrux.Styling.RelativeUnit.Relative)) &&
+              gradient.SpreadMethod == Acrux.Styling.GradientSpreadMethod.Reflect,
+            "a compiled <LinearGradientBrush> with GradientStop children reached the client as one brush");
+        Color fallback = gradient == null ? Color.Transparent : gradient.FallbackColor;
+        Check(Math.Abs(fallback.R - 127) <= 1 && fallback.G == 0 && Math.Abs(fallback.B - 127) <= 1,
+            "a gradient's fallback color is the average of its stops (" + fallback + ")");
+
+        var sheet = toolkit::Acrux.Styling.StyleSheet.Load(
+            "<Styles xmlns=\"https://github.com/ArthurGamerHD/AcruxUI\"><Style Selector=\"Border\">" +
+            "<Setter Property=\"Background\"><RadialGradientBrush RadiusX=\"25%\" RadiusY=\"10\">" +
+            "<RadialGradientBrush.GradientStops><GradientStop Color=\"#FFFFFF\" Offset=\"0\" />" +
+            "<GradientStop Color=\"#000000\" Offset=\"1\" /></RadialGradientBrush.GradientStops>" +
+            "</RadialGradientBrush></Setter></Style></Styles>");
+        var styled = new toolkit::Acrux.Controls.Border { Width = 10, Height = 10, Styles = sheet };
+        var styledHost = new toolkit::Acrux.Lcd.LcdGuiHost(SurfaceMock.Create(new Vector2(32, 32)), styled);
+        styledHost.Input.KeyboardEnabled = false;
+        styledHost.Arrange(new RectangleF(0, 0, 32, 32));
+        var styledSprites = new List<MySprite>();
+        styledHost.Draw(styledSprites);
+        var radial = styled.Background as toolkit::Acrux.Styling.RadialGradientBrush;
+        Check(radial != null && radial.GradientStops.Count == 2 &&
+              radial.RadiusX.Equals(new toolkit::Acrux.Styling.RelativeScalar(.25f, toolkit::Acrux.Styling.RelativeUnit.Relative)) &&
+              radial.RadiusY.Equals(new toolkit::Acrux.Styling.RelativeScalar(10f, toolkit::Acrux.Styling.RelativeUnit.Absolute)),
+            "a style Setter parsed a <RadialGradientBrush> with a GradientStops property element");
+
+        // The baked texels: a horizontal red-to-blue gradient over 8x2 texels, its middle purple.
+        var linear = new toolkit::Acrux.Styling.LinearGradientBrush
+        {
+            EndPoint = new toolkit::Acrux.Styling.RelativePoint(1f, 0f, toolkit::Acrux.Styling.RelativeUnit.Relative)
+        };
+        linear.GradientStops.Add(new Color(255, 0, 0), 0f);
+        linear.GradientStops.Add(new Color(0, 0, 255), 1f);
+        var pixels = new byte[8 * 2 * 4];
+        var canvas = new toolkit::Acrux.Rendering.PixelCanvas(pixels, 8, 2);
+        Type painter = typeof(toolkit::Acrux.Rendering.PixelCanvas).Assembly.GetType("Acrux.Rendering.GradientTexture");
+        painter.GetMethod("PaintFill", BindingFlags.Static | BindingFlags.NonPublic)
+            .Invoke(null, new object[] { canvas, linear, new Vector2(80f, 20f), Vector4.Zero });
+        Check(pixels[0] > 220 && pixels[2] < 35 && pixels[7 * 4] < 35 && pixels[7 * 4 + 2] > 220 &&
+              Math.Abs(pixels[4 * 4] - pixels[4 * 4 + 2]) < 40 && pixels[3] == 255,
+            "a LinearGradientBrush baked red at its start and blue at its end (" + pixels[0] + "," + pixels[2] + " / " +
+            pixels[28] + "," + pixels[30] + ")");
+
+        // A shallow gradient (three levels over 256 texels) is dithered: the column averages follow the ramp instead of
+        // stepping in bands, and opaque stays opaque.
+        var shallow = new toolkit::Acrux.Styling.LinearGradientBrush
+        {
+            EndPoint = new toolkit::Acrux.Styling.RelativePoint(1f, 0f, toolkit::Acrux.Styling.RelativeUnit.Relative)
+        };
+        shallow.GradientStops.Add(new Color(10, 10, 10), 0f);
+        shallow.GradientStops.Add(new Color(13, 13, 13), 1f);
+        const int rampWidth = 256, rampHeight = 16;
+        var ramp = new byte[rampWidth * rampHeight * 4];
+        painter.GetMethod("PaintFill", BindingFlags.Static | BindingFlags.NonPublic).Invoke(null, new object[]
+        {
+            new toolkit::Acrux.Rendering.PixelCanvas(ramp, rampWidth, rampHeight), shallow,
+            new Vector2(rampWidth, rampHeight), Vector4.Zero
+        });
+        double worst = 0;
+        bool opaque = true;
+        var levels = new HashSet<byte>();
+        for (int x = 0; x < rampWidth; x += 8)
+        {
+            double sum = 0;
+            for (int column = x; column < x + 8; column++)
+            for (int y = 0; y < rampHeight; y++)
+            {
+                int index = (y * rampWidth + column) * 4;
+                sum += ramp[index];
+                levels.Add(ramp[index]);
+                opaque &= ramp[index + 3] == 255;
+            }
+            double expected = 10 + 3 * (x + 4) / (double)rampWidth;
+            worst = Math.Max(worst, Math.Abs(sum / (8 * rampHeight) - expected));
+        }
+        Check(worst < .35 && opaque && levels.Count >= 4,
+            "a shallow gradient is dithered instead of banded (worst column off by " + worst.ToString("0.00") +
+            " levels, " + levels.Count + " levels used, opaque " + opaque + ")");
+
+        // An OpacityMask texture: resolved once through the host and decoded in the background (not drawn until then),
+        // with one warning naming it, then served from the cache;
+        // re-encoded as texel times gradient (the white texel takes the gradient's color, the clear one stays clear).
+        Assembly toolkitAssembly = typeof(toolkit::Acrux.Rendering.PixelCanvas).Assembly;
+        Type interop = toolkitAssembly.GetType("Acrux.Toolkit.Server.ExternalInterop");
+        Type texturePixels = toolkitAssembly.GetType("Acrux.Rendering.TexturePixels");
+        FieldInfo warningField = interop.GetField("Warning", BindingFlags.Static | BindingFlags.NonPublic);
+        FieldInfo loaderField = interop.GetField("LoadTexturePixels", BindingFlags.Static | BindingFlags.NonPublic);
+        FieldInfo backgroundField = interop.GetField("RunInBackground", BindingFlags.Static | BindingFlags.NonPublic);
+        object previousWarning = warningField.GetValue(null);
+        object previousLoader = loaderField.GetValue(null);
+        object previousBackground = backgroundField.GetValue(null);
+        var queued = new List<Action>();
+        var warnings = new List<string>();
+        int loads = 0;
+        // Premultiplied: one opaque white texel, one transparent.
+        object maskPixels = Activator.CreateInstance(texturePixels, BindingFlags.Instance | BindingFlags.NonPublic, null,
+            new object[] { 2, 1, new byte[] { 255, 255, 255, 255, 0, 0, 0, 0 } }, null);
+        Type decodeType = typeof(Func<>).MakeGenericType(texturePixels);
+        Func<object> decode = () => { loads++; return maskPixels; };
+        Delegate typedDecode = System.Linq.Expressions.Expression.Lambda(decodeType,
+            System.Linq.Expressions.Expression.Convert(
+                System.Linq.Expressions.Expression.Invoke(System.Linq.Expressions.Expression.Constant(decode)), texturePixels)).Compile();
+        var nameParameter = System.Linq.Expressions.Expression.Parameter(typeof(string));
+        var sideParameter = System.Linq.Expressions.Expression.Parameter(typeof(int));
+        warningField.SetValue(null, new Action<string>(warnings.Add));
+        backgroundField.SetValue(null, new Action<Action>(queued.Add));
+        loaderField.SetValue(null, System.Linq.Expressions.Expression.Lambda(loaderField.FieldType,
+            System.Linq.Expressions.Expression.Constant(typedDecode, decodeType), nameParameter, sideParameter).Compile());
+        try
+        {
+            MethodInfo getMask = painter.GetMethod("GetMask", BindingFlags.Static | BindingFlags.NonPublic);
+            var arguments = new object[] { "HarnessMask", null };
+            string pending = getMask.Invoke(null, arguments).ToString();
+            Check(pending == "Loading" && arguments[1] == null && loads == 0 && queued.Count == 1,
+                "a gradient's OpacityMask decodes on a background thread, and is not drawn until then (" + pending + ")");
+            queued[0]();
+            string ready = getMask.Invoke(null, arguments).ToString();
+            object first = arguments[1];
+            getMask.Invoke(null, arguments);
+            object second = arguments[1];
+            Check(ready == "Ready" && first != null && ReferenceEquals(first, second) && loads == 1 && queued.Count == 1 &&
+                  warnings.Count == 1 &&
+                  warnings[0].Contains("slow") && warnings[0].Contains("'HarnessMask' will be cached"),
+                "a gradient's OpacityMask texture is decoded once, with a single warning naming it (" + loads + " loads, " +
+                warnings.Count + " warnings: " + string.Join(" | ", warnings) + ")");
+
+            var masked = new byte[2 * 1 * 4];
+            painter.GetMethod("PaintMasked", BindingFlags.Static | BindingFlags.NonPublic).Invoke(null, new object[]
+            {
+                new toolkit::Acrux.Rendering.PixelCanvas(masked, 2, 1), linear, new RectangleF(0, 0, 20, 10),
+                new RectangleF(0, 0, 20, 10), first
+            });
+            Check(masked[0] > 150 && masked[2] < 100 && masked[3] == 255 && masked[7] == 0,
+                "the mask was re-encoded with the gradient (" + string.Join(",", masked) + ")");
+        }
+        finally
+        {
+            warningField.SetValue(null, previousWarning);
+            loaderField.SetValue(null, previousLoader);
+            backgroundField.SetValue(null, previousBackground);
+        }
+    }
+
+    sealed class FakeTexture : toolkit::Acrux.Rendering.IDynamicTexture
+    {
+        public FakeTexture(Vector2I size) { Size = size; }
+        public toolkit::Acrux.Rendering.TextureSource Source => toolkit::Acrux.Rendering.TextureSource.FromKey("fake");
+        public bool IsAvailable => !Disposed;
+        public Vector2I Size { get; }
+        public bool Disposed;
+        public int Paints;
+        public bool Update(Action<toolkit::Acrux.Rendering.PixelCanvas> paint)
+        {
+            Paints++;
+            paint(new toolkit::Acrux.Rendering.PixelCanvas(new byte[Size.X * Size.Y * 4], Size.X, Size.Y));
+            return true;
+        }
+        public void Dispose() { Disposed = true; }
+    }
+
+    sealed class FakeTextures : toolkit::Acrux.Rendering.IDynamicTextureFactory
+    {
+        public readonly List<FakeTexture> Created = new List<FakeTexture>();
+        public Vector2I FitToSupportedSize(Vector2I requested) { return requested; }
+        public toolkit::Acrux.Rendering.IDynamicTexture Create(string name, Vector2I size)
+        {
+            var texture = new FakeTexture(size);
+            Created.Add(texture);
+            return texture;
+        }
+    }
+
+    static void CheckGradientSharing()
+    {
+        Assembly assembly = typeof(toolkit::Acrux.Rendering.PixelCanvas).Assembly;
+        Type cacheType = assembly.GetType("Acrux.Rendering.GradientTextureCache");
+        Type keyType = cacheType.GetNestedType("Key", BindingFlags.NonPublic | BindingFlags.Public);
+        Type paintType = typeof(Action<,>).MakeGenericType(typeof(toolkit::Acrux.Rendering.PixelCanvas),
+            assembly.GetType("Acrux.Styling.GradientBrush"));
+        var textures = new FakeTextures();
+        object cache = Activator.CreateInstance(cacheType, true);
+        MethodInfo acquire = cacheType.GetMethod("Acquire", BindingFlags.Instance | BindingFlags.NonPublic);
+        Delegate paint = System.Linq.Expressions.Expression.Lambda(paintType, System.Linq.Expressions.Expression.Empty(),
+            System.Linq.Expressions.Expression.Parameter(typeof(toolkit::Acrux.Rendering.PixelCanvas)),
+            System.Linq.Expressions.Expression.Parameter(assembly.GetType("Acrux.Styling.GradientBrush"))).Compile();
+        Func<Color, object> lease = top =>
+        {
+            var brush = new toolkit::Acrux.Styling.LinearGradientBrush();
+            brush.GradientStops.Add(top, 0f);
+            brush.GradientStops.Add(Color.Black, 1f);
+            object key = Activator.CreateInstance(keyType);
+            keyType.GetField("Brush").SetValue(key, brush);
+            keyType.GetField("Size").SetValue(key, new Vector2I(64, 32));
+            keyType.GetField("Layout").SetValue(key, new Vector2(64f, 32f));
+            return acquire.Invoke(cache, new[] { textures, key, paint });
+        };
+        object first = lease(Color.Red);
+        object second = lease(Color.Red);
+        object third = lease(Color.Blue);
+        Check(first != null && second != null && third != null && textures.Created.Count == 2 &&
+              textures.Created[0].Paints == 1,
+            "equal gradients at one size share one baked texture; another brush gets its own (" + textures.Created.Count + " made)");
+        ((IDisposable)first).Dispose();
+        ((IDisposable)second).Dispose();
+        ((IDisposable)third).Dispose();
+        Check(!textures.Created[0].Disposed, "a released gradient texture is kept a while for reuse");
+
+        // Across surfaces: two LCDs' factories (the toolkit's own budget) resolve the same stores; a factory that
+        // cannot share gets none.
+        Type stores = assembly.GetType("Acrux.Rendering.SharedTextureStores");
+        MethodInfo gradientStore = stores.GetMethod("Gradient", BindingFlags.Static | BindingFlags.NonPublic);
+        MethodInfo borderStore = stores.GetMethod("Border", BindingFlags.Static | BindingFlags.NonPublic);
+        var lcdA = new toolkit::Acrux.Lcd.LcdDynamicTextureFactory();
+        var lcdB = new toolkit::Acrux.Lcd.LcdDynamicTextureFactory();
+        var screen = new toolkit::Acrux.ScreenSpace.ScreenSpaceDynamicTextureFactory();
+        object gradientA = gradientStore.Invoke(null, new object[] { lcdA });
+        object gradientB = gradientStore.Invoke(null, new object[] { lcdB });
+        object borderA = borderStore.Invoke(null, new object[] { lcdA });
+        object borderB = borderStore.Invoke(null, new object[] { lcdB });
+        object screenGradient = gradientStore.Invoke(null, new object[] { screen });
+        Check(gradientA != null && ReferenceEquals(gradientA, gradientB) && borderA != null && ReferenceEquals(borderA, borderB) &&
+              !ReferenceEquals(screenGradient, gradientA) && gradientStore.Invoke(null, new object[] { textures }) == null,
+            "two LCD surfaces of one mod share gradient and Border texture stores; screen space and unshareable factories do not");
     }
 
     static void Check(bool ok, string what)

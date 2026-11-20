@@ -8,13 +8,25 @@ namespace Acrux.Rendering
         {
             __AttachNative(__UiBridge_Acrux_Rendering_BorderTextureCache.m0(global::Acrux.Rendering.__UiBridge_Acrux_Rendering_IDynamicTextureFactory.Export(@textures)));
         }
+        internal global::Acrux.Rendering.IDynamicTextureFactory Textures { get { return global::Acrux.Toolkit.Ui.Wrap<global::Acrux.Rendering.IDynamicTextureFactory>(__UiBridge_Acrux_Rendering_BorderTextureCache.m1(Native)); } }
+        internal static void PaintRoundedMask(global::Acrux.Rendering.PixelCanvas @canvas, global::VRageMath.Vector4 @cornerRadius)  { __UiBridge_Acrux_Rendering_BorderTextureCache.m2(global::Acrux.Toolkit.Ui.Native(@canvas), @cornerRadius); }
+        internal static void PaintRoundedRing(global::Acrux.Rendering.PixelCanvas @canvas, global::VRageMath.Vector4 @cornerRadius, global::VRageMath.Vector4 @borderThickness)  { __UiBridge_Acrux_Rendering_BorderTextureCache.m3(global::Acrux.Toolkit.Ui.Native(@canvas), @cornerRadius, @borderThickness); }
+        internal static float RoundedRectCoverage(float @sampleX, float @sampleY, float @left, float @top, float @width, float @height, global::VRageMath.Vector4 @cornerRadius)  { return __UiBridge_Acrux_Rendering_BorderTextureCache.m4(@sampleX, @sampleY, @left, @top, @width, @height, @cornerRadius); }
     }
     internal static class __UiBridge_Acrux_Rendering_BorderTextureCache
     {
         internal static global::System.Func<object, object> m0;
+        internal static global::System.Func<object, object> m1;
+        internal static global::System.Action<object, global::VRageMath.Vector4> m2;
+        internal static global::System.Action<object, global::VRageMath.Vector4, global::VRageMath.Vector4> m3;
+        internal static global::System.Func<float, float, float, float, float, float, global::VRageMath.Vector4, float> m4;
         internal static void Load(global::System.Collections.Generic.IDictionary<string, global::System.Delegate> api)
         {
             m0 = global::Acrux.Toolkit.Ui.Get<global::System.Func<object, object>>(api, "Acrux.Rendering.BorderTextureCache.ctor(object)");
+            m1 = global::Acrux.Toolkit.Ui.Get<global::System.Func<object, object>>(api, "Acrux.Rendering.BorderTextureCache.get_Textures");
+            m2 = global::Acrux.Toolkit.Ui.Get<global::System.Action<object, global::VRageMath.Vector4>>(api, "Acrux.Rendering.BorderTextureCache.PaintRoundedMask`0(object,global::VRageMath.Vector4)s");
+            m3 = global::Acrux.Toolkit.Ui.Get<global::System.Action<object, global::VRageMath.Vector4, global::VRageMath.Vector4>>(api, "Acrux.Rendering.BorderTextureCache.PaintRoundedRing`0(object,global::VRageMath.Vector4,global::VRageMath.Vector4)s");
+            m4 = global::Acrux.Toolkit.Ui.Get<global::System.Func<float, float, float, float, float, float, global::VRageMath.Vector4, float>>(api, "Acrux.Rendering.BorderTextureCache.RoundedRectCoverage`0(float,float,float,float,float,float,global::VRageMath.Vector4)s");
         }
     }
 }

@@ -78,6 +78,12 @@ namespace Acrux.Toolkit
             }
         }
 
+        internal static bool IsRegistered(GeneratedTexturePool pool)
+        {
+            lock (Clients)
+                return Clients.Contains(pool);
+        }
+
         internal static void Clear()
         {
             lock (Clients)

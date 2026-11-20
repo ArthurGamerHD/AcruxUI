@@ -599,7 +599,8 @@ namespace Acrux.Markup
                     return element;
                 });
             }
-            else if (value.Name == "ImageBrush" || value.Name == "SolidColorBrush")
+            else if (value.Name == "ImageBrush" || value.Name == "SolidColorBrush" ||
+                     GradientBrushMarkup.IsGradientBrush(value.Name))
                 built = UiXmlLoader.BuildValue(value);
             else
                 // A single visual, as the compiled view assigns one (Button.Flyout holding a Flyout).

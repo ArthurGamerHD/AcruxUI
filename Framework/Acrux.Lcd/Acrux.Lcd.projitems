@@ -13,6 +13,7 @@
     <Compile Include="$(MSBuildThisFileDirectory)LcdRenderer.cs" />
     <Compile Include="$(MSBuildThisFileDirectory)LcdSpriteCanvas.cs" />
     <Compile Include="$(MSBuildThisFileDirectory)LcdSurfaceLayers.cs" />
+    <Compile Include="$(MSBuildThisFileDirectory)LcdSurfaceCapture.cs" />
     <Compile Include="$(MSBuildThisFileDirectory)LcdTextMetrics.cs" />
     <Compile Include="$(MSBuildThisFileDirectory)LcdTextureResolver.cs" />
     <Compile Include="$(MSBuildThisFileDirectory)LcdWindowPlatform.cs" />

@@ -34,6 +34,10 @@ namespace Acrux.Controls
         Action<PixelCanvas> _customTexturePainter;
         string _generatedTextureName;
         bool _textureDirty = true;
+        GradientTextureCache.Lease _gradientTexture;
+        // A key whose texture could not be made: not retried every frame, only once something about it changes.
+        GradientTextureCache.Key _gradientFailed;
+        bool _hasGradientFailed;
 
         public static readonly StyledProperty<BackgroundBrush> BackgroundProperty =
             StyledProperty.Register<Border, BackgroundBrush>(
@@ -165,6 +169,7 @@ namespace Acrux.Controls
         {
             BackgroundBrush background = ResolveBackground();
             Color border = ResolveBorder();
+            GradientBrush gradient = background as GradientBrush;
 
             ImageBrush mask = OpacityMask as ImageBrush;
             if (mask != null)
@@ -174,11 +179,24 @@ namespace Acrux.Controls
                 if (background != null && !string.IsNullOrWhiteSpace(mask.Source))
                 {
                     Transform transform = RenderTransform;
-                    context.Texture(mask.Source, ImageBrush.Arrange(Bounds, mask.Stretch), background.FallbackColor,
-                        true, transform == null ? 0f : transform.RotationRadians);
+                    float rotation = transform == null ? 0f : transform.RotationRadians;
+                    RectangleF maskBounds = ImageBrush.Arrange(Bounds, mask.Stretch);
+                    if (gradient != null && DrawMaskedGradient(context, gradient, mask.Source, maskBounds, rotation))
+                        return;
+                    DisposeGradientTexture();
+                    context.Texture(mask.Source, maskBounds, background.FallbackColor, true, rotation);
                 }
+                else
+                    DisposeGradientTexture();
                 return;
             }
+
+            if (gradient != null)
+            {
+                DrawGradient(context, gradient, border);
+                return;
+            }
+            DisposeGradientTexture();
 
             if (background != null && !(background is SolidColorBrush))
             {
@@ -225,6 +243,127 @@ namespace Acrux.Controls
 
             EnsureStandardTexture(context, backgroundColor, border);
             DrawRounded(context, backgroundColor, border);
+        }
+
+        // While the mask decodes nothing is drawn; false draws the mask in one color instead.
+        bool DrawMaskedGradient(RenderContext context, GradientBrush gradient, string source, RectangleF maskBounds,
+            float rotation)
+        {
+            TexturePixels pixels;
+            MaskState state = GradientTexture.GetMask(source, out pixels);
+            if (state == MaskState.Loading)
+            {
+                context.MarkVolatile(this);
+                return true;
+            }
+            if (state == MaskState.Failed)
+                return false;
+            Vector2I size = context.DynamicTextures.FitToSupportedSize(new Vector2I(pixels.Width, pixels.Height));
+            var gradientBounds = new RectangleF(Vector2.Zero, Bounds.Size);
+            var relative = new RectangleF(maskBounds.Position - Bounds.Position, maskBounds.Size);
+            IDynamicTexture texture = EnsureGradientTexture(context, size, gradient, Vector4.Zero, source, relative,
+                (canvas, brush) => GradientTexture.PaintMasked(canvas, brush, gradientBounds, relative, pixels));
+            if (texture == null || !texture.IsAvailable)
+                return false;
+            context.DrawTexture(texture.Source, maskBounds, Color.White, rotation);
+            return true;
+        }
+
+        void DrawGradient(RenderContext context, GradientBrush gradient, Color border)
+        {
+            DisposeOwnedTexture();
+            Vector4 corners = CornerRadius;
+            bool rounded = Math.Max(Math.Max(corners.X, corners.Y), Math.Max(corners.Z, corners.W)) > 0f;
+
+            // At display size even without corners: the dithering that hides 8-bit bands only works near one texel per
+            // pixel, and stretching a smaller texture would blur it back into bands.
+            Vector2I supported = GetSupportedSize(context);
+            Vector4 radius = rounded && supported.X > 0 && supported.Y > 0
+                ? Vector4.Min(corners * GetTextureScale(supported), new Vector4(Math.Min(supported.X, supported.Y) * 0.5f))
+                : Vector4.Zero;
+
+            if (ShadowColor.A > 0)
+            {
+                var shadow = new RectangleF(Bounds.Position + ShadowOffset, Bounds.Size);
+                if (rounded && supported.X > 0 && supported.Y > 0)
+                {
+                    UpdateFillMask(context, supported, radius);
+                    if (_sharedTexture != null && _sharedTexture.Texture != null && _sharedTexture.Texture.IsAvailable)
+                        context.DrawTexture(_sharedTexture.Texture.Source, shadow, ShadowColor);
+                    else
+                        context.Fill(shadow, ShadowColor);
+                }
+                else
+                {
+                    ReleaseFillTexture();
+                    context.Fill(shadow, ShadowColor);
+                }
+            }
+            else
+                ReleaseFillTexture();
+
+            Vector2 layout = Bounds.Size;
+            IDynamicTexture texture = EnsureGradientTexture(context, supported, gradient, radius, null, default(RectangleF),
+                (canvas, brush) => GradientTexture.PaintFill(canvas, brush, layout, radius));
+            if (texture != null && texture.IsAvailable)
+                context.DrawTexture(texture.Source, Bounds, Color.White);
+            else
+                context.Fill(Bounds, gradient.FallbackColor);
+
+            bool stroke = HasBorderThickness && border.A > 0;
+            UpdateRing(context, stroke, corners);
+            if (stroke)
+                DrawStroke(context, border);
+        }
+
+        IDynamicTexture EnsureGradientTexture(
+            RenderContext context,
+            Vector2I size,
+            GradientBrush gradient,
+            Vector4 radius,
+            string mask,
+            RectangleF maskBounds,
+            Action<PixelCanvas, GradientBrush> paint)
+        {
+            GradientTextureCache cache = context.BorderTextures.Gradients;
+            var key = new GradientTextureCache.Key
+            {
+                Brush = gradient,
+                Size = size,
+                Radius = radius,
+                Layout = Bounds.Size,
+                Mask = mask,
+                MaskBounds = maskBounds
+            };
+            if (_gradientTexture == null || !ReferenceEquals(_gradientTexture.Owner, cache) ||
+                !_gradientTexture.CacheKey.Equals(key))
+            {
+                if (_hasGradientFailed && _gradientFailed.Equals(key))
+                    return null;
+                // Acquired before the old lease is released, so a texture this Border shares is not dropped in between.
+                GradientTextureCache.Lease next = cache.Acquire(context.DynamicTextures, key, paint);
+                DisposeGradientTexture();
+                _gradientTexture = next;
+                _hasGradientFailed = next == null;
+                if (next == null)
+                    _gradientFailed = new GradientTextureCache.Key
+                    {
+                        Brush = GradientBrushes.Clone(gradient),
+                        Size = size,
+                        Radius = radius,
+                        Layout = Bounds.Size,
+                        Mask = mask,
+                        MaskBounds = maskBounds
+                    };
+            }
+            return _gradientTexture == null ? null : _gradientTexture.Texture;
+        }
+
+        void DisposeGradientTexture()
+        {
+            if (_gradientTexture != null)
+                _gradientTexture.Dispose();
+            _gradientTexture = null;
         }
 
         bool TryDrawOpaquePill(RenderContext context, Color background, Color border)
@@ -446,6 +585,15 @@ namespace Acrux.Controls
             Vector4 radius = Vector4.Min(
                 CornerRadius * GetTextureScale(supported),
                 new Vector4(Math.Min(supported.X, supported.Y) * 0.5f));
+            UpdateFillMask(context, supported, radius);
+
+            UpdateRing(context, NeedsRing(background, border), CornerRadius);
+
+            _textureDirty = false;
+        }
+
+        void UpdateFillMask(RenderContext context, Vector2I supported, Vector4 radius)
+        {
             var fill = new BorderTextureCache.Key(supported, radius, Vector4.Zero, Color.White, Color.White, false);
             bool sameOwner = ReferenceEquals(_sharedTextureOwner, context.BorderTextures);
             if (_sharedTexture == null || !sameOwner || !_sharedTexture.CacheKey.Equals(fill))
@@ -454,11 +602,7 @@ namespace Acrux.Controls
                 ReleaseFillTexture();
                 _sharedTexture = next;
             }
-
-            UpdateRing(context, NeedsRing(background, border), CornerRadius);
-
             _sharedTextureOwner = context.BorderTextures;
-            _textureDirty = false;
         }
 
         // Keeps the shared ring texture of this Border's stroke (its size, thickness and corners) while wanted, and
@@ -540,6 +684,7 @@ namespace Acrux.Controls
         {
             ReleaseSharedTexture();
             DisposeOwnedTexture();
+            DisposeGradientTexture();
         }
 
         void ReleaseSharedTexture()

@@ -118,6 +118,9 @@ namespace Acrux.Lcd
             try
             {
                 paint(new PixelCanvas(pixels, _texture.Size.X, _texture.Size.Y));
+#if DEBUG
+                LcdSurfaceCapture.RecordTexture(_texture.Name, _texture.Size, pixels);
+#endif
             }
             finally
             {
@@ -133,12 +136,16 @@ namespace Acrux.Lcd
                 return;
             int removed;
             ContentVersions.TryRemove(_texture.Name, out removed);
+#if DEBUG
+            LcdSurfaceCapture.ForgetTexture(_texture.Name);
+#endif
             _texture.Dispose();
             _texture = null;
         }
     }
 
-    public sealed class LcdDynamicTextureFactory : IDynamicTextureFactory, global::Acrux.Toolkit.IExternalPeerHost
+    public sealed class LcdDynamicTextureFactory : IDynamicTextureFactory, ISharedTextureFactory,
+        global::Acrux.Toolkit.IExternalPeerHost
     {
         object _externalPeer;
         object global::Acrux.Toolkit.IExternalPeerHost.ExternalPeer { get { return _externalPeer; } set { _externalPeer = value; } }
@@ -156,6 +163,8 @@ namespace Acrux.Lcd
         }
 
         global::Acrux.Toolkit.GeneratedTexturePool Pool => _pool == null ? null : _pool();
+
+        global::Acrux.Toolkit.GeneratedTexturePool ISharedTextureFactory.SharingScope => Pool;
 
         public Vector2I FitToSupportedSize(Vector2I requestedSize)
         {

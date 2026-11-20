@@ -209,6 +209,9 @@ namespace Acrux.Lcd
         /// </summary>
         public List<MySprite> Compose()
         {
+#if DEBUG
+            LcdSurfaceCapture.Record(_surface, _content, _overlay);
+#endif
             _frame.Clear();
             _frame.AddRange(_content);
             _frame.AddRange(_overlay);

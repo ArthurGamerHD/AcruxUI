@@ -453,6 +453,10 @@ enum Acrux.Render3D.GridHighlightStyle.SeeThroughWireframe = 3
 enum Acrux.Render3D.GridHighlightStyle.Solid = 0
 enum Acrux.Render3D.GridHighlightStyle.Tint = 1
 enum Acrux.Render3D.GridHighlightStyle.Wireframe = 2
+enum Acrux.Render3D.SceneCullingMode : byte
+enum Acrux.Render3D.SceneCullingMode.Auto = 0
+enum Acrux.Render3D.SceneCullingMode.Off = 2
+enum Acrux.Render3D.SceneCullingMode.On = 1
 enum Acrux.Rendering.DrawCommandKind : int
 enum Acrux.Rendering.DrawCommandKind.FillRectangle = 0
 enum Acrux.Rendering.DrawCommandKind.Text = 2
@@ -460,6 +464,10 @@ enum Acrux.Rendering.DrawCommandKind.Texture = 1
 enum Acrux.Styling.CompositeBrushOrientation : int
 enum Acrux.Styling.CompositeBrushOrientation.Horizontal = 0
 enum Acrux.Styling.CompositeBrushOrientation.Vertical = 1
+enum Acrux.Styling.GradientSpreadMethod : int
+enum Acrux.Styling.GradientSpreadMethod.Pad = 0
+enum Acrux.Styling.GradientSpreadMethod.Reflect = 1
+enum Acrux.Styling.GradientSpreadMethod.Repeat = 2
 enum Acrux.Styling.RelativeUnit : int
 enum Acrux.Styling.RelativeUnit.Absolute = 1
 enum Acrux.Styling.RelativeUnit.Relative = 0
@@ -3194,7 +3202,12 @@ member Acrux.Render3D.SceneModel.set_Opacity : System.Action<object, float>
 member Acrux.Render3D.SceneModel.set_Unlit : System.Action<object, bool>
 member Acrux.Render3D.SceneModel.set_Visible : System.Action<object, bool>
 member Acrux.Render3D.SceneModel.set_WorldMatrix : System.Action<object, VRageMath.MatrixD>
+member Acrux.Render3D.SceneVisibility.IsSurfaceVisible`0(global::VRage.Game.ModAPI.IMyCubeBlock,global::Sandbox.ModAPI.Ingame.IMyTextSurface,double,byte)s : System.Func<VRage.Game.ModAPI.IMyCubeBlock, Sandbox.ModAPI.Ingame.IMyTextSurface, double, byte, bool>
+member Acrux.Rendering.BorderTextureCache.PaintRoundedMask`0(object,global::VRageMath.Vector4)s : System.Action<object, VRageMath.Vector4>
+member Acrux.Rendering.BorderTextureCache.PaintRoundedRing`0(object,global::VRageMath.Vector4,global::VRageMath.Vector4)s : System.Action<object, VRageMath.Vector4, VRageMath.Vector4>
+member Acrux.Rendering.BorderTextureCache.RoundedRectCoverage`0(float,float,float,float,float,float,global::VRageMath.Vector4)s : System.Func<float, float, float, float, float, float, VRageMath.Vector4, float>
 member Acrux.Rendering.BorderTextureCache.ctor(object) : System.Func<object, object>
+member Acrux.Rendering.BorderTextureCache.get_Textures : System.Func<object, object>
 member Acrux.Rendering.IDynamicTexture.Update`0(global::System.Action<object>) : System.Func<object, System.Action<object>, bool>
 member Acrux.Rendering.IDynamicTexture.get_IsAvailable : System.Func<object, bool>
 member Acrux.Rendering.IDynamicTexture.get_Size : System.Func<object, VRageMath.Vector2I>
@@ -3221,6 +3234,7 @@ member Acrux.Rendering.PixelCanvas.DrawLine`0(int,int,int,int,global::VRageMath.
 member Acrux.Rendering.PixelCanvas.FillCircle`0(int,int,int,global::VRageMath.Color) : System.Action<object, int, int, int, VRageMath.Color>
 member Acrux.Rendering.PixelCanvas.FillRectangle`0(int,int,int,int,global::VRageMath.Color) : System.Action<object, int, int, int, int, VRageMath.Color>
 member Acrux.Rendering.PixelCanvas.FillTriangle`0(global::VRageMath.Vector2I,global::VRageMath.Vector2I,global::VRageMath.Vector2I,global::VRageMath.Color) : System.Action<object, VRageMath.Vector2I, VRageMath.Vector2I, VRageMath.Vector2I, VRageMath.Color>
+member Acrux.Rendering.PixelCanvas.SetPixelDithered`0(int,int,global::VRageMath.Vector4) : System.Action<object, int, int, VRageMath.Vector4>
 member Acrux.Rendering.PixelCanvas.SetPixel`0(int,int,global::VRageMath.Color) : System.Action<object, int, int, VRageMath.Color>
 member Acrux.Rendering.PixelCanvas.ctor(byte[],int,int) : System.Func<byte[], int, int, object>
 member Acrux.Rendering.PixelCanvas.get_Height : System.Func<object, int>
@@ -3344,6 +3358,12 @@ member Acrux.Styling.CompositeTextureBrush.get_ReferenceCrossLength : System.Fun
 member Acrux.Styling.CompositeTextureBrush.get_StartLength : System.Func<object, float>
 member Acrux.Styling.CompositeTextureBrush.get_StartSource : System.Func<object, string>
 member Acrux.Styling.CompositeTextureBrush.get_Tint : System.Func<object, VRageMath.Color>
+member Acrux.Styling.ConicGradientBrush.EqualsCore`0(object) : System.Func<object, object, bool>
+member Acrux.Styling.ConicGradientBrush.ctor() : System.Func<object>
+member Acrux.Styling.ConicGradientBrush.get_Angle : System.Func<object, float>
+member Acrux.Styling.ConicGradientBrush.get_Center : System.Func<object, VRageMath.Vector3>
+member Acrux.Styling.ConicGradientBrush.set_Angle : System.Action<object, float>
+member Acrux.Styling.ConicGradientBrush.set_Center : System.Action<object, VRageMath.Vector3>
 member Acrux.Styling.ControlTemplate.BuildInstance`0(object) : System.Func<object, object, object>
 member Acrux.Styling.ControlTemplate.Parse`0(string)s : System.Func<string, object>
 member Acrux.Styling.ControlTemplate.ctor(global::System.Func<object, object>) : System.Func<System.Func<object, object>, object>
@@ -3355,6 +3375,33 @@ member Acrux.Styling.DataTemplate.Build`0(object) : System.Func<object, object, 
 member Acrux.Styling.DataTemplate.ctor(global::System.Func<object, object>) : System.Func<System.Func<object, object>, object>
 member Acrux.Styling.DataTemplate<TData>.Build`0(object) : System.Func<object, object, object>
 member Acrux.Styling.DataTemplate<TData>.ctor(global::System.Func<object, object>) : System.Func<System.Func<object, object>, object>
+member Acrux.Styling.GradientBrush.get_GradientStops : System.Func<object, object>
+member Acrux.Styling.GradientBrush.get_Opacity : System.Func<object, float>
+member Acrux.Styling.GradientBrush.get_SpreadMethod : System.Func<object, int>
+member Acrux.Styling.GradientBrush.get_Transform : System.Func<object, object>
+member Acrux.Styling.GradientBrush.get_TransformOrigin : System.Func<object, VRageMath.Vector3>
+member Acrux.Styling.GradientBrush.set_GradientStops : System.Action<object, object>
+member Acrux.Styling.GradientBrush.set_Opacity : System.Action<object, float>
+member Acrux.Styling.GradientBrush.set_SpreadMethod : System.Action<object, int>
+member Acrux.Styling.GradientBrush.set_Transform : System.Action<object, object>
+member Acrux.Styling.GradientBrush.set_TransformOrigin : System.Action<object, VRageMath.Vector3>
+member Acrux.Styling.GradientStop.Equals`0(object) : System.Func<object, object, bool>
+member Acrux.Styling.GradientStop.ctor() : System.Func<object>
+member Acrux.Styling.GradientStop.ctor(global::VRageMath.Color,float) : System.Func<VRageMath.Color, float, object>
+member Acrux.Styling.GradientStop.get_Color : System.Func<object, VRageMath.Color>
+member Acrux.Styling.GradientStop.get_Offset : System.Func<object, float>
+member Acrux.Styling.GradientStop.set_Color : System.Action<object, VRageMath.Color>
+member Acrux.Styling.GradientStop.set_Offset : System.Action<object, float>
+member Acrux.Styling.GradientStops.Add`0(global::VRageMath.Color,float) : System.Action<object, VRageMath.Color, float>
+member Acrux.Styling.GradientStops.Add`0(object) : System.Action<object, object>
+member Acrux.Styling.GradientStops.Clear`0() : System.Action<object>
+member Acrux.Styling.GradientStops.Insert`0(int,object) : System.Action<object, int, object>
+member Acrux.Styling.GradientStops.RemoveAt`0(int) : System.Action<object, int>
+member Acrux.Styling.GradientStops.Remove`0(object) : System.Func<object, object, bool>
+member Acrux.Styling.GradientStops.ctor() : System.Func<object>
+member Acrux.Styling.GradientStops.get_Count : System.Func<object, int>
+member Acrux.Styling.GradientStops.get_Item(int) : System.Func<object, int, object>
+member Acrux.Styling.GradientStops.set_Item(int) : System.Action<object, int, object>
 member Acrux.Styling.IDataTemplate.Build`0(object) : System.Func<object, object, object>
 member Acrux.Styling.ITemplate<T>.Build`0() : System.Func<object, object>
 member Acrux.Styling.ImageBrush.Arrange`0(global::VRageMath.RectangleF,int)s : System.Func<VRageMath.RectangleF, int, VRageMath.RectangleF>
@@ -3382,6 +3429,12 @@ member Acrux.Styling.ItemsPanelTemplate.Build`0() : System.Func<object, object>
 member Acrux.Styling.ItemsPanelTemplate.Build`0(object) : System.Func<object, object, object>
 member Acrux.Styling.ItemsPanelTemplate.Parse`0(string)s : System.Func<string, object>
 member Acrux.Styling.ItemsPanelTemplate.ctor(global::System.Func<object>) : System.Func<System.Func<object>, object>
+member Acrux.Styling.LinearGradientBrush.EqualsCore`0(object) : System.Func<object, object, bool>
+member Acrux.Styling.LinearGradientBrush.ctor() : System.Func<object>
+member Acrux.Styling.LinearGradientBrush.get_EndPoint : System.Func<object, VRageMath.Vector3>
+member Acrux.Styling.LinearGradientBrush.get_StartPoint : System.Func<object, VRageMath.Vector3>
+member Acrux.Styling.LinearGradientBrush.set_EndPoint : System.Action<object, VRageMath.Vector3>
+member Acrux.Styling.LinearGradientBrush.set_StartPoint : System.Action<object, VRageMath.Vector3>
 member Acrux.Styling.NineSliceTextureBrush.EqualsCore`0(object) : System.Func<object, object, bool>
 member Acrux.Styling.NineSliceTextureBrush.ctor(string,string,string,string,string,string,string,string,string,float,float,float,float,float,global::VRageMath.Color,global::VRageMath.Color) : System.Func<string, string, string, string, string, string, string, string, string, float, float, float, float, float, VRageMath.Color, VRageMath.Color, object>
 member Acrux.Styling.NineSliceTextureBrush.get_BottomHeight : System.Func<object, float>
@@ -3403,6 +3456,16 @@ member Acrux.Styling.NineSliceTextureBrush.get_TopHeight : System.Func<object, f
 member Acrux.Styling.PseudoClassCollection.Contains`0(string) : System.Func<object, string, bool>
 member Acrux.Styling.PseudoClassCollection.Set`0(string,bool) : System.Action<object, string, bool>
 member Acrux.Styling.PseudoClassCollection.ctor(global::System.Action<string>) : System.Func<System.Action<string>, object>
+member Acrux.Styling.RadialGradientBrush.EqualsCore`0(object) : System.Func<object, object, bool>
+member Acrux.Styling.RadialGradientBrush.ctor() : System.Func<object>
+member Acrux.Styling.RadialGradientBrush.get_Center : System.Func<object, VRageMath.Vector3>
+member Acrux.Styling.RadialGradientBrush.get_GradientOrigin : System.Func<object, VRageMath.Vector3>
+member Acrux.Styling.RadialGradientBrush.get_RadiusX : System.Func<object, VRageMath.Vector2>
+member Acrux.Styling.RadialGradientBrush.get_RadiusY : System.Func<object, VRageMath.Vector2>
+member Acrux.Styling.RadialGradientBrush.set_Center : System.Action<object, VRageMath.Vector3>
+member Acrux.Styling.RadialGradientBrush.set_GradientOrigin : System.Action<object, VRageMath.Vector3>
+member Acrux.Styling.RadialGradientBrush.set_RadiusX : System.Action<object, VRageMath.Vector2>
+member Acrux.Styling.RadialGradientBrush.set_RadiusY : System.Action<object, VRageMath.Vector2>
 member Acrux.Styling.ResourceDictionary.Add`0(string,object) : System.Action<object, string, object>
 member Acrux.Styling.ResourceDictionary.add_Changed : System.Action<object, System.Action<string>>
 member Acrux.Styling.ResourceDictionary.ctor() : System.Func<object>

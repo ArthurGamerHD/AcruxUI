@@ -190,6 +190,25 @@ namespace Acrux.Rendering
             _pixels[index + 3] = ToByte(255f * sourceAlpha + _pixels[index + 3] * inverseAlpha);
         }
 
+        // Smooth gradients quantized to 8 bits band, so the color gets ordered noise of up to half a level before
+        // rounding ("interleaved gradient noise": deterministic, so a texture bakes the same every time). The same
+        // noise on every channel keeps it from tinting; alpha is not dithered, so opaque stays opaque.
+        internal void SetPixelDithered(int x, int y, Vector4 straight)
+        {
+            if (x < 0 || y < 0 || x >= Width || y >= Height)
+                return;
+            double cell = 0.06711056 * x + 0.00583715 * y;
+            double wave = 52.9829189 * (cell - Math.Floor(cell));
+            float noise = (float)(wave - Math.Floor(wave)) - .5f;
+            float alpha = MathHelper.Clamp(straight.W, 0f, 1f);
+            byte a = ToByte(alpha * 255f);
+            int index = (y * Width + x) * 4;
+            _pixels[index] = Math.Min(a, ToByte(MathHelper.Clamp(straight.X, 0f, 1f) * alpha * 255f + noise));
+            _pixels[index + 1] = Math.Min(a, ToByte(MathHelper.Clamp(straight.Y, 0f, 1f) * alpha * 255f + noise));
+            _pixels[index + 2] = Math.Min(a, ToByte(MathHelper.Clamp(straight.Z, 0f, 1f) * alpha * 255f + noise));
+            _pixels[index + 3] = a;
+        }
+
         static byte ToByte(float value)
         {
             if (value <= 0f)

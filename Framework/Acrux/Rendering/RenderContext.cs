@@ -235,6 +235,11 @@ namespace Acrux.Rendering
             if (nineSliceBrush != null && DrawNineSliceTexture(bounds, nineSliceBrush))
                 return;
 
+            if (brush is GradientBrush)
+                global::Acrux.Toolkit.Server.ExternalInterop.WarnOnce(
+                    "A GradientBrush is drawn only as a Border's Background (or through its OpacityMask); elsewhere it " +
+                    "fills with the average of its stops.");
+
             FillRectangle(bounds, brush.FallbackColor);
         }
 

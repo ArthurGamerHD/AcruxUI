@@ -96,28 +96,42 @@ namespace LcdEyeTrackingApi.Geometry
 
         public static bool IsScreenAreaVisibleToCamera(ITrackedSurface screen)
         {
+            return IsScreenAreaVisibleToCamera(screen, 0d, true);
+        }
+
+        // The screen area faces the camera (unless requireFacing is false: a transparent screen shows both sides),
+        // lies within maxDistance of it (the camera's far plane when not positive) and touches its frustum. Without
+        // screen geometry (an unknown surface, a model with no screen area found) the whole block is tested instead,
+        // facing aside.
+        public static bool IsScreenAreaVisibleToCamera(ITrackedSurface screen, double maxDistance, bool requireFacing)
+        {
             if (screen == null || screen.Block == null)
                 return false;
 
             var session = MyAPIGateway.Session;
-            var camera = session.Camera;
+            var camera = session == null ? null : session.Camera;
             if (camera == null)
                 return false;
 
-            MinimalMwmScreenAreaGeometry geometry;
-            if (!TryGetScreenAreaGeometry(screen, out geometry))
-                return false;
-
             BoundingBoxD bounds;
-            if (!TryGetScreenAreaWorldBounds(
-                    screen.Block.Model,
-                    screen.Block.WorldMatrix,
-                    geometry,
-                    camera.Position,
-                    out bounds))
-                return false;
+            MinimalMwmScreenAreaGeometry geometry;
+            if (screen.RotationOrSurfaceIndex >= 0 && TryGetScreenAreaGeometry(screen, out geometry))
+            {
+                // False here means no screen triangle faces the camera: it sees the back of the screen.
+                if (!TryGetScreenAreaWorldBounds(
+                        screen.Block.Model,
+                        screen.Block.WorldMatrix,
+                        geometry,
+                        camera.Position,
+                        requireFacing,
+                        out bounds))
+                    return false;
+            }
+            else
+                bounds = screen.Block.WorldAABB;
 
-            double maxDistance = Math.Max(1d, camera.FarPlaneDistance);
+            if (maxDistance <= 0d)
+                maxDistance = Math.Max(1d, camera.FarPlaneDistance);
             double distanceSq = Vector3D.DistanceSquared(camera.Position, bounds.Center);
             if (distanceSq > maxDistance * maxDistance)
                 return false;
@@ -250,6 +264,7 @@ namespace LcdEyeTrackingApi.Geometry
             MatrixD worldMatrix,
             MinimalMwmScreenAreaGeometry geometry,
             Vector3D cameraPosition,
+            bool requireFacing,
             out BoundingBoxD bounds)
         {
             bounds = default(BoundingBoxD);
@@ -285,7 +300,7 @@ namespace LcdEyeTrackingApi.Geometry
                     hasFacingTriangle = true;
             }
 
-            if (!hasPoint || !hasFacingTriangle)
+            if (!hasPoint || (requireFacing && !hasFacingTriangle))
                 return false;
 
             bounds = new BoundingBoxD(min, max);

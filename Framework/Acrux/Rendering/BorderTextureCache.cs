@@ -7,15 +7,16 @@ namespace Acrux.Rendering
     /// <summary>
     /// Shares rounded Border textures by their geometry: a white fill mask, or a white border ring, both tinted when
     /// drawn so that color changes never need a new texture. Corner radii are top-left, top-right, bottom-right and
-    /// bottom-left, like CornerRadius. Unused entries stay cached for a while, since SE does not
-    /// draw a generated texture in the frame it is created.
+    /// bottom-left, like CornerRadius. The textures are shared by every surface of the same kind whose UI belongs to
+    /// the same mod (every LCD of one client mod, for example), and unused entries stay cached for a while.
     /// </summary>
     public sealed class BorderTextureCache
     {
         const float RADIUS_PRECISION = 1000f;
-        static readonly long RetentionTicks = TimeSpan.TicksPerSecond * 10;
         readonly IDynamicTextureFactory _textures;
-        readonly Dictionary<Key, Entry> _entries = new Dictionary<Key, Entry>();
+        // For a factory whose textures cannot be shared between surfaces.
+        BorderTextureStore _localStore;
+        GradientTextureCache _localGradients;
 
         public BorderTextureCache(IDynamicTextureFactory textures)
         {
@@ -23,6 +24,15 @@ namespace Acrux.Rendering
                 throw new ArgumentNullException(nameof(textures));
             _textures = textures;
         }
+
+        // Resolved per use: the paying mod (and so the shared store) follows the surface's root.
+        internal IDynamicTextureFactory Textures => _textures;
+
+        internal GradientTextureCache Gradients =>
+            SharedTextureStores.Gradient(_textures) ?? (_localGradients ?? (_localGradients = new GradientTextureCache()));
+
+        BorderTextureStore Store =>
+            SharedTextureStores.Border(_textures) ?? (_localStore ?? (_localStore = new BorderTextureStore()));
 
         public struct Key : IEquatable<Key>
         {
@@ -115,25 +125,15 @@ namespace Acrux.Rendering
             }
         }
 
-        internal sealed class Entry
-        {
-            public IDynamicTexture Texture;
-            public int References;
-            public object CreatedIn;
-            public long ReleasedTicks;
-        }
-
         public sealed class Lease : IDisposable
         {
-            readonly BorderTextureCache _owner;
             readonly Key _key;
             bool _disposed;
 
-            readonly Entry _entry;
+            readonly SharedTextureEntry _entry;
 
-            internal Lease(BorderTextureCache owner, Key key, Entry entry, bool isNew)
+            internal Lease(Key key, SharedTextureEntry entry, bool isNew)
             {
-                _owner = owner;
                 _key = key;
                 _entry = entry;
                 Texture = entry.Texture;
@@ -158,14 +158,14 @@ namespace Acrux.Rendering
                     return;
 
                 _disposed = true;
-                _owner.Release(_key);
+                _entry.Release();
                 Texture = null;
             }
         }
 
         public Lease AcquireMask(Vector2I supportedSize, Vector4 cornerRadius, object frame = null)
         {
-            return Acquire(frame,
+            return Store.Acquire(_textures, frame,
                 new Key(
                     supportedSize,
                     ClampRadius(supportedSize, cornerRadius),
@@ -177,7 +177,7 @@ namespace Acrux.Rendering
 
         public Lease AcquireRing(Vector2I supportedSize, Vector4 cornerRadius, Vector4 borderThickness, object frame = null)
         {
-            return Acquire(frame,
+            return Store.Acquire(_textures, frame,
                 new Key(
                     supportedSize,
                     ClampRadius(supportedSize, cornerRadius),
@@ -187,85 +187,12 @@ namespace Acrux.Rendering
                     true));
         }
 
-        Lease Acquire(object frame, Key key)
-        {
-            if (key.Width <= 0 || key.Height <= 0)
-                return null;
-
-            Sweep();
-            Entry entry;
-            bool created = false;
-            if (!_entries.TryGetValue(key, out entry))
-            {
-                created = true;
-                string name = "AcruxBorderShared_" +
-                              key.Width + "x" + key.Height +
-                              "_r" + key.RadiusMilli.X + "_" + key.RadiusMilli.Y + "_" + key.RadiusMilli.Z + "_" +
-                              key.RadiusMilli.W +
-                              (key.Styled
-                                  ? "_ring" + key.BorderThickness.X + "_" + key.BorderThickness.Y + "_" +
-                                    key.BorderThickness.Z + "_" + key.BorderThickness.W
-                                  : "_mask");
-                IDynamicTexture texture = _textures.Create(
-                    name,
-                    new Vector2I(key.Width, key.Height));
-                if (!texture.IsAvailable)
-                {
-                    texture.Dispose();
-                    return null;
-                }
-
-                if (key.Styled)
-                    texture.Update(canvas => PaintRoundedRing(canvas, key.Radius, key.BorderThickness));
-                else
-                    texture.Update(canvas => PaintRoundedMask(canvas, key.Radius));
-
-                entry = new Entry
-                {
-                    Texture = texture,
-                    References = 0,
-                    CreatedIn = frame
-                };
-                _entries.Add(key, entry);
-            }
-
-            entry.References++;
-            return new Lease(this, key, entry, created);
-        }
-
-        void Release(Key key)
-        {
-            Entry entry;
-            if (!_entries.TryGetValue(key, out entry))
-                return;
-
-            entry.References--;
-            if (entry.References <= 0)
-                entry.ReleasedTicks = DateTime.UtcNow.Ticks;
-        }
-
-        readonly List<Key> _expired = new List<Key>();
-
-        void Sweep()
-        {
-            long now = DateTime.UtcNow.Ticks;
-            _expired.Clear();
-            foreach (var pair in _entries)
-                if (pair.Value.References <= 0 && now - pair.Value.ReleasedTicks > RetentionTicks)
-                    _expired.Add(pair.Key);
-            foreach (var key in _expired)
-            {
-                _entries[key].Texture.Dispose();
-                _entries.Remove(key);
-            }
-        }
-
         static Vector4 ClampRadius(Vector2I size, Vector4 cornerRadius)
         {
             return Vector4.Min(Vector4.Max(cornerRadius, Vector4.Zero), new Vector4(Math.Min(size.X, size.Y) * 0.5f));
         }
 
-        static void PaintRoundedMask(PixelCanvas canvas, Vector4 cornerRadius)
+        internal static void PaintRoundedMask(PixelCanvas canvas, Vector4 cornerRadius)
         {
             canvas.Clear(Color.Transparent);
             for (int y = 0; y < canvas.Height; y++)
@@ -278,7 +205,7 @@ namespace Acrux.Rendering
             }
         }
 
-        static void PaintRoundedRing(PixelCanvas canvas, Vector4 cornerRadius, Vector4 borderThickness)
+        internal static void PaintRoundedRing(PixelCanvas canvas, Vector4 cornerRadius, Vector4 borderThickness)
         {
             canvas.Clear(Color.Transparent);
 
@@ -309,7 +236,7 @@ namespace Acrux.Rendering
         }
 
         // Antialiased coverage of a rectangle whose corner in the sample's quadrant uses its own radius.
-        static float RoundedRectCoverage(
+        internal static float RoundedRectCoverage(
             float sampleX,
             float sampleY,
             float left,
@@ -341,6 +268,51 @@ namespace Acrux.Rendering
             float offsetY = sampleY - nearestY;
             float distance = (float)Math.Sqrt(offsetX * offsetX + offsetY * offsetY);
             return MathHelper.Clamp(radius + 0.5f - distance, 0f, 1f);
+        }
+    }
+
+    // The textures behind BorderTextureCache, for one kind of surface and paying mod.
+    internal sealed class BorderTextureStore
+    {
+        readonly SharedTextureTable<BorderTextureCache.Key> _table = new SharedTextureTable<BorderTextureCache.Key>();
+
+        internal BorderTextureCache.Lease Acquire(IDynamicTextureFactory textures, object frame, BorderTextureCache.Key key)
+        {
+            if (key.Width <= 0 || key.Height <= 0)
+                return null;
+            bool created;
+            SharedTextureEntry entry = _table.Acquire(key, frame, null, () => Create(textures, key), out created);
+            return entry == null ? null : new BorderTextureCache.Lease(key, entry, created);
+        }
+
+        internal void Clear()
+        {
+            _table.Clear();
+        }
+
+        static IDynamicTexture Create(IDynamicTextureFactory textures, BorderTextureCache.Key key)
+        {
+            string name = "AcruxBorderShared_" +
+                          key.Width + "x" + key.Height +
+                          "_r" + key.RadiusMilli.X + "_" + key.RadiusMilli.Y + "_" + key.RadiusMilli.Z + "_" +
+                          key.RadiusMilli.W +
+                          (key.Styled
+                              ? "_ring" + key.BorderThickness.X + "_" + key.BorderThickness.Y + "_" +
+                                key.BorderThickness.Z + "_" + key.BorderThickness.W
+                              : "_mask");
+            IDynamicTexture texture = textures.Create(name, new Vector2I(key.Width, key.Height));
+            if (texture == null)
+                return null;
+            if (!texture.IsAvailable)
+            {
+                texture.Dispose();
+                return null;
+            }
+            if (key.Styled)
+                texture.Update(canvas => BorderTextureCache.PaintRoundedRing(canvas, key.Radius, key.BorderThickness));
+            else
+                texture.Update(canvas => BorderTextureCache.PaintRoundedMask(canvas, key.Radius));
+            return texture;
         }
     }
 }

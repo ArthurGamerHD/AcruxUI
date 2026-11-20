@@ -14,6 +14,12 @@ namespace Acrux.Toolkit.Server
         internal static Action<string> Warning;
         // Writes one line to the game log as is (the caller formats it).
         internal static Action<string> Log;
+        // Finds a texture key's file on the render thread and returns the work that reads its pixels (premultiplied RGBA,
+        // at most the given side, from the largest mip that fits), which runs on a background thread; null when the key
+        // is unknown. Lets a GradientBrush be re-encoded into an OpacityMask texture.
+        internal static Func<string, int, Func<Acrux.Rendering.TexturePixels>> LoadTexturePixels;
+        // Runs work on a background thread; null runs it inline.
+        internal static Action<Action> RunInBackground;
 
         /// <summary>"[Acrux] - Client &lt;client&gt; &lt;level&gt;: &lt;message&gt;", for a problem Acrux found in one client's content.</summary>
         internal static void LogClient(string client, string level, string message)

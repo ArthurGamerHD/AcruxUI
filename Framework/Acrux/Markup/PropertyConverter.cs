@@ -47,6 +47,10 @@ namespace Acrux.Markup
                 return ParseVector4(value);
             if (targetType == typeof(RectangleF))
                 return ParseRectangle(value);
+            if (targetType == typeof(RelativePoint))
+                return RelativePoint.Parse(value);
+            if (targetType == typeof(RelativeScalar))
+                return RelativeScalar.Parse(value);
             if (targetType == typeof(Acrux.Styling.Transform))
                 return Acrux.Styling.Transform.Parse(value);
             try

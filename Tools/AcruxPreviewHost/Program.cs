@@ -40,6 +40,10 @@ static class Program
         System.Diagnostics.Trace.Listeners.Add(new PreviewTraceListener());
         if (args.Length >= 3 && args[0] == "--render")
             return RenderToFile(args);
+#if DEBUG
+        if (args.Length >= 3 && args[0] == "--render-capture")
+            return RenderCapture(args);
+#endif
         Uri transport = null;
         string sessionId = null;
         for (int i = 0; i < args.Length - 1; i++)
@@ -257,6 +261,11 @@ static class Program
             AcruxPreview.PreviewGame.Frame = frame;
             pixels = renderer.Draw(1f, out width, out height);
         }
+#if DEBUG
+        string capture = Environment.GetEnvironmentVariable("ACRUX_RENDER_CAPTURE");
+        if (!string.IsNullOrEmpty(capture))
+            renderer.SaveCapture(capture);
+#endif
         var info = new SkiaSharp.SKImageInfo(width, height, SkiaSharp.SKColorType.Bgra8888, SkiaSharp.SKAlphaType.Premul);
         using (var bitmap = new SkiaSharp.SKBitmap(info))
         {
@@ -267,6 +276,72 @@ static class Program
         }
         return 0;
     }
+
+#if DEBUG
+    // --render-capture capture.acruxcap out.png [--mod <mod Content folder>] [--scale <factor>]: renders a frame
+    // "/acrux capture" saved in a dev build of the toolkit, with the textures it captured and the game's own sprites
+    // and fonts; --mod adds the sprites a mod defines (its LCD texture definitions).
+    static int RenderCapture(string[] args)
+    {
+        string mod = null;
+        float scale = 1f;
+        for (int i = 3; i < args.Length - 1; i++)
+        {
+            if (args[i] == "--mod")
+                mod = args[++i];
+            else if (args[i] == "--scale")
+                scale = float.Parse(args[++i], System.Globalization.CultureInfo.InvariantCulture);
+        }
+        if (mod != null)
+            AcruxPreview.GameTextures.UseMod(Path.GetFullPath(mod));
+        Acrux.Lcd.LcdSurfaceCapture.Frame frame;
+        try
+        {
+            using (var reader = new BinaryReader(File.OpenRead(args[1])))
+                frame = Acrux.Lcd.LcdSurfaceCapture.Read(reader, (packed, size) => Adk.Compression.Zip.Zlib.Inflate(packed, size));
+        }
+        catch (Exception error)
+        {
+            Console.Error.WriteLine("cannot read " + args[1] + ": " + error.Message);
+            return 1;
+        }
+        foreach (var texture in frame.Textures)
+            AcruxPreview.PreviewGeneratedTextures.Inject(texture.Key, new VRageMath.Vector2I(texture.Value.Width, texture.Value.Height),
+                texture.Value.Rgba);
+
+        // Sprites are placed on the whole texture; the screen shows its centre, the surface's size.
+        VRageMath.Vector2 visible = frame.SurfaceSize;
+        VRageMath.Vector2 corner = (frame.TextureSize - visible) * 0.5f;
+        int width = Math.Max(1, (int)Math.Round(visible.X * scale));
+        int height = Math.Max(1, (int)Math.Round(visible.Y * scale));
+        var info = new SkiaSharp.SKImageInfo(width, height, SkiaSharp.SKColorType.Bgra8888, SkiaSharp.SKAlphaType.Premul);
+        using (var bitmap = new SkiaSharp.SKBitmap(info))
+        using (var canvas = new SkiaSharp.SKCanvas(bitmap))
+        {
+            VRageMath.Color background = frame.ScriptBackground;
+            canvas.Clear(new SkiaSharp.SKColor(background.R, background.G, background.B));
+            canvas.Scale(scale);
+            canvas.Translate(-corner.X, -corner.Y);
+            AcruxPreview.SpriteRasterizer.Paint(canvas, frame.Sprites, 1f, frame.TextureSize);
+            canvas.Flush();
+            using (SkiaSharp.SKData png = bitmap.Encode(SkiaSharp.SKEncodedImageFormat.Png, 100))
+            using (FileStream file = File.Create(args[2]))
+                png.SaveTo(file);
+        }
+        int missing = 0;
+        var seen = new HashSet<string>(StringComparer.Ordinal);
+        foreach (var sprite in frame.Sprites)
+            if (sprite.Type == VRage.Game.GUI.TextPanel.SpriteType.TEXTURE && sprite.Data != null && seen.Add(sprite.Data) &&
+                !AcruxPreview.PreviewGeneratedTextures.IsDefined(sprite.Data) && AcruxPreview.GameTextures.Image(sprite.Data) == null)
+            {
+                missing++;
+                Console.WriteLine("missing texture: " + sprite.Data);
+            }
+        Console.WriteLine("rendered '" + frame.DisplayName + "' of " + frame.BlockName + " (" + frame.Sprites.Count + " sprites, " +
+                          frame.Textures.Count + " captured textures, " + missing + " missing) to " + args[2]);
+        return 0;
+    }
+#endif
 
     static void Safely(Action action)
     {

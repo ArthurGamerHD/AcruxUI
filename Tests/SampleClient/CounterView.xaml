@@ -16,6 +16,14 @@
       <Border x:Name="Accent" Background="{DynamicResource accent}" Width="10" Height="10" />
       <Border x:Name="Missing" Background="{DynamicResource missingKey}" Width="10" Height="10" />
       <Border x:Name="InlineBox" Classes="inline-box" Height="10" />
+      <Border x:Name="Gradient" Width="20" Height="10">
+        <Border.Background>
+          <LinearGradientBrush StartPoint="0%,0%" EndPoint="100%,0%" SpreadMethod="Reflect">
+            <GradientStop Color="#FF0000" Offset="0" />
+            <GradientStop Color="#0000FF" Offset="1" />
+          </LinearGradientBrush>
+        </Border.Background>
+      </Border>
       <TextBlock x:Name="Doubled" Text="{Binding Count, Converter={StaticResource Doubler}}" />
     </StackPanel>
     <ItemsControl Grid.Row="1" ItemsSource="{Binding Items}">

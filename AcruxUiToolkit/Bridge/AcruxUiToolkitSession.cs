@@ -45,6 +45,8 @@ namespace Acrux.Bridge
             Acrux.Lcd.LcdTextureResolver.IsTextureDefined = IsLcdTextureDefined;
             Acrux.Toolkit.Server.ExternalInterop.Warning = message => MyLog.Default.WriteLineAndConsole("Acrux UI: " + message);
             Acrux.Toolkit.Server.ExternalInterop.Log = message => MyLog.Default.WriteLineAndConsole(message);
+            Acrux.Toolkit.Server.ExternalInterop.LoadTexturePixels = TexturePixelLoader.Load;
+            Acrux.Toolkit.Server.ExternalInterop.RunInBackground = work => MyAPIGateway.Parallel.StartBackground(work);
             MyAPIGateway.Utilities.RegisterMessageHandler(RequestChannel, OnRequest);
             MyAPIGateway.Utilities.MessageEntered += OnChatMessage;
             MyLog.Default.WriteLineAndConsole("Acrux UI: " + AcruxSettings.Load());
@@ -79,6 +81,13 @@ namespace Acrux.Bridge
             Acrux.Lcd.LcdSurfaceLayers.ShowFrameRate = false;
             _api = null;
             Acrux.Lcd.LcdTextureResolver.IsTextureDefined = null;
+            Acrux.Toolkit.Server.ExternalInterop.LoadTexturePixels = null;
+            Acrux.Toolkit.Server.ExternalInterop.RunInBackground = null;
+            Acrux.Rendering.GradientTexture.ClearMasks();
+            Acrux.Rendering.SharedTextureStores.Clear();
+#if DEBUG
+            SurfaceCaptureCommand.Unload();
+#endif
             Acrux.Cartography.CartographyModule.ReleaseShared();
             Acrux.Render3D.Render3DModule.ReleaseShared();
             Acrux.Sprites.BlockSprites.ReleaseShared();
@@ -105,6 +114,18 @@ namespace Acrux.Bridge
                     "Frame-rate counter " + (Acrux.Lcd.LcdSurfaceLayers.ShowFrameRate ? "on." : "off."));
                 return;
             }
+#if DEBUG
+            if (string.Equals(command, "capture", StringComparison.OrdinalIgnoreCase))
+            {
+                SurfaceCaptureCommand.Run();
+                return;
+            }
+            if (string.Equals(command, "capture-all", StringComparison.OrdinalIgnoreCase))
+            {
+                SurfaceCaptureCommand.RunAll();
+                return;
+            }
+#endif
             if (string.Equals(command, "reload", StringComparison.OrdinalIgnoreCase))
             {
                 MyAPIGateway.Utilities.ShowMessage("Acrux UI", "Settings: " + AcruxSettings.Load());
@@ -112,7 +133,12 @@ namespace Acrux.Bridge
             }
             MyAPIGateway.Utilities.ShowMessage("Acrux UI",
                 "Commands: /acrux fps (toggle the frame-rate counter), /acrux reload (re-read " +
-                AcruxSettings.FILE_NAME + ").");
+                AcruxSettings.FILE_NAME + ")" +
+#if DEBUG
+                ", /acrux capture (dev build: save the looked-at screen for AcruxPreviewHost --render-capture), " +
+                "/acrux capture-all (dev build: save every Acrux screen)" +
+#endif
+                ".");
         }
 
         static bool IsLcdTextureDefined(string name)

@@ -14,6 +14,11 @@
     <Compile Include="$(MSBuildThisFileDirectory)Extensions\ContextValueConverter.cs" />
     <Compile Include="$(MSBuildThisFileDirectory)Styling\ItemsPanelTemplate.cs" />
     <Compile Include="$(MSBuildThisFileDirectory)Styling\ImageBrush.cs" />
+    <Compile Include="$(MSBuildThisFileDirectory)Styling\GradientBrush.cs" />
+    <Compile Include="$(MSBuildThisFileDirectory)Markup\GradientBrushMarkup.cs" />
+    <Compile Include="$(MSBuildThisFileDirectory)Rendering\GradientTexture.cs" />
+    <Compile Include="$(MSBuildThisFileDirectory)Rendering\SharedTextureStores.cs" />
+    <Compile Include="$(MSBuildThisFileDirectory)Rendering\SharedTextureTable.cs" />
     <Compile Include="$(MSBuildThisFileDirectory)Styling\RelativeRect.cs" />
     <Compile Include="$(MSBuildThisFileDirectory)Styling\Transform.cs" />
     <Compile Include="$(MSBuildThisFileDirectory)Data\Converters\IValueConverter.cs" />

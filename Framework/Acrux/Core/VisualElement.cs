@@ -591,6 +591,13 @@ namespace Acrux.Core
             return null;
         }
 
+        // The scale or offset this element applies to its children (see MapPointToChildren), without clipping: popups
+        // owned by a descendant are drawn through it too.
+        internal virtual IDisposable PushChildTransform(RenderContext context)
+        {
+            return null;
+        }
+
         protected virtual void DrawSelf(RenderContext context)
         {
         }

@@ -25,6 +25,10 @@ namespace Acrux.Controls
     /// </summary>
     public class ComboBox : TemplatedControl, IOverlayProvider
     {
+        // Whether this control counts as open in VisualTree's open-overlay count. Setting the open property to its default
+        // (a first "close") reports a change too, so only real transitions may move the count.
+        bool _overlayCounted;
+
         static ComboBox() { }
 
         public static readonly StyledProperty<float> HeaderHeightProperty =
@@ -195,7 +199,11 @@ namespace Acrux.Controls
             base.OnPropertyChanged(property);
             if (property == IsDropDownOpenProperty)
             {
-                VisualTree.OverlayOpenChanged(IsDropDownOpen);
+                if (_overlayCounted != IsDropDownOpen)
+                {
+                    _overlayCounted = IsDropDownOpen;
+                    VisualTree.OverlayOpenChanged(_overlayCounted);
+                }
                 OnDropDownOpenChanged(IsDropDownOpen);
             }
             else if (property == ItemTemplateProperty || property == SelectionBoxItemTemplateProperty)
@@ -285,6 +293,7 @@ namespace Acrux.Controls
         // ------------------------------------------------------------------ options and selection
 
         readonly List<object> _options = new List<object>();
+        Adk.Mvvm.INotifyCollectionChanged _observableSource;
         readonly List<Border> _items = new List<Border>();
         readonly List<TextBlock> _itemTexts = new List<TextBlock>();
         Border _header;
@@ -398,16 +407,43 @@ namespace Acrux.Controls
 
         void OnItemsSourceChanged()
         {
-            _options.Clear();
             System.Collections.IEnumerable source = ItemsSource;
-            if (source != null)
-                foreach (object option in source)
-                    _options.Add(option);
+            var observable = source as Adk.Mvvm.INotifyCollectionChanged;
+            if (!ReferenceEquals(observable, _observableSource))
+            {
+                if (_observableSource != null)
+                    _observableSource.CollectionChanged -= OnCollectionChanged;
+                _observableSource = observable;
+                if (_observableSource != null)
+                    _observableSource.CollectionChanged += OnCollectionChanged;
+            }
+            ReadOptions();
             int index = SelectedIndex;
             if (index < 0 || index >= _options.Count)
                 index = _options.Count > 0 ? 0 : -1;
             ApplySelection(index);
             RebuildItems();
+        }
+
+        void ReadOptions()
+        {
+            _options.Clear();
+            System.Collections.IEnumerable source = ItemsSource;
+            if (source != null)
+                foreach (object option in source)
+                    _options.Add(option);
+        }
+
+        // As in Avalonia, a change to the options keeps the selected item rather than selecting another one.
+        void OnCollectionChanged(object sender, Adk.Mvvm.NotifyCollectionChangedEventArgs args)
+        {
+            object selected = SelectedItem;
+            ReadOptions();
+            int index = selected == null ? -1 : IndexOf(selected);
+            ApplySelection(index);
+            RebuildItems();
+            if (_options.Count == 0)
+                IsDropDownOpen = false;
         }
 
         void OnSelectedIndexChanged()
@@ -727,6 +763,9 @@ namespace Acrux.Controls
 
         public override void Dispose()
         {
+            if (_observableSource != null)
+                _observableSource.CollectionChanged -= OnCollectionChanged;
+            _observableSource = null;
             _popup.Dispose();
             base.Dispose();
         }

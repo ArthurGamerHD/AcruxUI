@@ -47,6 +47,8 @@ namespace Acrux.Controls
         const float FrameMargin = 12f;
         const float CaptionSize = 22f;
         const float CaptionSpacing = 6f;
+        const float ResizeGripSize = 5f;
+        const float MinimumManagedSize = 48f;
         static readonly Color ModalOverlay = new Color(0, 0, 0, 144);
 
         public static readonly StyledProperty<string> TitleProperty =
@@ -63,6 +65,14 @@ namespace Acrux.Controls
             StyledProperty.Register<Window, bool>(nameof(CanMaximize), true, UiInvalidation.Measure);
         public static readonly StyledProperty<bool> CanMinimizeProperty =
             StyledProperty.Register<Window, bool>(nameof(CanMinimize), true, UiInvalidation.Measure);
+        public static readonly StyledProperty<bool> CanResizeProperty =
+            StyledProperty.Register<Window, bool>(nameof(CanResize), true, UiInvalidation.Measure);
+        public static readonly StyledProperty<bool> TopmostProperty =
+            StyledProperty.Register<Window, bool>(nameof(Topmost), false, UiInvalidation.Render);
+        public static readonly StyledProperty<bool> ShowActivatedProperty =
+            StyledProperty.Register<Window, bool>(nameof(ShowActivated), true, UiInvalidation.None);
+        public static readonly StyledProperty<bool> IsActiveProperty =
+            StyledProperty.Register<Window, bool>(nameof(IsActive), false, UiInvalidation.Arrange | UiInvalidation.Render);
         public static readonly StyledProperty<SizeToContent> SizeToContentProperty =
             StyledProperty.Register<Window, SizeToContent>(nameof(SizeToContent), SizeToContent.Manual, UiInvalidation.Measure);
         public static readonly StyledProperty<BackgroundBrush> BackgroundProperty =
@@ -85,6 +95,12 @@ namespace Acrux.Controls
         readonly CaptionButton _maximize = new CaptionButton(CaptionGlyph.Maximize, "maximize");
         readonly CaptionButton _close = new CaptionButton(CaptionGlyph.Close, "close");
         RectangleF _frameBounds;
+        RectangleF _viewport;
+        Vector2 _position;
+        bool _hasPosition;
+        WindowDrag _drag;
+        Vector2 _dragStart;
+        RectangleF _dragFrame;
         bool _modal;
         RectangleF _clientBounds;
         readonly List<Key> _openKeys = new List<Key>();
@@ -127,6 +143,7 @@ namespace Acrux.Controls
             AddChild(_maximize);
             AddChild(_close);
             _close.Clicked = Close;
+            _minimize.Clicked = () => WindowState = WindowState.Minimized;
             _maximize.Clicked = () =>
                 WindowState = WindowState == WindowState.Maximized ? WindowState.Normal : WindowState.Maximized;
         }
@@ -173,6 +190,70 @@ namespace Acrux.Controls
             set { SetValue(CanMinimizeProperty, value); }
         }
 
+        /// <summary>Whether the user can resize the window by dragging its frame edges.</summary>
+        public bool CanResize
+        {
+            get { return GetValue(CanResizeProperty); }
+            set { SetValue(CanResizeProperty, value); }
+        }
+
+        /// <summary>
+        /// Whether this is the active window among its owner's windows: the last one activated, by a click on it or by
+        /// <see cref="Activate"/>. Styles can follow it with a <c>Window[IsActive=True]</c> selector.
+        /// </summary>
+        public bool IsActive
+        {
+            get { return GetValue(IsActiveProperty); }
+            private set { SetValue(IsActiveProperty, value); }
+        }
+
+        /// <summary>Whether this owned window stays above its owner's other, not topmost, windows.</summary>
+        public bool Topmost
+        {
+            get { return GetValue(TopmostProperty); }
+            set { SetValue(TopmostProperty, value); }
+        }
+
+        /// <summary>
+        /// Whether showing this owned window activates it. A window that is not shown activated is also never
+        /// activated in place of a closed or minimized one; a click on it or <see cref="Activate"/> still does.
+        /// </summary>
+        public bool ShowActivated
+        {
+            get { return GetValue(ShowActivatedProperty); }
+            set { SetValue(ShowActivatedProperty, value); }
+        }
+
+        /// <summary>
+        /// The frame's top-left corner in logical units, relative to the area the window is laid out in (its owner's
+        /// bounds for an owned window). Setting it places a normal window there instead of by its alignment; the frame
+        /// is kept inside that area, while the property keeps the value set, as in Avalonia.
+        /// </summary>
+        public Vector2 Position
+        {
+            get { return _hasPosition || !_hasViewport ? _position : _frameBounds.Position - _viewport.Position; }
+            set
+            {
+                if (_hasPosition && _position == value)
+                    return;
+                _position = value;
+                _hasPosition = true;
+                Invalidate(UiInvalidation.Measure | UiInvalidation.Arrange | UiInvalidation.Render);
+            }
+        }
+
+        /// <summary>Raised when the user moves the window, or when <see cref="Position"/> moves it.</summary>
+        public event Action PositionChanged;
+
+        /// <summary>Raised when the user resizes the window by dragging its frame.</summary>
+        public event Action Resized;
+
+        /// <summary>Raised when the window becomes the active window.</summary>
+        public event Action Activated;
+
+        /// <summary>Raised when the window stops being the active window.</summary>
+        public event Action Deactivated;
+
         public SizeToContent SizeToContent
         {
             get { return GetValue(SizeToContentProperty); }
@@ -206,7 +287,12 @@ namespace Acrux.Controls
         /// <summary>Where the window's frame sits inside its viewport; the whole viewport when full screen.</summary>
         public RectangleF FrameBounds => _frameBounds;
 
+        bool _hasViewport;
+
         bool IsFramed => WindowState != WindowState.FullScreen && WindowDecorations != WindowDecorations.None;
+        // A window the user moves and resizes: a framed, normal, non-modal window shown above an owner.
+        bool IsManaged => Owner != null && !_modal && WindowState == WindowState.Normal && IsFramed;
+        float ResizeGrip => IsManaged && CanResize ? Math.Max(ResizeGripSize, Math.Max(BorderThickness.X, BorderThickness.Z)) : 0f;
         bool HasTitleBar => WindowState != WindowState.FullScreen && WindowDecorations == WindowDecorations.Full;
         float TitleBarHeight => ExtendClientAreaTitleBarHeightHint > 0f ? ExtendClientAreaTitleBarHeightHint : DefaultTitleBarHeight;
 
@@ -230,11 +316,20 @@ namespace Acrux.Controls
             float barHeight = titleBar && !extended ? TitleBarHeight : 0f;
             VisualElement content = Child;
 
-            _frameBounds = fullScreen || WindowState == WindowState.Maximized
+            Vector2 previous = _frameBounds.Position - _viewport.Position;
+            bool hadViewport = _hasViewport;
+            _viewport = bounds;
+            _hasViewport = true;
+            _frameBounds = fullScreen
                 ? bounds
-                : NormalFrame(bounds, content, barHeight);
-            _clientBounds = new RectangleF(_frameBounds.X, _frameBounds.Y + barHeight, _frameBounds.Width,
-                Math.Max(0f, _frameBounds.Height - barHeight));
+                : WindowState == WindowState.Maximized
+                    ? MaximizedFrame(bounds)
+                    : NormalFrame(bounds, content, barHeight);
+            float grip = ResizeGrip;
+            _clientBounds = new RectangleF(_frameBounds.X + grip, _frameBounds.Y + barHeight,
+                Math.Max(0f, _frameBounds.Width - grip * 2f),
+                Math.Max(0f, _frameBounds.Height - barHeight - grip));
+            _minimize.Enabled = Owner != null && !_modal;
             if (content != null && content.Visible)
             {
                 Vector4 padding = Padding;
@@ -250,8 +345,9 @@ namespace Acrux.Controls
             {
                 _frame.Background = Background;
                 _frame.BorderBrush = BorderBrush;
-                _frame.BorderThickness = BorderThickness;
-                _frame.CornerRadius = WindowState == WindowState.Maximized ? Vector4.Zero : CornerRadius;
+                bool maximized = WindowState == WindowState.Maximized;
+                _frame.BorderThickness = maximized ? Vector4.Zero : BorderThickness;
+                _frame.CornerRadius = maximized ? Vector4.Zero : CornerRadius;
                 _frame.Measure(_frameBounds.Size);
                 _frame.Arrange(_frameBounds);
             }
@@ -261,6 +357,12 @@ namespace Acrux.Controls
             _maximize.Visible = titleBar && CanMaximize;
             _close.Visible = titleBar;
             _maximize.Glyph = WindowState == WindowState.Maximized ? CaptionGlyph.Restore : CaptionGlyph.Maximize;
+            if (hadViewport && _hasPosition && previous != _frameBounds.Position - _viewport.Position)
+            {
+                Action moved = PositionChanged;
+                if (moved != null)
+                    moved();
+            }
             if (!titleBar)
                 return;
 
@@ -289,9 +391,20 @@ namespace Acrux.Controls
             }
         }
 
+        // An owned window maximizes over its owner's client area: the owner's bounds less its Padding, which leaves room for
+        // what the owner keeps around its windows (a taskbar, for one).
+        RectangleF MaximizedFrame(RectangleF bounds)
+        {
+            if (Owner == null || _modal)
+                return bounds;
+            Vector4 padding = Owner.Padding;
+            return new RectangleF(bounds.X + padding.X, bounds.Y + padding.Y,
+                Math.Max(0f, bounds.Width - padding.X - padding.Z), Math.Max(0f, bounds.Height - padding.Y - padding.W));
+        }
+
         RectangleF NormalFrame(RectangleF bounds, VisualElement content, float barHeight)
         {
-            float inset = Math.Min(FrameMargin, Math.Min(bounds.Width, bounds.Height) * .05f);
+            float inset = _hasPosition ? 0f : Math.Min(FrameMargin, Math.Min(bounds.Width, bounds.Height) * .05f);
             float roomWidth = Math.Max(1f, bounds.Width - inset * 2f);
             float roomHeight = Math.Max(1f, bounds.Height - inset * 2f);
             float width = Fit(Width ?? roomWidth, MinWidth, MaxWidth, roomWidth);
@@ -307,6 +420,12 @@ namespace Acrux.Controls
                     width = Fit(desired.X + padding.X + padding.Z, MinWidth, MaxWidth, roomWidth);
                 if (sizing != SizeToContent.Width)
                     height = Fit(desired.Y + padding.Y + padding.W + barHeight, MinHeight, MaxHeight, roomHeight);
+            }
+            if (_hasPosition)
+            {
+                float left = Math.Max(bounds.X, Math.Min(bounds.Right - width, bounds.X + _position.X));
+                float top = Math.Max(bounds.Y, Math.Min(bounds.Bottom - height, bounds.Y + _position.Y));
+                return new RectangleF(left, top, width, height);
             }
             Vector4 margin = Margin;
             float x = HorizontalAlignment == HorizontalAlignment.Left ? bounds.X + margin.X
@@ -331,6 +450,212 @@ namespace Acrux.Controls
             MoveChild(_maximize, last);
             MoveChild(_minimize, last);
             MoveChild(_titleBox, last);
+        }
+
+        enum WindowDrag
+        {
+            None,
+            Move,
+            West,
+            East,
+            North,
+            South,
+            NorthWest,
+            NorthEast,
+            SouthWest,
+            SouthEast
+        }
+
+        // The title bar outside the caption buttons and the resize grip around the frame belong to the window itself.
+        protected override bool HitTestSelf(Vector2 point)
+        {
+            return DragAt(point) != WindowDrag.None;
+        }
+
+        WindowDrag DragAt(Vector2 point)
+        {
+            if (!IsManaged || !_frameBounds.Contains(point))
+                return WindowDrag.None;
+            float grip = ResizeGrip;
+            if (grip > 0f)
+            {
+                bool west = point.X < _frameBounds.X + grip;
+                bool east = point.X >= _frameBounds.Right - grip;
+                bool north = point.Y < _frameBounds.Y + grip;
+                bool south = point.Y >= _frameBounds.Bottom - grip;
+                if (north && west) return WindowDrag.NorthWest;
+                if (north && east) return WindowDrag.NorthEast;
+                if (south && west) return WindowDrag.SouthWest;
+                if (south && east) return WindowDrag.SouthEast;
+                if (west) return WindowDrag.West;
+                if (east) return WindowDrag.East;
+                if (south) return WindowDrag.South;
+                if (north) return WindowDrag.North;
+            }
+            return HasTitleBar && point.Y < _frameBounds.Y + TitleBarHeight ? WindowDrag.Move : WindowDrag.None;
+        }
+
+        internal override PointerCursor GetPointerCursor(Vector2 point)
+        {
+            switch (_drag != WindowDrag.None ? _drag : DragAt(point))
+            {
+                case WindowDrag.West:
+                case WindowDrag.East:
+                    return PointerCursor.SizeWestEast;
+                case WindowDrag.North:
+                case WindowDrag.South:
+                    return PointerCursor.SizeNorthSouth;
+                case WindowDrag.NorthWest:
+                    return PointerCursor.TopLeftCorner;
+                case WindowDrag.NorthEast:
+                    return PointerCursor.TopRightCorner;
+                case WindowDrag.SouthWest:
+                    return PointerCursor.BottomLeftCorner;
+                case WindowDrag.SouthEast:
+                    return PointerCursor.BottomRightCorner;
+                case WindowDrag.Move:
+                    return _drag == WindowDrag.Move ? PointerCursor.SizeAll : base.GetPointerCursor(point);
+                default:
+                    return base.GetPointerCursor(point);
+            }
+        }
+
+        internal override void PointerPressed(Vector2 point)
+        {
+            _drag = DragAt(point);
+            _dragStart = point;
+            _dragFrame = _frameBounds;
+        }
+
+        internal override void PointerMoved(Vector2 point, Vector2 delta)
+        {
+            if (_drag == WindowDrag.None || !IsManaged)
+                return;
+            Vector2 offset = point - _dragStart;
+            RectangleF frame = _dragFrame;
+            if (_drag == WindowDrag.Move)
+            {
+                Position = frame.Position + offset - _viewport.Position;
+                return;
+            }
+            float minimumWidth = Math.Max(MinWidth, MinimumManagedSize);
+            float minimumHeight = Math.Max(MinHeight, TitleBarHeight + MinimumManagedSize * .5f);
+            float left = frame.X, top = frame.Y, right = frame.Right, bottom = frame.Bottom;
+            if (_drag == WindowDrag.West || _drag == WindowDrag.NorthWest || _drag == WindowDrag.SouthWest)
+                left = Math.Max(_viewport.X, Math.Min(right - minimumWidth, frame.X + offset.X));
+            if (_drag == WindowDrag.East || _drag == WindowDrag.NorthEast || _drag == WindowDrag.SouthEast)
+                right = Math.Min(_viewport.Right, Math.Max(left + minimumWidth, frame.Right + offset.X));
+            if (_drag == WindowDrag.North || _drag == WindowDrag.NorthWest || _drag == WindowDrag.NorthEast)
+                top = Math.Max(_viewport.Y, Math.Min(bottom - minimumHeight, frame.Y + offset.Y));
+            if (_drag == WindowDrag.South || _drag == WindowDrag.SouthWest || _drag == WindowDrag.SouthEast)
+                bottom = Math.Min(_viewport.Bottom, Math.Max(top + minimumHeight, frame.Bottom + offset.Y));
+            Width = right - left;
+            Height = bottom - top;
+            Position = new Vector2(left, top) - _viewport.Position;
+            Action resized = Resized;
+            if (resized != null)
+                resized();
+        }
+
+        internal override void PointerReleased(Vector2 point, bool clicked)
+        {
+            _drag = WindowDrag.None;
+        }
+
+        internal override void PointerCaptureLost()
+        {
+            _drag = WindowDrag.None;
+        }
+
+        /// <summary>
+        /// Makes this window the active one among its owner's windows and brings it above them, restoring it first
+        /// when it is minimized.
+        /// </summary>
+        public void Activate()
+        {
+            ThrowIfDisposed();
+            Window owner = Owner;
+            if (owner == null)
+                return;
+            if (WindowState == WindowState.Minimized)
+                WindowState = WindowState.Normal;
+            if (!_modal)
+                owner.RaiseOwned(this);
+            owner.SetActiveWindow(this);
+        }
+
+        // Puts a non-modal owned window at the top of its band: below modal windows, and below topmost windows unless
+        // it is one itself.
+        void RaiseOwned(Window window)
+        {
+            int index = _ownedWindows.IndexOf(window);
+            if (index < 0)
+                return;
+            _ownedWindows.RemoveAt(index);
+            int top = _ownedWindows.Count;
+            for (int i = 0; i < _ownedWindows.Count; i++)
+            {
+                Window other = _ownedWindows[i];
+                if (other._modal || other.Topmost && !window.Topmost)
+                {
+                    top = i;
+                    break;
+                }
+            }
+            _ownedWindows.Insert(top, window);
+            if (top != index)
+                Invalidate(UiInvalidation.Render);
+        }
+
+        // Moves activation among this window's owned windows; null leaves none of them active.
+        internal void SetActiveWindow(Window active)
+        {
+            for (int i = 0; i < _ownedWindows.Count; i++)
+            {
+                Window window = _ownedWindows[i];
+                if (!ReferenceEquals(window, active))
+                    window.SetActive(false);
+            }
+            if (active != null && ReferenceEquals(active.Owner, this))
+                active.SetActive(true);
+        }
+
+        void SetActive(bool active)
+        {
+            if (IsActive == active)
+                return;
+            IsActive = active;
+            Action handler = active ? Activated : Deactivated;
+            if (handler != null)
+                handler();
+        }
+
+        // After the active window closes or is minimized, the top-most window still shown takes over.
+        void ActivateTopWindow()
+        {
+            for (int i = _ownedWindows.Count - 1; i >= 0; i--)
+            {
+                Window window = _ownedWindows[i];
+                if (!window._modal && window.ShowActivated && window.Visible && window.WindowState != WindowState.Minimized)
+                {
+                    SetActiveWindow(window);
+                    return;
+                }
+            }
+            SetActiveWindow(null);
+        }
+
+        protected override void OnPropertyChanged(IStyledProperty property)
+        {
+            base.OnPropertyChanged(property);
+            if (ReferenceEquals(property, TopmostProperty) && Owner != null && !_modal)
+                Owner.RaiseOwned(this);
+            if (ReferenceEquals(property, WindowStateProperty))
+            {
+                _drag = WindowDrag.None;
+                if (WindowState == WindowState.Minimized && IsActive && Owner != null)
+                    Owner.ActivateTopWindow();
+            }
         }
 
         protected override void DrawSelf(RenderContext context)
@@ -392,7 +717,11 @@ namespace Acrux.Controls
             Owner = owner;
             _modal = modal;
             owner._ownedWindows.Add(this);
+            if (!modal)
+                owner.RaiseOwned(this);
             owner.Invalidate(UiInvalidation.Measure | UiInvalidation.Render);
+            if (!modal && ShowActivated)
+                owner.SetActiveWindow(this);
             Action handler = Opened;
             if (handler != null) handler();
         }
@@ -480,6 +809,11 @@ namespace Acrux.Controls
                 var owner = Owner;
                 owner._ownedWindows.Remove(this);
                 Owner = null;
+                _drag = WindowDrag.None;
+                bool wasActive = IsActive;
+                SetActive(false);
+                if (wasActive)
+                    owner.ActivateTopWindow();
                 Styles = _dialogStyles;
                 _dialogStyles = null;
                 owner.Invalidate(UiInvalidation.Measure | UiInvalidation.Render);

@@ -42,19 +42,19 @@
             <SpritePath>Textures/GUI/MouseCursor.dds</SpritePath>
             <Selectable>false</Selectable>
         </LCDTextureDefinition>
-        <LCDTextureDefinition> <!-- No art yet: copy of the arrow -->
+        <LCDTextureDefinition> <!-- Assets/Cursor/ResizeHorizontal.png -->
             <Id Type="LCDTextureDefinition" Subtype="Acrux_CursorSizeWestEast"/>
-            <SpritePath>Textures/GUI/MouseCursor.dds</SpritePath>
+            <SpritePath>Textures/Acrux/CursorResizeHorizontal.dds</SpritePath>
             <Selectable>false</Selectable>
         </LCDTextureDefinition>
-        <LCDTextureDefinition> <!-- No art yet: copy of the arrow -->
+        <LCDTextureDefinition> <!-- Assets/Cursor/ResizeVertical.png -->
             <Id Type="LCDTextureDefinition" Subtype="Acrux_CursorSizeNorthSouth"/>
-            <SpritePath>Textures/GUI/MouseCursor.dds</SpritePath>
+            <SpritePath>Textures/Acrux/CursorResizeVertical.dds</SpritePath>
             <Selectable>false</Selectable>
         </LCDTextureDefinition>
-        <LCDTextureDefinition> <!-- No art yet: copy of the arrow -->
+        <LCDTextureDefinition> <!-- Assets/Cursor/Move.png -->
             <Id Type="LCDTextureDefinition" Subtype="Acrux_CursorSizeAll"/>
-            <SpritePath>Textures/GUI/MouseCursor.dds</SpritePath>
+            <SpritePath>Textures/Acrux/CursorMove.dds</SpritePath>
             <Selectable>false</Selectable>
         </LCDTextureDefinition>
         <LCDTextureDefinition> <!-- Vanilla no entry sprite -->
@@ -77,44 +77,44 @@
             <SpritePath>Textures/GUI/Controls/button_info_symbol_highlight.dds</SpritePath>
             <Selectable>false</Selectable>
         </LCDTextureDefinition>
-        <LCDTextureDefinition> <!-- No art yet: copy of the arrow -->
+        <LCDTextureDefinition> <!-- Assets/Cursor/ResizeVertical.png -->
             <Id Type="LCDTextureDefinition" Subtype="Acrux_CursorTopSide"/>
-            <SpritePath>Textures/GUI/MouseCursor.dds</SpritePath>
+            <SpritePath>Textures/Acrux/CursorResizeVertical.dds</SpritePath>
             <Selectable>false</Selectable>
         </LCDTextureDefinition>
-        <LCDTextureDefinition> <!-- No art yet: copy of the arrow -->
+        <LCDTextureDefinition> <!-- Assets/Cursor/ResizeVertical.png -->
             <Id Type="LCDTextureDefinition" Subtype="Acrux_CursorBottomSide"/>
-            <SpritePath>Textures/GUI/MouseCursor.dds</SpritePath>
+            <SpritePath>Textures/Acrux/CursorResizeVertical.dds</SpritePath>
             <Selectable>false</Selectable>
         </LCDTextureDefinition>
-        <LCDTextureDefinition> <!-- No art yet: copy of the arrow -->
+        <LCDTextureDefinition> <!-- Assets/Cursor/ResizeHorizontal.png -->
             <Id Type="LCDTextureDefinition" Subtype="Acrux_CursorLeftSide"/>
-            <SpritePath>Textures/GUI/MouseCursor.dds</SpritePath>
+            <SpritePath>Textures/Acrux/CursorResizeHorizontal.dds</SpritePath>
             <Selectable>false</Selectable>
         </LCDTextureDefinition>
-        <LCDTextureDefinition> <!-- No art yet: copy of the arrow -->
+        <LCDTextureDefinition> <!-- Assets/Cursor/ResizeHorizontal.png -->
             <Id Type="LCDTextureDefinition" Subtype="Acrux_CursorRightSide"/>
-            <SpritePath>Textures/GUI/MouseCursor.dds</SpritePath>
+            <SpritePath>Textures/Acrux/CursorResizeHorizontal.dds</SpritePath>
             <Selectable>false</Selectable>
         </LCDTextureDefinition>
-        <LCDTextureDefinition> <!-- No art yet: copy of the arrow -->
+        <LCDTextureDefinition> <!-- Assets/Cursor/ResizeDiagonal.png -->
             <Id Type="LCDTextureDefinition" Subtype="Acrux_CursorTopLeftCorner"/>
-            <SpritePath>Textures/GUI/MouseCursor.dds</SpritePath>
+            <SpritePath>Textures/Acrux/CursorResizeDiagonal.dds</SpritePath>
             <Selectable>false</Selectable>
         </LCDTextureDefinition>
-        <LCDTextureDefinition> <!-- No art yet: copy of the arrow -->
+        <LCDTextureDefinition> <!-- Assets/Cursor/ResizeDiagonalMirror.png -->
             <Id Type="LCDTextureDefinition" Subtype="Acrux_CursorTopRightCorner"/>
-            <SpritePath>Textures/GUI/MouseCursor.dds</SpritePath>
+            <SpritePath>Textures/Acrux/CursorResizeDiagonalMirror.dds</SpritePath>
             <Selectable>false</Selectable>
         </LCDTextureDefinition>
-        <LCDTextureDefinition> <!-- No art yet: copy of the arrow -->
+        <LCDTextureDefinition> <!-- Assets/Cursor/ResizeDiagonalMirror.png -->
             <Id Type="LCDTextureDefinition" Subtype="Acrux_CursorBottomLeftCorner"/>
-            <SpritePath>Textures/GUI/MouseCursor.dds</SpritePath>
+            <SpritePath>Textures/Acrux/CursorResizeDiagonalMirror.dds</SpritePath>
             <Selectable>false</Selectable>
         </LCDTextureDefinition>
-        <LCDTextureDefinition> <!-- No art yet: copy of the arrow -->
+        <LCDTextureDefinition> <!-- Assets/Cursor/ResizeDiagonal.png -->
             <Id Type="LCDTextureDefinition" Subtype="Acrux_CursorBottomRightCorner"/>
-            <SpritePath>Textures/GUI/MouseCursor.dds</SpritePath>
+            <SpritePath>Textures/Acrux/CursorResizeDiagonal.dds</SpritePath>
             <Selectable>false</Selectable>
         </LCDTextureDefinition>
         <LCDTextureDefinition> <!-- Closed hand while dragging -->

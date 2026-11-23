@@ -90,6 +90,7 @@ public sealed class AcruxViewGenerator : IIncrementalGenerator
             ["TextBox"] = "Acrux.Controls.TextBox",
             ["Image"] = "Acrux.Controls.Image",
             ["Viewbox"] = "Acrux.Layout.Viewbox",
+            ["LayoutTransformControl"] = "Acrux.Layout.LayoutTransformControl",
             ["ToggleSwitch"] = "Acrux.Controls.ToggleSwitch"
         };
 

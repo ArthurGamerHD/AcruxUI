@@ -128,6 +128,9 @@ namespace Acrux.Styling
                 "Viewbox", "Stretch", (viewbox, value) => viewbox.Stretch = value);
             registry.RegisterProperty<Viewbox, StretchDirection>(
                 "Viewbox", "StretchDirection", (viewbox, value) => viewbox.StretchDirection = value);
+            registry.Register<LayoutTransformControl>("LayoutTransformControl", () => new LayoutTransformControl());
+            registry.RegisterProperty<LayoutTransformControl, string>("LayoutTransformControl", "LayoutTransform",
+                (control, value) => control.LayoutTransform = Transform.Parse(value));
             registry.Register<VirtualizingStackPanel>("VirtualizingStackPanel", () => new VirtualizingStackPanel());
 
             registry.Register<WrapPanel>("WrapPanel", () => new WrapPanel());

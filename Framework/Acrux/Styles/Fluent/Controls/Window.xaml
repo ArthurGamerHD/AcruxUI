@@ -5,6 +5,9 @@
     <Setter Property="BorderBrush" Value="{DynamicResource borderVariantColor}" />
     <Setter Property="CornerRadius" Value="10" />
   </Style>
+  <Style Selector="Window[IsActive=True]">
+    <Setter Property="BorderBrush" Value="{DynamicResource accentColor}" />
+  </Style>
   <Style Selector="TextBlock.window-title">
     <Setter Property="Foreground" Value="{DynamicResource fontColor}" />
     <Setter Property="FontFamily" Value="{DynamicResource textFont}" />

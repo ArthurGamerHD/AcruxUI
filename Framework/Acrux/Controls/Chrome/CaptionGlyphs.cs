@@ -31,7 +31,7 @@ namespace Acrux.Controls.Chrome
             new[] { .36f, .36f, .64f, .64f, .64f, .36f, .36f, .64f },
             new[] { .3f, .6f, .5f, .4f, .5f, .4f, .7f, .6f },
             new[] { .3f, .4f, .5f, .6f, .5f, .6f, .7f, .4f },
-            new[] { .32f, .46f, .5f, .28f, .5f, .28f, .68f, .46f, .32f, .54f, .5f, .72f, .5f, .72f, .68f, .54f }
+            new[] { .3f, .5f, .5f, .3f, .5f, .3f, .7f, .5f, .3f, .5f, .5f, .7f, .5f, .7f, .7f, .5f }
         };
 
         // The glyph's texture, or the disc variant; false while it is being created.

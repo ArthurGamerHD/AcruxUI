@@ -11,58 +11,97 @@ namespace Acrux.Controls
         public static readonly global::Acrux.Core.PropertySystem.StyledProperty<float> ExtendClientAreaTitleBarHeightHintProperty = global::Acrux.Core.PropertySystem.StyledProperty<float>.Lazy(() => __UiBridge_Acrux_Controls_Window.m4());
         public static readonly global::Acrux.Core.PropertySystem.StyledProperty<bool> CanMaximizeProperty = global::Acrux.Core.PropertySystem.StyledProperty<bool>.Lazy(() => __UiBridge_Acrux_Controls_Window.m5());
         public static readonly global::Acrux.Core.PropertySystem.StyledProperty<bool> CanMinimizeProperty = global::Acrux.Core.PropertySystem.StyledProperty<bool>.Lazy(() => __UiBridge_Acrux_Controls_Window.m6());
-        public static readonly global::Acrux.Core.PropertySystem.StyledProperty<global::Acrux.Controls.SizeToContent> SizeToContentProperty = global::Acrux.Core.PropertySystem.StyledProperty<global::Acrux.Controls.SizeToContent>.Lazy(() => __UiBridge_Acrux_Controls_Window.m7());
-        public static readonly global::Acrux.Core.PropertySystem.StyledProperty<global::Acrux.Styling.BackgroundBrush> BackgroundProperty = global::Acrux.Core.PropertySystem.StyledProperty<global::Acrux.Styling.BackgroundBrush>.Lazy(() => __UiBridge_Acrux_Controls_Window.m8());
-        public static readonly global::Acrux.Core.PropertySystem.StyledProperty<global::VRageMath.Color> BorderBrushProperty = global::Acrux.Core.PropertySystem.StyledProperty<global::VRageMath.Color>.Lazy(() => __UiBridge_Acrux_Controls_Window.m9());
-        public static readonly global::Acrux.Core.PropertySystem.StyledProperty<global::VRageMath.Vector4> BorderThicknessProperty = global::Acrux.Core.PropertySystem.StyledProperty<global::VRageMath.Vector4>.Lazy(() => __UiBridge_Acrux_Controls_Window.m10());
-        public static readonly global::Acrux.Core.PropertySystem.StyledProperty<global::VRageMath.Vector4> CornerRadiusProperty = global::Acrux.Core.PropertySystem.StyledProperty<global::VRageMath.Vector4>.Lazy(() => __UiBridge_Acrux_Controls_Window.m11());
-        internal void SetPlatformResource(string @key, object @value)  { __UiBridge_Acrux_Controls_Window.m12(Native, @key, global::Acrux.Toolkit.Ui.ToWire(@value)); }
+        public static readonly global::Acrux.Core.PropertySystem.StyledProperty<bool> CanResizeProperty = global::Acrux.Core.PropertySystem.StyledProperty<bool>.Lazy(() => __UiBridge_Acrux_Controls_Window.m7());
+        public static readonly global::Acrux.Core.PropertySystem.StyledProperty<bool> TopmostProperty = global::Acrux.Core.PropertySystem.StyledProperty<bool>.Lazy(() => __UiBridge_Acrux_Controls_Window.m8());
+        public static readonly global::Acrux.Core.PropertySystem.StyledProperty<bool> ShowActivatedProperty = global::Acrux.Core.PropertySystem.StyledProperty<bool>.Lazy(() => __UiBridge_Acrux_Controls_Window.m9());
+        public static readonly global::Acrux.Core.PropertySystem.StyledProperty<bool> IsActiveProperty = global::Acrux.Core.PropertySystem.StyledProperty<bool>.Lazy(() => __UiBridge_Acrux_Controls_Window.m10());
+        public static readonly global::Acrux.Core.PropertySystem.StyledProperty<global::Acrux.Controls.SizeToContent> SizeToContentProperty = global::Acrux.Core.PropertySystem.StyledProperty<global::Acrux.Controls.SizeToContent>.Lazy(() => __UiBridge_Acrux_Controls_Window.m11());
+        public static readonly global::Acrux.Core.PropertySystem.StyledProperty<global::Acrux.Styling.BackgroundBrush> BackgroundProperty = global::Acrux.Core.PropertySystem.StyledProperty<global::Acrux.Styling.BackgroundBrush>.Lazy(() => __UiBridge_Acrux_Controls_Window.m12());
+        public static readonly global::Acrux.Core.PropertySystem.StyledProperty<global::VRageMath.Color> BorderBrushProperty = global::Acrux.Core.PropertySystem.StyledProperty<global::VRageMath.Color>.Lazy(() => __UiBridge_Acrux_Controls_Window.m13());
+        public static readonly global::Acrux.Core.PropertySystem.StyledProperty<global::VRageMath.Vector4> BorderThicknessProperty = global::Acrux.Core.PropertySystem.StyledProperty<global::VRageMath.Vector4>.Lazy(() => __UiBridge_Acrux_Controls_Window.m14());
+        public static readonly global::Acrux.Core.PropertySystem.StyledProperty<global::VRageMath.Vector4> CornerRadiusProperty = global::Acrux.Core.PropertySystem.StyledProperty<global::VRageMath.Vector4>.Lazy(() => __UiBridge_Acrux_Controls_Window.m15());
+        internal void SetPlatformResource(string @key, object @value)  { __UiBridge_Acrux_Controls_Window.m16(Native, @key, global::Acrux.Toolkit.Ui.ToWire(@value)); }
         public Window() : base(global::Acrux.Toolkit.Deferred.Value)
         {
-            __AttachNative(GetType() == typeof(global::Acrux.Controls.Window) ? __UiBridge_Acrux_Controls_Window.m13() : __UiBridge_Acrux_Controls_Window.m14(this));
+            __AttachNative(GetType() == typeof(global::Acrux.Controls.Window) ? __UiBridge_Acrux_Controls_Window.m17() : __UiBridge_Acrux_Controls_Window.m18(this));
         }
-        public string Title { get { return __UiBridge_Acrux_Controls_Window.m15(Native); } set { __UiBridge_Acrux_Controls_Window.m16(Native, value); } }
-        public global::Acrux.Controls.WindowState WindowState { get { return (global::Acrux.Controls.WindowState)(__UiBridge_Acrux_Controls_Window.m17(Native)); } set { __UiBridge_Acrux_Controls_Window.m18(Native, (int)(value)); } }
-        public global::Acrux.Controls.WindowDecorations WindowDecorations { get { return (global::Acrux.Controls.WindowDecorations)(__UiBridge_Acrux_Controls_Window.m19(Native)); } set { __UiBridge_Acrux_Controls_Window.m20(Native, (int)(value)); } }
-        public bool ExtendClientAreaToDecorationsHint { get { return __UiBridge_Acrux_Controls_Window.m21(Native); } set { __UiBridge_Acrux_Controls_Window.m22(Native, value); } }
-        public float ExtendClientAreaTitleBarHeightHint { get { return __UiBridge_Acrux_Controls_Window.m23(Native); } set { __UiBridge_Acrux_Controls_Window.m24(Native, value); } }
-        public bool CanMaximize { get { return __UiBridge_Acrux_Controls_Window.m25(Native); } set { __UiBridge_Acrux_Controls_Window.m26(Native, value); } }
-        public bool CanMinimize { get { return __UiBridge_Acrux_Controls_Window.m27(Native); } set { __UiBridge_Acrux_Controls_Window.m28(Native, value); } }
-        public global::Acrux.Controls.SizeToContent SizeToContent { get { return (global::Acrux.Controls.SizeToContent)(__UiBridge_Acrux_Controls_Window.m29(Native)); } set { __UiBridge_Acrux_Controls_Window.m30(Native, (int)(value)); } }
-        public global::Acrux.Styling.BackgroundBrush Background { get { return global::Acrux.Toolkit.Ui.Wrap<global::Acrux.Styling.BackgroundBrush>(__UiBridge_Acrux_Controls_Window.m31(Native)); } set { __UiBridge_Acrux_Controls_Window.m32(Native, global::Acrux.Toolkit.Ui.Native(value)); } }
-        public global::VRageMath.Color BorderBrush { get { return __UiBridge_Acrux_Controls_Window.m33(Native); } set { __UiBridge_Acrux_Controls_Window.m34(Native, value); } }
-        public global::VRageMath.Vector4 BorderThickness { get { return __UiBridge_Acrux_Controls_Window.m35(Native); } set { __UiBridge_Acrux_Controls_Window.m36(Native, value); } }
-        public global::VRageMath.Vector4 CornerRadius { get { return __UiBridge_Acrux_Controls_Window.m37(Native); } set { __UiBridge_Acrux_Controls_Window.m38(Native, value); } }
-        public global::VRageMath.RectangleF FrameBounds { get { return __UiBridge_Acrux_Controls_Window.m39(Native); } }
-        public global::Acrux.Controls.Window Owner { get { return global::Acrux.Toolkit.Ui.Wrap<global::Acrux.Controls.Window>(__UiBridge_Acrux_Controls_Window.m40(Native)); } }
-        public global::System.Collections.Generic.IReadOnlyList<global::Acrux.Controls.Window> OwnedWindows { get { return global::Acrux.Toolkit.Ui.ReadOnlyListFromWire<global::Acrux.Controls.Window>(__UiBridge_Acrux_Controls_Window.m41(Native), __x58 => global::Acrux.Toolkit.Ui.Wrap<global::Acrux.Controls.Window>(((object)__x58))); } }
-        internal global::Acrux.Controls.Window ActiveModalWindow { get { return global::Acrux.Toolkit.Ui.Wrap<global::Acrux.Controls.Window>(__UiBridge_Acrux_Controls_Window.m42(Native)); } }
-        internal bool IsModal { get { return __UiBridge_Acrux_Controls_Window.m43(Native); } }
-        public void Show(global::Acrux.Controls.Window @owner)  { __UiBridge_Acrux_Controls_Window.m44(Native, global::Acrux.Toolkit.Ui.Native(@owner)); }
-        internal void OpenModal(global::Acrux.Controls.Window @owner)  { __UiBridge_Acrux_Controls_Window.m45(Native, global::Acrux.Toolkit.Ui.Native(@owner)); }
-        public global::Acrux.Controls.IWindowPlatform Platform { get { return global::Acrux.Toolkit.Ui.Wrap<global::Acrux.Controls.IWindowPlatform>(__UiBridge_Acrux_Controls_Window.m46(Native)); } set { __UiBridge_Acrux_Controls_Window.m47(Native, global::Acrux.Controls.__UiBridge_Acrux_Controls_IWindowPlatform.Export(value)); } }
-        public bool IsOpen { get { return __UiBridge_Acrux_Controls_Window.m48(Native); } }
-        public double RenderScaling { get { return __UiBridge_Acrux_Controls_Window.m49(Native); } }
-        internal void SetRenderScaling(float @scaling)  { __UiBridge_Acrux_Controls_Window.m50(Native, @scaling); }
-        public bool CloseOnEscape { get { return __UiBridge_Acrux_Controls_Window.m51(Native); } set { __UiBridge_Acrux_Controls_Window.m52(Native, value); } }
+        public string Title { get { return __UiBridge_Acrux_Controls_Window.m19(Native); } set { __UiBridge_Acrux_Controls_Window.m20(Native, value); } }
+        public global::Acrux.Controls.WindowState WindowState { get { return (global::Acrux.Controls.WindowState)(__UiBridge_Acrux_Controls_Window.m21(Native)); } set { __UiBridge_Acrux_Controls_Window.m22(Native, (int)(value)); } }
+        public global::Acrux.Controls.WindowDecorations WindowDecorations { get { return (global::Acrux.Controls.WindowDecorations)(__UiBridge_Acrux_Controls_Window.m23(Native)); } set { __UiBridge_Acrux_Controls_Window.m24(Native, (int)(value)); } }
+        public bool ExtendClientAreaToDecorationsHint { get { return __UiBridge_Acrux_Controls_Window.m25(Native); } set { __UiBridge_Acrux_Controls_Window.m26(Native, value); } }
+        public float ExtendClientAreaTitleBarHeightHint { get { return __UiBridge_Acrux_Controls_Window.m27(Native); } set { __UiBridge_Acrux_Controls_Window.m28(Native, value); } }
+        public bool CanMaximize { get { return __UiBridge_Acrux_Controls_Window.m29(Native); } set { __UiBridge_Acrux_Controls_Window.m30(Native, value); } }
+        public bool CanMinimize { get { return __UiBridge_Acrux_Controls_Window.m31(Native); } set { __UiBridge_Acrux_Controls_Window.m32(Native, value); } }
+        public bool CanResize { get { return __UiBridge_Acrux_Controls_Window.m33(Native); } set { __UiBridge_Acrux_Controls_Window.m34(Native, value); } }
+        public bool IsActive { get { return __UiBridge_Acrux_Controls_Window.m35(Native); } }
+        public bool Topmost { get { return __UiBridge_Acrux_Controls_Window.m36(Native); } set { __UiBridge_Acrux_Controls_Window.m37(Native, value); } }
+        public bool ShowActivated { get { return __UiBridge_Acrux_Controls_Window.m38(Native); } set { __UiBridge_Acrux_Controls_Window.m39(Native, value); } }
+        public global::VRageMath.Vector2 Position { get { return __UiBridge_Acrux_Controls_Window.m40(Native); } set { __UiBridge_Acrux_Controls_Window.m41(Native, value); } }
+        global::System.Action __event_PositionChanged;
+        bool __event_PositionChanged_subscribed;
+        public event global::System.Action PositionChanged
+        {
+            add { __event_PositionChanged += value; if (!__event_PositionChanged_subscribed && __UiBridge_Acrux_Controls_Window.m42 != null) { __event_PositionChanged_subscribed = true; __UiBridge_Acrux_Controls_Window.m42(Native, new global::System.Action(() => { var __h = __event_PositionChanged; if (__h != null) __h(); })); } }
+            remove { __event_PositionChanged -= value; }
+        }
+        global::System.Action __event_Resized;
+        bool __event_Resized_subscribed;
+        public event global::System.Action Resized
+        {
+            add { __event_Resized += value; if (!__event_Resized_subscribed && __UiBridge_Acrux_Controls_Window.m43 != null) { __event_Resized_subscribed = true; __UiBridge_Acrux_Controls_Window.m43(Native, new global::System.Action(() => { var __h = __event_Resized; if (__h != null) __h(); })); } }
+            remove { __event_Resized -= value; }
+        }
+        global::System.Action __event_Activated;
+        bool __event_Activated_subscribed;
+        public event global::System.Action Activated
+        {
+            add { __event_Activated += value; if (!__event_Activated_subscribed && __UiBridge_Acrux_Controls_Window.m44 != null) { __event_Activated_subscribed = true; __UiBridge_Acrux_Controls_Window.m44(Native, new global::System.Action(() => { var __h = __event_Activated; if (__h != null) __h(); })); } }
+            remove { __event_Activated -= value; }
+        }
+        global::System.Action __event_Deactivated;
+        bool __event_Deactivated_subscribed;
+        public event global::System.Action Deactivated
+        {
+            add { __event_Deactivated += value; if (!__event_Deactivated_subscribed && __UiBridge_Acrux_Controls_Window.m45 != null) { __event_Deactivated_subscribed = true; __UiBridge_Acrux_Controls_Window.m45(Native, new global::System.Action(() => { var __h = __event_Deactivated; if (__h != null) __h(); })); } }
+            remove { __event_Deactivated -= value; }
+        }
+        public global::Acrux.Controls.SizeToContent SizeToContent { get { return (global::Acrux.Controls.SizeToContent)(__UiBridge_Acrux_Controls_Window.m46(Native)); } set { __UiBridge_Acrux_Controls_Window.m47(Native, (int)(value)); } }
+        public global::Acrux.Styling.BackgroundBrush Background { get { return global::Acrux.Toolkit.Ui.Wrap<global::Acrux.Styling.BackgroundBrush>(__UiBridge_Acrux_Controls_Window.m48(Native)); } set { __UiBridge_Acrux_Controls_Window.m49(Native, global::Acrux.Toolkit.Ui.Native(value)); } }
+        public global::VRageMath.Color BorderBrush { get { return __UiBridge_Acrux_Controls_Window.m50(Native); } set { __UiBridge_Acrux_Controls_Window.m51(Native, value); } }
+        public global::VRageMath.Vector4 BorderThickness { get { return __UiBridge_Acrux_Controls_Window.m52(Native); } set { __UiBridge_Acrux_Controls_Window.m53(Native, value); } }
+        public global::VRageMath.Vector4 CornerRadius { get { return __UiBridge_Acrux_Controls_Window.m54(Native); } set { __UiBridge_Acrux_Controls_Window.m55(Native, value); } }
+        public global::VRageMath.RectangleF FrameBounds { get { return __UiBridge_Acrux_Controls_Window.m56(Native); } }
+        public void Activate()  { __UiBridge_Acrux_Controls_Window.m57(Native); }
+        internal void SetActiveWindow(global::Acrux.Controls.Window @active)  { __UiBridge_Acrux_Controls_Window.m58(Native, global::Acrux.Toolkit.Ui.Native(@active)); }
+        public global::Acrux.Controls.Window Owner { get { return global::Acrux.Toolkit.Ui.Wrap<global::Acrux.Controls.Window>(__UiBridge_Acrux_Controls_Window.m59(Native)); } }
+        public global::System.Collections.Generic.IReadOnlyList<global::Acrux.Controls.Window> OwnedWindows { get { return global::Acrux.Toolkit.Ui.ReadOnlyListFromWire<global::Acrux.Controls.Window>(__UiBridge_Acrux_Controls_Window.m60(Native), __x58 => global::Acrux.Toolkit.Ui.Wrap<global::Acrux.Controls.Window>(((object)__x58))); } }
+        internal global::Acrux.Controls.Window ActiveModalWindow { get { return global::Acrux.Toolkit.Ui.Wrap<global::Acrux.Controls.Window>(__UiBridge_Acrux_Controls_Window.m61(Native)); } }
+        internal bool IsModal { get { return __UiBridge_Acrux_Controls_Window.m62(Native); } }
+        public void Show(global::Acrux.Controls.Window @owner)  { __UiBridge_Acrux_Controls_Window.m63(Native, global::Acrux.Toolkit.Ui.Native(@owner)); }
+        internal void OpenModal(global::Acrux.Controls.Window @owner)  { __UiBridge_Acrux_Controls_Window.m64(Native, global::Acrux.Toolkit.Ui.Native(@owner)); }
+        public global::Acrux.Controls.IWindowPlatform Platform { get { return global::Acrux.Toolkit.Ui.Wrap<global::Acrux.Controls.IWindowPlatform>(__UiBridge_Acrux_Controls_Window.m65(Native)); } set { __UiBridge_Acrux_Controls_Window.m66(Native, global::Acrux.Controls.__UiBridge_Acrux_Controls_IWindowPlatform.Export(value)); } }
+        public bool IsOpen { get { return __UiBridge_Acrux_Controls_Window.m67(Native); } }
+        public double RenderScaling { get { return __UiBridge_Acrux_Controls_Window.m68(Native); } }
+        internal void SetRenderScaling(float @scaling)  { __UiBridge_Acrux_Controls_Window.m69(Native, @scaling); }
+        public bool CloseOnEscape { get { return __UiBridge_Acrux_Controls_Window.m70(Native); } set { __UiBridge_Acrux_Controls_Window.m71(Native, value); } }
         global::System.Action __event_Opened;
         bool __event_Opened_subscribed;
         public event global::System.Action Opened
         {
-            add { __event_Opened += value; if (!__event_Opened_subscribed && __UiBridge_Acrux_Controls_Window.m53 != null) { __event_Opened_subscribed = true; __UiBridge_Acrux_Controls_Window.m53(Native, new global::System.Action(() => { var __h = __event_Opened; if (__h != null) __h(); })); } }
+            add { __event_Opened += value; if (!__event_Opened_subscribed && __UiBridge_Acrux_Controls_Window.m72 != null) { __event_Opened_subscribed = true; __UiBridge_Acrux_Controls_Window.m72(Native, new global::System.Action(() => { var __h = __event_Opened; if (__h != null) __h(); })); } }
             remove { __event_Opened -= value; }
         }
         global::System.Action __event_Closed;
         bool __event_Closed_subscribed;
         public event global::System.Action Closed
         {
-            add { __event_Closed += value; if (!__event_Closed_subscribed && __UiBridge_Acrux_Controls_Window.m54 != null) { __event_Closed_subscribed = true; __UiBridge_Acrux_Controls_Window.m54(Native, new global::System.Action(() => { var __h = __event_Closed; if (__h != null) __h(); })); } }
+            add { __event_Closed += value; if (!__event_Closed_subscribed && __UiBridge_Acrux_Controls_Window.m73 != null) { __event_Closed_subscribed = true; __UiBridge_Acrux_Controls_Window.m73(Native, new global::System.Action(() => { var __h = __event_Closed; if (__h != null) __h(); })); } }
             remove { __event_Closed -= value; }
         }
-        public global::Acrux.Controls.Window BindOpen(global::Acrux.Core.Input.Key @key)  { return global::Acrux.Toolkit.Ui.Wrap<global::Acrux.Controls.Window>(__UiBridge_Acrux_Controls_Window.m55(Native, (byte)(@key))); }
-        public bool UnbindOpen(global::Acrux.Core.Input.Key @key)  { return __UiBridge_Acrux_Controls_Window.m56(Native, (byte)(@key)); }
-        public void Open()  { __UiBridge_Acrux_Controls_Window.m57(Native); }
-        public void Close()  { __UiBridge_Acrux_Controls_Window.m58(Native); }
+        public global::Acrux.Controls.Window BindOpen(global::Acrux.Core.Input.Key @key)  { return global::Acrux.Toolkit.Ui.Wrap<global::Acrux.Controls.Window>(__UiBridge_Acrux_Controls_Window.m74(Native, (byte)(@key))); }
+        public bool UnbindOpen(global::Acrux.Core.Input.Key @key)  { return __UiBridge_Acrux_Controls_Window.m75(Native, (byte)(@key)); }
+        public void Open()  { __UiBridge_Acrux_Controls_Window.m76(Native); }
+        public void Close()  { __UiBridge_Acrux_Controls_Window.m77(Native); }
     }
     internal static class __UiBridge_Acrux_Controls_Window
     {
@@ -78,53 +117,72 @@ namespace Acrux.Controls
         internal static global::System.Func<object> m9;
         internal static global::System.Func<object> m10;
         internal static global::System.Func<object> m11;
-        internal static global::System.Action<object, string, object> m12;
+        internal static global::System.Func<object> m12;
         internal static global::System.Func<object> m13;
-        internal static global::System.Func<object, object> m14;
-        internal static global::System.Func<object, string> m15;
-        internal static global::System.Action<object, string> m16;
-        internal static global::System.Func<object, int> m17;
-        internal static global::System.Action<object, int> m18;
-        internal static global::System.Func<object, int> m19;
-        internal static global::System.Action<object, int> m20;
-        internal static global::System.Func<object, bool> m21;
-        internal static global::System.Action<object, bool> m22;
-        internal static global::System.Func<object, float> m23;
-        internal static global::System.Action<object, float> m24;
+        internal static global::System.Func<object> m14;
+        internal static global::System.Func<object> m15;
+        internal static global::System.Action<object, string, object> m16;
+        internal static global::System.Func<object> m17;
+        internal static global::System.Func<object, object> m18;
+        internal static global::System.Func<object, string> m19;
+        internal static global::System.Action<object, string> m20;
+        internal static global::System.Func<object, int> m21;
+        internal static global::System.Action<object, int> m22;
+        internal static global::System.Func<object, int> m23;
+        internal static global::System.Action<object, int> m24;
         internal static global::System.Func<object, bool> m25;
         internal static global::System.Action<object, bool> m26;
-        internal static global::System.Func<object, bool> m27;
-        internal static global::System.Action<object, bool> m28;
-        internal static global::System.Func<object, int> m29;
-        internal static global::System.Action<object, int> m30;
-        internal static global::System.Func<object, object> m31;
-        internal static global::System.Action<object, object> m32;
-        internal static global::System.Func<object, global::VRageMath.Color> m33;
-        internal static global::System.Action<object, global::VRageMath.Color> m34;
-        internal static global::System.Func<object, global::VRageMath.Vector4> m35;
-        internal static global::System.Action<object, global::VRageMath.Vector4> m36;
-        internal static global::System.Func<object, global::VRageMath.Vector4> m37;
-        internal static global::System.Action<object, global::VRageMath.Vector4> m38;
-        internal static global::System.Func<object, global::VRageMath.RectangleF> m39;
-        internal static global::System.Func<object, object> m40;
-        internal static global::System.Func<object, object> m41;
-        internal static global::System.Func<object, object> m42;
-        internal static global::System.Func<object, bool> m43;
-        internal static global::System.Action<object, object> m44;
-        internal static global::System.Action<object, object> m45;
-        internal static global::System.Func<object, object> m46;
-        internal static global::System.Action<object, object> m47;
-        internal static global::System.Func<object, bool> m48;
-        internal static global::System.Func<object, double> m49;
-        internal static global::System.Action<object, float> m50;
-        internal static global::System.Func<object, bool> m51;
-        internal static global::System.Action<object, bool> m52;
-        internal static global::System.Action<object, global::System.Action> m53;
-        internal static global::System.Action<object, global::System.Action> m54;
-        internal static global::System.Func<object, byte, object> m55;
-        internal static global::System.Func<object, byte, bool> m56;
+        internal static global::System.Func<object, float> m27;
+        internal static global::System.Action<object, float> m28;
+        internal static global::System.Func<object, bool> m29;
+        internal static global::System.Action<object, bool> m30;
+        internal static global::System.Func<object, bool> m31;
+        internal static global::System.Action<object, bool> m32;
+        internal static global::System.Func<object, bool> m33;
+        internal static global::System.Action<object, bool> m34;
+        internal static global::System.Func<object, bool> m35;
+        internal static global::System.Func<object, bool> m36;
+        internal static global::System.Action<object, bool> m37;
+        internal static global::System.Func<object, bool> m38;
+        internal static global::System.Action<object, bool> m39;
+        internal static global::System.Func<object, global::VRageMath.Vector2> m40;
+        internal static global::System.Action<object, global::VRageMath.Vector2> m41;
+        internal static global::System.Action<object, global::System.Action> m42;
+        internal static global::System.Action<object, global::System.Action> m43;
+        internal static global::System.Action<object, global::System.Action> m44;
+        internal static global::System.Action<object, global::System.Action> m45;
+        internal static global::System.Func<object, int> m46;
+        internal static global::System.Action<object, int> m47;
+        internal static global::System.Func<object, object> m48;
+        internal static global::System.Action<object, object> m49;
+        internal static global::System.Func<object, global::VRageMath.Color> m50;
+        internal static global::System.Action<object, global::VRageMath.Color> m51;
+        internal static global::System.Func<object, global::VRageMath.Vector4> m52;
+        internal static global::System.Action<object, global::VRageMath.Vector4> m53;
+        internal static global::System.Func<object, global::VRageMath.Vector4> m54;
+        internal static global::System.Action<object, global::VRageMath.Vector4> m55;
+        internal static global::System.Func<object, global::VRageMath.RectangleF> m56;
         internal static global::System.Action<object> m57;
-        internal static global::System.Action<object> m58;
+        internal static global::System.Action<object, object> m58;
+        internal static global::System.Func<object, object> m59;
+        internal static global::System.Func<object, object> m60;
+        internal static global::System.Func<object, object> m61;
+        internal static global::System.Func<object, bool> m62;
+        internal static global::System.Action<object, object> m63;
+        internal static global::System.Action<object, object> m64;
+        internal static global::System.Func<object, object> m65;
+        internal static global::System.Action<object, object> m66;
+        internal static global::System.Func<object, bool> m67;
+        internal static global::System.Func<object, double> m68;
+        internal static global::System.Action<object, float> m69;
+        internal static global::System.Func<object, bool> m70;
+        internal static global::System.Action<object, bool> m71;
+        internal static global::System.Action<object, global::System.Action> m72;
+        internal static global::System.Action<object, global::System.Action> m73;
+        internal static global::System.Func<object, byte, object> m74;
+        internal static global::System.Func<object, byte, bool> m75;
+        internal static global::System.Action<object> m76;
+        internal static global::System.Action<object> m77;
         internal static void Load(global::System.Collections.Generic.IDictionary<string, global::System.Delegate> api)
         {
             m0 = global::Acrux.Toolkit.Ui.Get<global::System.Func<object>>(api, "Acrux.Controls.Window.field_TitleProperty");
@@ -134,58 +192,77 @@ namespace Acrux.Controls
             m4 = global::Acrux.Toolkit.Ui.Get<global::System.Func<object>>(api, "Acrux.Controls.Window.field_ExtendClientAreaTitleBarHeightHintProperty");
             m5 = global::Acrux.Toolkit.Ui.Get<global::System.Func<object>>(api, "Acrux.Controls.Window.field_CanMaximizeProperty");
             m6 = global::Acrux.Toolkit.Ui.Get<global::System.Func<object>>(api, "Acrux.Controls.Window.field_CanMinimizeProperty");
-            m7 = global::Acrux.Toolkit.Ui.Get<global::System.Func<object>>(api, "Acrux.Controls.Window.field_SizeToContentProperty");
-            m8 = global::Acrux.Toolkit.Ui.Get<global::System.Func<object>>(api, "Acrux.Controls.Window.field_BackgroundProperty");
-            m9 = global::Acrux.Toolkit.Ui.Get<global::System.Func<object>>(api, "Acrux.Controls.Window.field_BorderBrushProperty");
-            m10 = global::Acrux.Toolkit.Ui.Get<global::System.Func<object>>(api, "Acrux.Controls.Window.field_BorderThicknessProperty");
-            m11 = global::Acrux.Toolkit.Ui.Get<global::System.Func<object>>(api, "Acrux.Controls.Window.field_CornerRadiusProperty");
-            m12 = global::Acrux.Toolkit.Ui.Get<global::System.Action<object, string, object>>(api, "Acrux.Controls.Window.SetPlatformResource`0(string,object)");
-            m13 = global::Acrux.Toolkit.Ui.Get<global::System.Func<object>>(api, "Acrux.Controls.Window.ctor()");
-            m14 = global::Acrux.Toolkit.Ui.Get<global::System.Func<object, object>>(api, "Acrux.Controls.Window.ctor()#remote");
-            m15 = global::Acrux.Toolkit.Ui.Get<global::System.Func<object, string>>(api, "Acrux.Controls.Window.get_Title");
-            m16 = global::Acrux.Toolkit.Ui.Get<global::System.Action<object, string>>(api, "Acrux.Controls.Window.set_Title");
-            m17 = global::Acrux.Toolkit.Ui.Get<global::System.Func<object, int>>(api, "Acrux.Controls.Window.get_WindowState");
-            m18 = global::Acrux.Toolkit.Ui.Get<global::System.Action<object, int>>(api, "Acrux.Controls.Window.set_WindowState");
-            m19 = global::Acrux.Toolkit.Ui.Get<global::System.Func<object, int>>(api, "Acrux.Controls.Window.get_WindowDecorations");
-            m20 = global::Acrux.Toolkit.Ui.Get<global::System.Action<object, int>>(api, "Acrux.Controls.Window.set_WindowDecorations");
-            m21 = global::Acrux.Toolkit.Ui.Get<global::System.Func<object, bool>>(api, "Acrux.Controls.Window.get_ExtendClientAreaToDecorationsHint");
-            m22 = global::Acrux.Toolkit.Ui.Get<global::System.Action<object, bool>>(api, "Acrux.Controls.Window.set_ExtendClientAreaToDecorationsHint");
-            m23 = global::Acrux.Toolkit.Ui.Get<global::System.Func<object, float>>(api, "Acrux.Controls.Window.get_ExtendClientAreaTitleBarHeightHint");
-            m24 = global::Acrux.Toolkit.Ui.Get<global::System.Action<object, float>>(api, "Acrux.Controls.Window.set_ExtendClientAreaTitleBarHeightHint");
-            m25 = global::Acrux.Toolkit.Ui.Get<global::System.Func<object, bool>>(api, "Acrux.Controls.Window.get_CanMaximize");
-            m26 = global::Acrux.Toolkit.Ui.Get<global::System.Action<object, bool>>(api, "Acrux.Controls.Window.set_CanMaximize");
-            m27 = global::Acrux.Toolkit.Ui.Get<global::System.Func<object, bool>>(api, "Acrux.Controls.Window.get_CanMinimize");
-            m28 = global::Acrux.Toolkit.Ui.Get<global::System.Action<object, bool>>(api, "Acrux.Controls.Window.set_CanMinimize");
-            m29 = global::Acrux.Toolkit.Ui.Get<global::System.Func<object, int>>(api, "Acrux.Controls.Window.get_SizeToContent");
-            m30 = global::Acrux.Toolkit.Ui.Get<global::System.Action<object, int>>(api, "Acrux.Controls.Window.set_SizeToContent");
-            m31 = global::Acrux.Toolkit.Ui.Get<global::System.Func<object, object>>(api, "Acrux.Controls.Window.get_Background");
-            m32 = global::Acrux.Toolkit.Ui.Get<global::System.Action<object, object>>(api, "Acrux.Controls.Window.set_Background");
-            m33 = global::Acrux.Toolkit.Ui.Get<global::System.Func<object, global::VRageMath.Color>>(api, "Acrux.Controls.Window.get_BorderBrush");
-            m34 = global::Acrux.Toolkit.Ui.Get<global::System.Action<object, global::VRageMath.Color>>(api, "Acrux.Controls.Window.set_BorderBrush");
-            m35 = global::Acrux.Toolkit.Ui.Get<global::System.Func<object, global::VRageMath.Vector4>>(api, "Acrux.Controls.Window.get_BorderThickness");
-            m36 = global::Acrux.Toolkit.Ui.Get<global::System.Action<object, global::VRageMath.Vector4>>(api, "Acrux.Controls.Window.set_BorderThickness");
-            m37 = global::Acrux.Toolkit.Ui.Get<global::System.Func<object, global::VRageMath.Vector4>>(api, "Acrux.Controls.Window.get_CornerRadius");
-            m38 = global::Acrux.Toolkit.Ui.Get<global::System.Action<object, global::VRageMath.Vector4>>(api, "Acrux.Controls.Window.set_CornerRadius");
-            m39 = global::Acrux.Toolkit.Ui.Get<global::System.Func<object, global::VRageMath.RectangleF>>(api, "Acrux.Controls.Window.get_FrameBounds");
-            m40 = global::Acrux.Toolkit.Ui.Get<global::System.Func<object, object>>(api, "Acrux.Controls.Window.get_Owner");
-            m41 = global::Acrux.Toolkit.Ui.Get<global::System.Func<object, object>>(api, "Acrux.Controls.Window.get_OwnedWindows");
-            m42 = global::Acrux.Toolkit.Ui.Get<global::System.Func<object, object>>(api, "Acrux.Controls.Window.get_ActiveModalWindow");
-            m43 = global::Acrux.Toolkit.Ui.Get<global::System.Func<object, bool>>(api, "Acrux.Controls.Window.get_IsModal");
-            m44 = global::Acrux.Toolkit.Ui.Get<global::System.Action<object, object>>(api, "Acrux.Controls.Window.Show`0(object)");
-            m45 = global::Acrux.Toolkit.Ui.Get<global::System.Action<object, object>>(api, "Acrux.Controls.Window.OpenModal`0(object)");
-            m46 = global::Acrux.Toolkit.Ui.Get<global::System.Func<object, object>>(api, "Acrux.Controls.Window.get_Platform");
-            m47 = global::Acrux.Toolkit.Ui.Get<global::System.Action<object, object>>(api, "Acrux.Controls.Window.set_Platform");
-            m48 = global::Acrux.Toolkit.Ui.Get<global::System.Func<object, bool>>(api, "Acrux.Controls.Window.get_IsOpen");
-            m49 = global::Acrux.Toolkit.Ui.Get<global::System.Func<object, double>>(api, "Acrux.Controls.Window.get_RenderScaling");
-            m50 = global::Acrux.Toolkit.Ui.Get<global::System.Action<object, float>>(api, "Acrux.Controls.Window.SetRenderScaling`0(float)");
-            m51 = global::Acrux.Toolkit.Ui.Get<global::System.Func<object, bool>>(api, "Acrux.Controls.Window.get_CloseOnEscape");
-            m52 = global::Acrux.Toolkit.Ui.Get<global::System.Action<object, bool>>(api, "Acrux.Controls.Window.set_CloseOnEscape");
-            m53 = global::Acrux.Toolkit.Ui.Get<global::System.Action<object, global::System.Action>>(api, "Acrux.Controls.Window.add_Opened");
-            m54 = global::Acrux.Toolkit.Ui.Get<global::System.Action<object, global::System.Action>>(api, "Acrux.Controls.Window.add_Closed");
-            m55 = global::Acrux.Toolkit.Ui.Get<global::System.Func<object, byte, object>>(api, "Acrux.Controls.Window.BindOpen`0(byte)");
-            m56 = global::Acrux.Toolkit.Ui.Get<global::System.Func<object, byte, bool>>(api, "Acrux.Controls.Window.UnbindOpen`0(byte)");
-            m57 = global::Acrux.Toolkit.Ui.Get<global::System.Action<object>>(api, "Acrux.Controls.Window.Open`0()");
-            m58 = global::Acrux.Toolkit.Ui.Get<global::System.Action<object>>(api, "Acrux.Controls.Window.Close`0()");
+            m7 = global::Acrux.Toolkit.Ui.Get<global::System.Func<object>>(api, "Acrux.Controls.Window.field_CanResizeProperty");
+            m8 = global::Acrux.Toolkit.Ui.Get<global::System.Func<object>>(api, "Acrux.Controls.Window.field_TopmostProperty");
+            m9 = global::Acrux.Toolkit.Ui.Get<global::System.Func<object>>(api, "Acrux.Controls.Window.field_ShowActivatedProperty");
+            m10 = global::Acrux.Toolkit.Ui.Get<global::System.Func<object>>(api, "Acrux.Controls.Window.field_IsActiveProperty");
+            m11 = global::Acrux.Toolkit.Ui.Get<global::System.Func<object>>(api, "Acrux.Controls.Window.field_SizeToContentProperty");
+            m12 = global::Acrux.Toolkit.Ui.Get<global::System.Func<object>>(api, "Acrux.Controls.Window.field_BackgroundProperty");
+            m13 = global::Acrux.Toolkit.Ui.Get<global::System.Func<object>>(api, "Acrux.Controls.Window.field_BorderBrushProperty");
+            m14 = global::Acrux.Toolkit.Ui.Get<global::System.Func<object>>(api, "Acrux.Controls.Window.field_BorderThicknessProperty");
+            m15 = global::Acrux.Toolkit.Ui.Get<global::System.Func<object>>(api, "Acrux.Controls.Window.field_CornerRadiusProperty");
+            m16 = global::Acrux.Toolkit.Ui.Get<global::System.Action<object, string, object>>(api, "Acrux.Controls.Window.SetPlatformResource`0(string,object)");
+            m17 = global::Acrux.Toolkit.Ui.Get<global::System.Func<object>>(api, "Acrux.Controls.Window.ctor()");
+            m18 = global::Acrux.Toolkit.Ui.Get<global::System.Func<object, object>>(api, "Acrux.Controls.Window.ctor()#remote");
+            m19 = global::Acrux.Toolkit.Ui.Get<global::System.Func<object, string>>(api, "Acrux.Controls.Window.get_Title");
+            m20 = global::Acrux.Toolkit.Ui.Get<global::System.Action<object, string>>(api, "Acrux.Controls.Window.set_Title");
+            m21 = global::Acrux.Toolkit.Ui.Get<global::System.Func<object, int>>(api, "Acrux.Controls.Window.get_WindowState");
+            m22 = global::Acrux.Toolkit.Ui.Get<global::System.Action<object, int>>(api, "Acrux.Controls.Window.set_WindowState");
+            m23 = global::Acrux.Toolkit.Ui.Get<global::System.Func<object, int>>(api, "Acrux.Controls.Window.get_WindowDecorations");
+            m24 = global::Acrux.Toolkit.Ui.Get<global::System.Action<object, int>>(api, "Acrux.Controls.Window.set_WindowDecorations");
+            m25 = global::Acrux.Toolkit.Ui.Get<global::System.Func<object, bool>>(api, "Acrux.Controls.Window.get_ExtendClientAreaToDecorationsHint");
+            m26 = global::Acrux.Toolkit.Ui.Get<global::System.Action<object, bool>>(api, "Acrux.Controls.Window.set_ExtendClientAreaToDecorationsHint");
+            m27 = global::Acrux.Toolkit.Ui.Get<global::System.Func<object, float>>(api, "Acrux.Controls.Window.get_ExtendClientAreaTitleBarHeightHint");
+            m28 = global::Acrux.Toolkit.Ui.Get<global::System.Action<object, float>>(api, "Acrux.Controls.Window.set_ExtendClientAreaTitleBarHeightHint");
+            m29 = global::Acrux.Toolkit.Ui.Get<global::System.Func<object, bool>>(api, "Acrux.Controls.Window.get_CanMaximize");
+            m30 = global::Acrux.Toolkit.Ui.Get<global::System.Action<object, bool>>(api, "Acrux.Controls.Window.set_CanMaximize");
+            m31 = global::Acrux.Toolkit.Ui.Get<global::System.Func<object, bool>>(api, "Acrux.Controls.Window.get_CanMinimize");
+            m32 = global::Acrux.Toolkit.Ui.Get<global::System.Action<object, bool>>(api, "Acrux.Controls.Window.set_CanMinimize");
+            m33 = global::Acrux.Toolkit.Ui.Get<global::System.Func<object, bool>>(api, "Acrux.Controls.Window.get_CanResize");
+            m34 = global::Acrux.Toolkit.Ui.Get<global::System.Action<object, bool>>(api, "Acrux.Controls.Window.set_CanResize");
+            m35 = global::Acrux.Toolkit.Ui.Get<global::System.Func<object, bool>>(api, "Acrux.Controls.Window.get_IsActive");
+            m36 = global::Acrux.Toolkit.Ui.Get<global::System.Func<object, bool>>(api, "Acrux.Controls.Window.get_Topmost");
+            m37 = global::Acrux.Toolkit.Ui.Get<global::System.Action<object, bool>>(api, "Acrux.Controls.Window.set_Topmost");
+            m38 = global::Acrux.Toolkit.Ui.Get<global::System.Func<object, bool>>(api, "Acrux.Controls.Window.get_ShowActivated");
+            m39 = global::Acrux.Toolkit.Ui.Get<global::System.Action<object, bool>>(api, "Acrux.Controls.Window.set_ShowActivated");
+            m40 = global::Acrux.Toolkit.Ui.Get<global::System.Func<object, global::VRageMath.Vector2>>(api, "Acrux.Controls.Window.get_Position");
+            m41 = global::Acrux.Toolkit.Ui.Get<global::System.Action<object, global::VRageMath.Vector2>>(api, "Acrux.Controls.Window.set_Position");
+            m42 = global::Acrux.Toolkit.Ui.Get<global::System.Action<object, global::System.Action>>(api, "Acrux.Controls.Window.add_PositionChanged");
+            m43 = global::Acrux.Toolkit.Ui.Get<global::System.Action<object, global::System.Action>>(api, "Acrux.Controls.Window.add_Resized");
+            m44 = global::Acrux.Toolkit.Ui.Get<global::System.Action<object, global::System.Action>>(api, "Acrux.Controls.Window.add_Activated");
+            m45 = global::Acrux.Toolkit.Ui.Get<global::System.Action<object, global::System.Action>>(api, "Acrux.Controls.Window.add_Deactivated");
+            m46 = global::Acrux.Toolkit.Ui.Get<global::System.Func<object, int>>(api, "Acrux.Controls.Window.get_SizeToContent");
+            m47 = global::Acrux.Toolkit.Ui.Get<global::System.Action<object, int>>(api, "Acrux.Controls.Window.set_SizeToContent");
+            m48 = global::Acrux.Toolkit.Ui.Get<global::System.Func<object, object>>(api, "Acrux.Controls.Window.get_Background");
+            m49 = global::Acrux.Toolkit.Ui.Get<global::System.Action<object, object>>(api, "Acrux.Controls.Window.set_Background");
+            m50 = global::Acrux.Toolkit.Ui.Get<global::System.Func<object, global::VRageMath.Color>>(api, "Acrux.Controls.Window.get_BorderBrush");
+            m51 = global::Acrux.Toolkit.Ui.Get<global::System.Action<object, global::VRageMath.Color>>(api, "Acrux.Controls.Window.set_BorderBrush");
+            m52 = global::Acrux.Toolkit.Ui.Get<global::System.Func<object, global::VRageMath.Vector4>>(api, "Acrux.Controls.Window.get_BorderThickness");
+            m53 = global::Acrux.Toolkit.Ui.Get<global::System.Action<object, global::VRageMath.Vector4>>(api, "Acrux.Controls.Window.set_BorderThickness");
+            m54 = global::Acrux.Toolkit.Ui.Get<global::System.Func<object, global::VRageMath.Vector4>>(api, "Acrux.Controls.Window.get_CornerRadius");
+            m55 = global::Acrux.Toolkit.Ui.Get<global::System.Action<object, global::VRageMath.Vector4>>(api, "Acrux.Controls.Window.set_CornerRadius");
+            m56 = global::Acrux.Toolkit.Ui.Get<global::System.Func<object, global::VRageMath.RectangleF>>(api, "Acrux.Controls.Window.get_FrameBounds");
+            m57 = global::Acrux.Toolkit.Ui.Get<global::System.Action<object>>(api, "Acrux.Controls.Window.Activate`0()");
+            m58 = global::Acrux.Toolkit.Ui.Get<global::System.Action<object, object>>(api, "Acrux.Controls.Window.SetActiveWindow`0(object)");
+            m59 = global::Acrux.Toolkit.Ui.Get<global::System.Func<object, object>>(api, "Acrux.Controls.Window.get_Owner");
+            m60 = global::Acrux.Toolkit.Ui.Get<global::System.Func<object, object>>(api, "Acrux.Controls.Window.get_OwnedWindows");
+            m61 = global::Acrux.Toolkit.Ui.Get<global::System.Func<object, object>>(api, "Acrux.Controls.Window.get_ActiveModalWindow");
+            m62 = global::Acrux.Toolkit.Ui.Get<global::System.Func<object, bool>>(api, "Acrux.Controls.Window.get_IsModal");
+            m63 = global::Acrux.Toolkit.Ui.Get<global::System.Action<object, object>>(api, "Acrux.Controls.Window.Show`0(object)");
+            m64 = global::Acrux.Toolkit.Ui.Get<global::System.Action<object, object>>(api, "Acrux.Controls.Window.OpenModal`0(object)");
+            m65 = global::Acrux.Toolkit.Ui.Get<global::System.Func<object, object>>(api, "Acrux.Controls.Window.get_Platform");
+            m66 = global::Acrux.Toolkit.Ui.Get<global::System.Action<object, object>>(api, "Acrux.Controls.Window.set_Platform");
+            m67 = global::Acrux.Toolkit.Ui.Get<global::System.Func<object, bool>>(api, "Acrux.Controls.Window.get_IsOpen");
+            m68 = global::Acrux.Toolkit.Ui.Get<global::System.Func<object, double>>(api, "Acrux.Controls.Window.get_RenderScaling");
+            m69 = global::Acrux.Toolkit.Ui.Get<global::System.Action<object, float>>(api, "Acrux.Controls.Window.SetRenderScaling`0(float)");
+            m70 = global::Acrux.Toolkit.Ui.Get<global::System.Func<object, bool>>(api, "Acrux.Controls.Window.get_CloseOnEscape");
+            m71 = global::Acrux.Toolkit.Ui.Get<global::System.Action<object, bool>>(api, "Acrux.Controls.Window.set_CloseOnEscape");
+            m72 = global::Acrux.Toolkit.Ui.Get<global::System.Action<object, global::System.Action>>(api, "Acrux.Controls.Window.add_Opened");
+            m73 = global::Acrux.Toolkit.Ui.Get<global::System.Action<object, global::System.Action>>(api, "Acrux.Controls.Window.add_Closed");
+            m74 = global::Acrux.Toolkit.Ui.Get<global::System.Func<object, byte, object>>(api, "Acrux.Controls.Window.BindOpen`0(byte)");
+            m75 = global::Acrux.Toolkit.Ui.Get<global::System.Func<object, byte, bool>>(api, "Acrux.Controls.Window.UnbindOpen`0(byte)");
+            m76 = global::Acrux.Toolkit.Ui.Get<global::System.Action<object>>(api, "Acrux.Controls.Window.Open`0()");
+            m77 = global::Acrux.Toolkit.Ui.Get<global::System.Action<object>>(api, "Acrux.Controls.Window.Close`0()");
         }
     }
 }

@@ -13,8 +13,8 @@ namespace Acrux.Layout
         {
             __AttachNative(__UiBridge_Acrux_Layout_Decorator.m7(this));
         }
-        internal bool __Hook_Acrux_Layout_Decorator_IsAuxiliaryChild_201(object __w_child) { return IsAuxiliaryChild(global::Acrux.Toolkit.Ui.Wrap<global::Acrux.Core.VisualElement>(__w_child)); }
-        internal global::VRageMath.Vector4 __Hook_Acrux_Layout_Decorator_GetLayoutPadding_202() { return GetLayoutPadding(); }
+        internal bool __Hook_Acrux_Layout_Decorator_IsAuxiliaryChild_202(object __w_child) { return IsAuxiliaryChild(global::Acrux.Toolkit.Ui.Wrap<global::Acrux.Core.VisualElement>(__w_child)); }
+        internal global::VRageMath.Vector4 __Hook_Acrux_Layout_Decorator_GetLayoutPadding_203() { return GetLayoutPadding(); }
     }
     internal static class __UiBridge_Acrux_Layout_Decorator
     {

@@ -76,9 +76,12 @@ namespace Acrux.Layout
 
         protected override IDisposable BeginChildDraw(RenderContext context, VisualElement child)
         {
-            return ReferenceEquals(child, Child) && Math.Abs(_scale - 1f) > 0.0001f
-                ? context.PushScale(_origin, _scale)
-                : null;
+            return ReferenceEquals(child, Child) ? PushChildTransform(context) : null;
+        }
+
+        internal override IDisposable PushChildTransform(RenderContext context)
+        {
+            return Math.Abs(_scale - 1f) > 0.0001f ? context.PushScale(_origin, _scale) : null;
         }
 
         internal override Vector2 MapPointToChildren(Vector2 point)

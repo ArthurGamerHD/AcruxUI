@@ -395,6 +395,7 @@ static class Program
         ComboBoxPlacementChecks();
         FlyoutChecks();
         ComboBoxTemplateChecks();
+        WindowManagerChecks();
 
         Console.WriteLine(_failures == 0 ? "ALL CHECKS PASSED" : _failures + " CHECK(S) FAILED");
         return _failures == 0 ? 0 : 1;
@@ -499,6 +500,317 @@ static class Program
 
     // A Flyout takes its content's size, sits against its target, and takes the target's data context; ShowAt opens one
     // at an element that is not a button, which the tree finds through the element.
+    // Owned, non-modal windows: activation and stacking, title-bar move, edge resize, minimize and restore.
+    static void WindowManagerChecks()
+    {
+        var surface = SurfaceMock.Create(new Vector2(400, 300));
+        var platform = new toolkit::Acrux.Lcd.LcdWindowPlatform(surface, null, null, false);
+        var root = new toolkit::Acrux.Controls.Window
+        {
+            WindowState = toolkit::Acrux.Controls.WindowState.FullScreen,
+            Content = new toolkit::Acrux.Controls.Border { Background = new toolkit::Acrux.Styling.SolidColorBrush(Color.Black) },
+            Platform = platform
+        };
+        root.Open();
+        var host = platform.GetGuiHost(root);
+        host.Input.KeyboardEnabled = false;
+        Func<Vector2, toolkit::Acrux.Controls.Window> make = position =>
+        {
+            var window = new toolkit::Acrux.Controls.Window
+            {
+                Title = "w",
+                Width = 160,
+                Height = 120,
+                Content = new toolkit::Acrux.Controls.Button { Content = new toolkit::Acrux.Controls.TextBlock { Text = "b" } }
+            };
+            window.Position = position;
+            window.Show(root);
+            return window;
+        };
+        var a = make(new Vector2(10, 10));
+        var b = make(new Vector2(200, 100));
+        var frame = new List<MySprite>();
+        host.Arrange(new RectangleF(0, 0, 400, 300));
+        host.Draw(frame);
+        Check(b.IsActive && !a.IsActive, "the window shown last is the active one");
+        Check(a.FrameBounds == new RectangleF(10, 10, 160, 120), "Position places a normal owned window (" + a.FrameBounds + ")");
+
+        host.MovePointer(new Vector2(90, 100));
+        host.SetPrimaryButton(true);
+        host.SetPrimaryButton(false);
+        Check(a.IsActive && !b.IsActive && ReferenceEquals(root.OwnedWindows[root.OwnedWindows.Count - 1], a),
+            "a click inside a window activates it and brings it to the top");
+
+        int moved = 0;
+        a.PositionChanged += () => moved++;
+        host.MovePointer(new Vector2(40, 20));
+        host.SetPrimaryButton(true);
+        host.MovePointer(new Vector2(70, 50));
+        host.SetPrimaryButton(false);
+        host.Draw(frame);
+        Check(a.Position == new Vector2(40, 40) && moved > 0, "dragging the title bar moves the window (" + a.Position + ", " + moved + " events)");
+
+        int resized = 0;
+        a.Resized += () => resized++;
+        float right = a.FrameBounds.Right;
+        host.MovePointer(new Vector2(right - 2f, a.FrameBounds.Center.Y));
+        host.SetPrimaryButton(true);
+        host.MovePointer(new Vector2(right + 38f, a.FrameBounds.Center.Y));
+        host.SetPrimaryButton(false);
+        host.Draw(frame);
+        Check(Math.Abs(a.FrameBounds.Width - 200f) < .5f && resized > 0, "dragging the east edge resizes the window (" + a.FrameBounds + ")");
+
+        a.WindowState = toolkit::Acrux.Controls.WindowState.Minimized;
+        frame.Clear();
+        host.Draw(frame);
+        Check(!a.IsActive && b.IsActive, "minimizing the active window activates the next one");
+        host.MovePointer(new Vector2(50, 60));
+        host.SetPrimaryButton(true);
+        host.SetPrimaryButton(false);
+        Check(!a.IsActive && !b.IsActive, "a minimized window takes no input; a click on the owner deactivates every window");
+        a.Activate();
+        Check(a.WindowState == toolkit::Acrux.Controls.WindowState.Normal && a.IsActive, "Activate restores a minimized window");
+        root.Padding = new Vector4(0, 0, 0, 40);
+        a.WindowState = toolkit::Acrux.Controls.WindowState.Maximized;
+        frame.Clear();
+        host.Draw(frame);
+        Check(a.FrameBounds == new RectangleF(0, 0, 400, 260),
+            "an owned window maximizes over its owner's client area, inside the owner's padding (" + a.FrameBounds + ")");
+        a.WindowState = toolkit::Acrux.Controls.WindowState.Normal;
+        root.Padding = Vector4.Zero;
+        var bar = new toolkit::Acrux.Controls.Window { Topmost = true, WindowDecorations = toolkit::Acrux.Controls.WindowDecorations.None };
+        bar.Show(root);
+        a.Activate();
+        Check(ReferenceEquals(root.OwnedWindows[root.OwnedWindows.Count - 1], bar) &&
+              ReferenceEquals(root.OwnedWindows[root.OwnedWindows.Count - 2], a),
+            "an activated window stays below a Topmost one");
+        var hint = new toolkit::Acrux.Controls.Window { ShowActivated = false, Topmost = true };
+        hint.Show(root);
+        Check(a.IsActive && !hint.IsActive, "a window with ShowActivated false opens without taking activation");
+        hint.Close();
+        bar.Close();
+        bar.ShowActivated = false;
+        bar.Show(root);
+        a.Close();
+        Check(b.IsActive && !bar.IsActive, "closing the active window skips windows that are not shown activated");
+        bar.Close();
+        var menuWindow = new toolkit::Acrux.Controls.Window
+        {
+            WindowDecorations = toolkit::Acrux.Controls.WindowDecorations.None,
+            Width = 400,
+            Height = 30,
+            ShowActivated = false
+        };
+        menuWindow.Position = new Vector2(0, 0);
+        var menu = new toolkit::Acrux.Controls.Menu();
+        var top = new toolkit::Acrux.Controls.MenuItem { Header = "File" };
+        int picked = 0;
+        var item = new toolkit::Acrux.Controls.MenuItem { Header = "Pick", Command = new toolkit::Acrux.Core.Input.DelegateCommand(_ => picked++) };
+        top.Items.Add(item);
+        menu.Items.Add(top);
+        menuWindow.Content = menu;
+        menuWindow.Show(root);
+        frame.Clear();
+        host.Draw(frame);
+        host.MovePointer(top.Bounds.Center);
+        host.SetPrimaryButton(true);
+        host.SetPrimaryButton(false);
+        frame.Clear();
+        host.Draw(frame);
+        bool opened = top.IsSubMenuOpen;
+        host.MovePointer(item.Bounds.Center);
+        host.SetPrimaryButton(true);
+        host.SetPrimaryButton(false);
+        Check(opened && picked == 1, "a menu in an owned window opens and its items take clicks (open " + opened + ", picked " + picked + ")");
+
+        var comboWindow = new toolkit::Acrux.Controls.Window
+        {
+            WindowDecorations = toolkit::Acrux.Controls.WindowDecorations.None,
+            Width = 400,
+            Height = 30,
+            Topmost = true,
+            ShowActivated = false
+        };
+        comboWindow.Position = new Vector2(0, 270);
+        var pages = new toolkit::Acrux.Controls.ComboBox { Width = 200, ItemsSource = new List<string> { "one", "two", "three" } };
+        pages.SelectedIndex = 0;
+        comboWindow.Content = pages;
+        comboWindow.Show(root);
+        frame.Clear();
+        host.Arrange(new RectangleF(0, 0, 400, 300));
+        host.Draw(frame);
+        host.MovePointer(pages.Bounds.Center);
+        host.SetPrimaryButton(true);
+        host.SetPrimaryButton(false);
+        frame.Clear();
+        host.Draw(frame);
+        bool comboOpened = pages.IsDropDownOpen;
+        var dropDown = new List<MySprite>(frame);
+        var two = dropDown.FirstOrDefault(sp => sp.Data == "two");
+        Console.WriteLine("combo open " + comboOpened + " at " + pages.Bounds + " item two " + two.Position);
+        if (two.Position.HasValue)
+        {
+            host.MovePointer(two.Position.Value + new Vector2(4, 6));
+            host.SetPrimaryButton(true);
+            host.SetPrimaryButton(false);
+        }
+        Check(comboOpened && pages.SelectedIndex == 1,
+            "a combo box in a topmost owned window opens and takes a selection (open " + comboOpened + ", index " + pages.SelectedIndex + ")");
+        comboWindow.Close();
+
+        var scaledWindow = new toolkit::Acrux.Controls.Window
+        {
+            WindowDecorations = toolkit::Acrux.Controls.WindowDecorations.None,
+            Width = 400,
+            Height = 300,
+            Topmost = true,
+            ShowActivated = false
+        };
+        scaledWindow.Position = new Vector2(0, 0);
+        int scaledClicks = 0;
+        var scaledButton = new toolkit::Acrux.Controls.Button
+        {
+            Width = 40, Height = 20,
+            HorizontalAlignment = toolkit::Acrux.Core.HorizontalAlignment.Left,
+            Command = new toolkit::Acrux.Core.Input.DelegateCommand(_ => scaledClicks++)
+        };
+        var scaledCombo = new toolkit::Acrux.Controls.ComboBox
+        {
+            Width = 80,
+            HorizontalAlignment = toolkit::Acrux.Core.HorizontalAlignment.Left,
+            ItemsSource = new List<string> { "uno", "dos", "tres" }
+        };
+        scaledCombo.SelectedIndex = 0;
+        var scaledPanel = new toolkit::Acrux.Layout.StackPanel();
+        scaledPanel.AddChild(scaledButton);
+        scaledPanel.AddChild(scaledCombo);
+        var transform = new toolkit::Acrux.Layout.LayoutTransformControl
+        {
+            LayoutTransform = new toolkit::Acrux.Styling.ScaleTransform(2f, 2f),
+            Child = scaledPanel
+        };
+        scaledWindow.Content = transform;
+        scaledWindow.Show(root);
+        frame.Clear();
+        host.Arrange(new RectangleF(0, 0, 400, 300));
+        host.Draw(frame);
+        Func<Vector2, Vector2> toRoot = point => transform.Bounds.Position + (point - transform.Bounds.Position) * 2f;
+        bool laidOutScaled = Math.Abs(scaledPanel.Bounds.Width - transform.Bounds.Width / 2f) < .5f;
+        host.MovePointer(toRoot(scaledButton.Bounds.Center));
+        host.SetPrimaryButton(true);
+        host.SetPrimaryButton(false);
+        host.MovePointer(toRoot(scaledCombo.Bounds.Center));
+        host.SetPrimaryButton(true);
+        host.SetPrimaryButton(false);
+        frame.Clear();
+        host.Draw(frame);
+        bool scaledOpened = scaledCombo.IsDropDownOpen;
+        var dos = frame.FirstOrDefault(sp => sp.Data == "dos");
+        if (dos.Position.HasValue)
+        {
+            host.MovePointer(dos.Position.Value + new Vector2(8, 12));
+            host.SetPrimaryButton(true);
+            host.SetPrimaryButton(false);
+        }
+        Check(laidOutScaled && scaledClicks == 1 && scaledOpened && scaledCombo.SelectedIndex == 1,
+            "a LayoutTransformControl lays its child out scaled and maps clicks and its popups (layout " + laidOutScaled +
+            ", clicks " + scaledClicks + ", open " + scaledOpened + ", index " + scaledCombo.SelectedIndex + ")");
+
+        for (int i = 0; i < 3; i++)
+            new toolkit::Acrux.Controls.ComboBox().IsDropDownOpen = false;
+        scaledCombo.IsDropDownOpen = true;
+        frame.Clear();
+        host.Draw(frame);
+        bool popupDrawn = frame.Any(sp => sp.Data == "tres");
+        scaledCombo.IsDropDownOpen = false;
+        Check(popupDrawn, "closing combo boxes that never opened does not hide another one's open popup");
+        scaledWindow.Close();
+
+        var appWindow = new toolkit::Acrux.Controls.Window
+        {
+            WindowDecorations = toolkit::Acrux.Controls.WindowDecorations.None,
+            Width = 300,
+            Height = 200,
+            Topmost = true
+        };
+        appWindow.Position = new Vector2(20, 20);
+        int appClicks = 0;
+        appWindow.Content = new toolkit::Acrux.Controls.Button
+        {
+            Command = new toolkit::Acrux.Core.Input.DelegateCommand(_ => appClicks++)
+        };
+        appWindow.Show(root);
+        var nestedDialog = new toolkit::Acrux.Controls.Window
+        {
+            WindowDecorations = toolkit::Acrux.Controls.WindowDecorations.None,
+            Width = 120,
+            Height = 60
+        };
+        int dialogClicks = 0;
+        var dialogButton = new toolkit::Acrux.Controls.Button
+        {
+            Command = new toolkit::Acrux.Core.Input.DelegateCommand(_ => dialogClicks++)
+        };
+        var dialogCombo = new toolkit::Acrux.Controls.ComboBox { ItemsSource = new List<string> { "alpha", "beta" } };
+        var dialogPanel = new toolkit::Acrux.Layout.StackPanel();
+        dialogPanel.AddChild(dialogButton);
+        dialogPanel.AddChild(dialogCombo);
+        nestedDialog.Content = dialogPanel;
+        toolkit::Acrux.Extensions.WindowDialogs.ShowModal(nestedDialog, appWindow);
+        frame.Clear();
+        host.Arrange(new RectangleF(0, 0, 400, 300));
+        host.Draw(frame);
+        host.MovePointer(dialogButton.Bounds.Center);
+        host.SetPrimaryButton(true);
+        host.SetPrimaryButton(false);
+        host.MovePointer(new Vector2(appWindow.FrameBounds.X + 4, appWindow.FrameBounds.Bottom - 4));
+        host.SetPrimaryButton(true);
+        host.SetPrimaryButton(false);
+        host.MovePointer(dialogCombo.Bounds.Center);
+        host.SetPrimaryButton(true);
+        host.SetPrimaryButton(false);
+        frame.Clear();
+        host.Draw(frame);
+        bool nestedComboOpen = dialogCombo.IsDropDownOpen && frame.Any(sp => sp.Data == "beta");
+        Check(dialogClicks == 1 && appClicks == 0 && nestedComboOpen && appWindow.IsActive,
+            "a dialog of an owned window takes input and blocks that window (dialog " + dialogClicks + ", window " +
+            appClicks + ", combo " + nestedComboOpen + ", owner active " + appWindow.IsActive + ")");
+        dialogCombo.IsDropDownOpen = false;
+        nestedDialog.Close();
+        appWindow.Close();
+
+        var growing = new toolkit::Adk.Mvvm.ObservableList<string>();
+        var follower = new toolkit::Acrux.Controls.ComboBox { ItemsSource = growing };
+        growing.Add("first");
+        growing.Add("second");
+        follower.SelectedIndex = 1;
+        growing.Insert(0, "zero");
+        Check(follower.SelectedIndex == 2 && Equals(follower.SelectedItem, "second"),
+            "a combo box follows an observable ItemsSource and keeps its selected item (" + follower.SelectedIndex + ")");
+
+        int opens = 0;
+        b.PositionChanged += () =>
+        {
+            if (opens++ == 0)
+                new toolkit::Acrux.Controls.Window { ShowActivated = false }.Show(root);
+        };
+        b.Position = new Vector2(150, 90);
+        Exception arrangeError = null;
+        try
+        {
+            frame.Clear();
+            host.Arrange(new RectangleF(0, 0, 400, 300));
+            host.Draw(frame);
+        }
+        catch (Exception error)
+        {
+            arrangeError = error;
+        }
+        Check(arrangeError == null && opens > 0, "a PositionChanged handler may open a window while the owner lays out (" +
+              (arrangeError == null ? "ok" : arrangeError.Message) + ")");
+        root.Dispose();
+    }
+
     static void FlyoutChecks()
     {
         Func<bool, Tuple<RectangleF, RectangleF, object, bool>> open = viaButton =>

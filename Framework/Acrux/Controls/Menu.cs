@@ -300,6 +300,10 @@ namespace Acrux.Controls
     /// </summary>
     public class MenuItem : Button
     {
+        // Whether this control counts as open in VisualTree's open-overlay count. Setting the open property to its default
+        // (a first "close") reports a change too, so only real transitions may move the count.
+        bool _overlayCounted;
+
         public static readonly StyledProperty<object> HeaderProperty =
             StyledProperty.Register<MenuItem, object>(nameof(Header), null, UiInvalidation.Measure);
         public static readonly StyledProperty<object> IconProperty =
@@ -433,8 +437,11 @@ namespace Acrux.Controls
         protected override void OnPropertyChanged(IStyledProperty property)
         {
             base.OnPropertyChanged(property);
-            if (property == IsSubMenuOpenProperty)
-                VisualTree.OverlayOpenChanged(IsSubMenuOpen);
+            if (property == IsSubMenuOpenProperty && _overlayCounted != IsSubMenuOpen)
+            {
+                _overlayCounted = IsSubMenuOpen;
+                VisualTree.OverlayOpenChanged(_overlayCounted);
+            }
             if (property == HeaderProperty)
                 UpdateHeader();
             else if (property == IconProperty)

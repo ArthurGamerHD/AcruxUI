@@ -6,7 +6,7 @@ namespace Acrux.Styling
         internal ControlTemplate(global::Acrux.Toolkit.Deferred deferred) : base(deferred) { }
         public ControlTemplate(global::System.Func<TControl, global::Acrux.Core.VisualElement> @factory) : base(global::Acrux.Toolkit.Deferred.Value)
         {
-            __AttachNative(__UiBridge_Acrux_Styling_ControlTemplate_TControl_.m0(((global::System.Func<global::System.Func<TControl, global::Acrux.Core.VisualElement>, global::System.Func<object, object>>)(__d228 => __d228 == null ? null : new global::System.Func<object, object>((__p228_0) => global::Acrux.Toolkit.Ui.Native(__d228(global::Acrux.Toolkit.Ui.Wrap<TControl>(__p228_0))))))(@factory)));
+            __AttachNative(__UiBridge_Acrux_Styling_ControlTemplate_TControl_.m0(((global::System.Func<global::System.Func<TControl, global::Acrux.Core.VisualElement>, global::System.Func<object, object>>)(__d229 => __d229 == null ? null : new global::System.Func<object, object>((__p229_0) => global::Acrux.Toolkit.Ui.Native(__d229(global::Acrux.Toolkit.Ui.Wrap<TControl>(__p229_0))))))(@factory)));
         }
         public global::Acrux.Core.VisualElement Build(TControl @owner)  { return global::Acrux.Toolkit.Ui.Wrap<global::Acrux.Core.VisualElement>(__UiBridge_Acrux_Styling_ControlTemplate_TControl_.m1(Native, global::Acrux.Toolkit.Ui.Native(@owner))); }
         public global::Acrux.Styling.ControlTemplate ToUntyped()  { return global::Acrux.Toolkit.Ui.Wrap<global::Acrux.Styling.ControlTemplate>(__UiBridge_Acrux_Styling_ControlTemplate_TControl_.m2(Native)); }

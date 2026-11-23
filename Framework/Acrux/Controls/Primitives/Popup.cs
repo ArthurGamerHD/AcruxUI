@@ -11,6 +11,10 @@ namespace Acrux.Controls.Primitives
     /// <summary>A renderer-neutral overlay primitive positioned relative to another visual.</summary>
     public class Popup : VisualElement, IOverlayProvider, ILightDismissOverlayProvider
     {
+        // Whether this control counts as open in VisualTree's open-overlay count. Setting the open property to its default
+        // (a first "close") reports a change too, so only real transitions may move the count.
+        bool _overlayCounted;
+
         static readonly IReadOnlyList<VisualElement> NoVisualChildren =
             new VisualElement[0];
         VisualElement _attachedChild;
@@ -205,8 +209,11 @@ namespace Acrux.Controls.Primitives
         protected override void OnPropertyChanged(IStyledProperty property)
         {
             base.OnPropertyChanged(property);
-            if (property == IsOpenProperty)
-                VisualTree.OverlayOpenChanged(IsOpen);
+            if (property == IsOpenProperty && _overlayCounted != IsOpen)
+            {
+                _overlayCounted = IsOpen;
+                VisualTree.OverlayOpenChanged(_overlayCounted);
+            }
             if (property != ChildProperty)
                 return;
             VisualElement child = Child;

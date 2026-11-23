@@ -59,6 +59,7 @@ namespace Acrux.Core
         VisualElement _inputRoot;
         PointerCursor _pointerCursor = PointerCursor.Arrow;
         readonly List<VisualElement> _drawnOverlays = new List<VisualElement>();
+        readonly List<VisualElement> _transformPath = new List<VisualElement>();
         bool _lastFrameVolatile;
         string _lastVolatileSource;
 
@@ -256,11 +257,35 @@ namespace Acrux.Core
             for (int i = windows.Count - 1; i >= 0; i--)
             {
                 Window window = windows[i];
-                if (window.IsModal || !window.Visible || !window.FrameBounds.Contains(pointer))
+                if (window.IsModal)
                     continue;
-                return window.HitTest(pointer) ?? window;
+                VisualElement hit = HitWindowTree(window, pointer);
+                if (hit != null)
+                    return hit;
             }
             return null;
+        }
+
+        // A window and the windows it owns, which are drawn above it and may reach outside its frame. A window with a
+        // modal dialog takes no input itself: the dialog (and what it owns) does, and the window's frame swallows the rest.
+        static VisualElement HitWindowTree(Window window, Vector2 pointer)
+        {
+            if (!window.Visible || window.WindowState == WindowState.Minimized)
+                return null;
+            Window modal = window.ActiveModalWindow;
+            if (modal != null)
+            {
+                VisualElement dialogHit = HitWindowTree(modal, pointer);
+                if (dialogHit != null)
+                    return dialogHit;
+                return window.FrameBounds.Contains(pointer) ? window : null;
+            }
+            VisualElement ownedHit = HitOwnedWindows(window, pointer);
+            if (ownedHit != null)
+                return ownedHit;
+            if (!window.FrameBounds.Contains(pointer))
+                return null;
+            return window.HitTest(pointer) ?? window;
         }
 
         // Non-modal windows an owner opened after the active modal chain are drawn above that modal (windows draw in
@@ -279,9 +304,11 @@ namespace Acrux.Core
                 for (int i = windows.Count - 1; i >= 0 && !ReferenceEquals(windows[i], child); i--)
                 {
                     Window window = windows[i];
-                    if (window.IsModal || !window.Visible || !window.FrameBounds.Contains(pointer))
+                    if (window.IsModal)
                         continue;
-                    return window.HitTest(pointer) ?? window;
+                    VisualElement hit = HitWindowTree(window, pointer);
+                    if (hit != null)
+                        return hit;
                 }
             }
             return null;
@@ -325,15 +352,20 @@ namespace Acrux.Core
                 return false;
             IReadOnlyList<Window> dialogs = owner.OwnedWindows;
             for (int i = 0; i < dialogs.Count; i++)
+            {
+                if (dialogs[i].WindowState == WindowState.Minimized)
+                    continue;
                 if (dialogs[i].PendingInvalidation != UiInvalidation.None || OwnedWindowsNeedRender(dialogs[i]))
                     return true;
+            }
             return false;
         }
 
         void ArrangeOwnedWindows(Window owner)
         {
             if (owner == null) return;
-            foreach (var dialog in owner.OwnedWindows)
+            // A copy: arranging raises Window events (PositionChanged) whose handlers may open or close windows.
+            foreach (var dialog in new List<Window>(owner.OwnedWindows))
             {
                 dialog.AttachTextMetrics(_renderer.TextMetrics);
                 dialog.AttachAnimationController(_animations);
@@ -354,14 +386,66 @@ namespace Acrux.Core
                 VisualElement element = overlay.OverlayElement;
                 if (element != null)
                 {
-                    element.DrawTree(context);
+                    DrawOverlay(element, context);
                     _drawnOverlays.Add(element);
                 }
             }
             var window = root as Window;
             if (window != null)
-                foreach (var dialog in window.OwnedWindows)
-                    DrawWindow(dialog, context);
+                foreach (var dialog in new List<Window>(window.OwnedWindows))
+                    if (dialog.WindowState != WindowState.Minimized)
+                        DrawWindow(dialog, context);
+        }
+
+        // An overlay is laid out in its owner's units, so it is drawn through the scales of the owner's ancestors (a
+        // Viewbox, a LayoutTransformControl) but not their clips.
+        void DrawOverlay(VisualElement element, RenderContext context)
+        {
+            List<VisualElement> path = TransformPath(element);
+            if (path.Count == 0)
+            {
+                element.DrawTree(context);
+                return;
+            }
+            var scopes = new IDisposable[path.Count];
+            for (int i = 0; i < path.Count; i++)
+                scopes[i] = path[i].PushChildTransform(context);
+            try
+            {
+                element.DrawTree(context);
+            }
+            finally
+            {
+                for (int i = scopes.Length - 1; i >= 0; i--)
+                    if (scopes[i] != null)
+                        scopes[i].Dispose();
+            }
+        }
+
+        // The ancestors of an element, following overlay owners, outermost first.
+        List<VisualElement> TransformPath(VisualElement element)
+        {
+            _transformPath.Clear();
+            if (element != null)
+                for (VisualElement current = element.Parent ?? element.OverlayOwner; current != null;
+                     current = current.Parent ?? current.OverlayOwner)
+                    _transformPath.Add(current);
+            _transformPath.Reverse();
+            return _transformPath;
+        }
+
+        // Pointer positions are tracked in root units; an element receives them in the units it is laid out in.
+        Vector2 ToElementPoint(VisualElement element, Vector2 point)
+        {
+            List<VisualElement> path = TransformPath(element);
+            for (int i = 0; i < path.Count; i++)
+                point = path[i].MapPointToChildren(point);
+            return point;
+        }
+
+        Vector2 ToElementDelta(VisualElement element, Vector2 point, Vector2 delta)
+        {
+            return ToElementPoint(element, point) - ToElementPoint(element, point - delta);
         }
 
         // Overlay content is not part of the tree, so it gets its owner and text metrics here, before it is laid out.
@@ -391,8 +475,25 @@ namespace Acrux.Core
             return stack;
         }
 
+        // Popups open in a non-modal owned window (a menu bar, a combo box in a tool window) take input before the
+        // owner's own, top-most window first, as those windows are drawn above the owner.
         IOverlayProvider GetTopmostOpenOverlay(VisualElement root)
         {
+            var window = root as Window;
+            if (window != null)
+            {
+                IReadOnlyList<Window> owned = window.OwnedWindows;
+                for (int i = owned.Count - 1; i >= 0; i--)
+                {
+                    Window candidate = owned[i];
+                    // The input root has no modal dialog of its own; a modal here belongs to one of its owned windows.
+                    if (!candidate.Visible || candidate.WindowState == WindowState.Minimized)
+                        continue;
+                    IOverlayProvider found = GetTopmostOpenOverlay(candidate);
+                    if (found != null)
+                        return found;
+                }
+            }
             List<IOverlayProvider> stack = GetOpenOverlayStack(root);
             return stack.Count == 0 ? null : stack[stack.Count - 1];
         }
@@ -454,7 +555,7 @@ namespace Acrux.Core
                 AdoptOverlay(overlay, overlayElement);
             if (overlay != null)
                 overlay.UpdateOverlayLayout();
-            VisualElement overlayHit = overlayElement == null ? null : overlayElement.HitTest(pointer);
+            VisualElement overlayHit = overlayElement == null ? null : overlayElement.HitTest(ToElementPoint(overlayElement, pointer));
             VisualElement hit = overlayHit ?? HitWindowsAboveModal(inputRoot as Window, pointer) ??
                                 HitOwnedWindows(inputRoot as Window, pointer) ?? inputRoot.HitTest(pointer);
             if (!ReferenceEquals(hit, _hovered))
@@ -463,7 +564,7 @@ namespace Acrux.Core
                 _hovered = hit;
             }
             for (VisualElement current = hit; current != null; current = current.Parent)
-                current.PointerHovered(pointer);
+                current.PointerHovered(ToElementPoint(current, pointer));
             var dismissable = overlay as ILightDismissOverlayProvider;
             bool passThrough = dismissable != null && dismissable.OverlayDismissEventPassThrough;
             UpdateToolTip(overlayHit == null && passThrough ? inputRoot : overlayElement ?? inputRoot, pointer,
@@ -472,7 +573,7 @@ namespace Acrux.Core
 
             if ((input.IsNewPrimaryButtonPressed() || input.IsNewSecondaryButtonPressed()) &&
                 overlay != null && overlayHit == null &&
-                (overlayElement == null || !overlayElement.OverlayContains(pointer)))
+                (overlayElement == null || !overlayElement.OverlayContains(ToElementPoint(overlayElement, pointer))))
             {
                 if (dismissable == null || dismissable.IsLightDismissEnabled)
                     overlay.CloseOverlay();
@@ -483,17 +584,20 @@ namespace Acrux.Core
                 }
             }
 
+            if (input.IsNewPrimaryButtonPressed() || input.IsNewSecondaryButtonPressed())
+                ActivateWindowAt(inputRoot as Window, hit);
+
             if (input.IsNewPrimaryButtonPressed())
             {
                 SetFocus(FindFocusable(hit), false);
                 _pressed = hit;
                 SetPressedPath(_pressed);
                 if (_pressed != null)
-                    _pressed.PointerPressed(pointer);
+                    _pressed.PointerPressed(ToElementPoint(_pressed, pointer));
             }
 
             if (_pressed != null && input.IsPrimaryButtonPressed())
-                _pressed.PointerMoved(pointer, delta);
+                _pressed.PointerMoved(ToElementPoint(_pressed, pointer), ToElementDelta(_pressed, pointer, delta));
 
             if (input.IsNewPrimaryButtonReleased())
             {
@@ -501,36 +605,36 @@ namespace Acrux.Core
                 _pressed = null;
                 ClearPressedPath();
                 if (pressed != null)
-                    pressed.PointerReleased(pointer, ReferenceEquals(pressed, hit));
+                    pressed.PointerReleased(ToElementPoint(pressed, pointer), ReferenceEquals(pressed, hit));
             }
 
             if (input.IsNewMiddleButtonPressed())
             {
                 _middlePressed = hit;
                 if (_middlePressed != null)
-                    _middlePressed.MiddlePointerPressed(pointer);
+                    _middlePressed.MiddlePointerPressed(ToElementPoint(_middlePressed, pointer));
             }
 
             if (_middlePressed != null && input.IsMiddleButtonPressed())
-                _middlePressed.MiddlePointerMoved(pointer, delta);
+                _middlePressed.MiddlePointerMoved(ToElementPoint(_middlePressed, pointer), ToElementDelta(_middlePressed, pointer, delta));
 
             if (input.IsNewMiddleButtonReleased())
             {
                 VisualElement middlePressed = _middlePressed;
                 _middlePressed = null;
                 if (middlePressed != null)
-                    middlePressed.MiddlePointerReleased(pointer);
+                    middlePressed.MiddlePointerReleased(ToElementPoint(middlePressed, pointer));
             }
 
             if (input.IsNewSecondaryButtonPressed())
             {
                 _secondaryPressed = hit;
                 if (_secondaryPressed != null)
-                    _secondaryPressed.SecondaryPointerPressed(pointer);
+                    _secondaryPressed.SecondaryPointerPressed(ToElementPoint(_secondaryPressed, pointer));
             }
 
             if (_secondaryPressed != null && input.IsSecondaryButtonPressed())
-                _secondaryPressed.SecondaryPointerMoved(pointer, delta);
+                _secondaryPressed.SecondaryPointerMoved(ToElementPoint(_secondaryPressed, pointer), ToElementDelta(_secondaryPressed, pointer, delta));
 
             if (input.IsNewSecondaryButtonReleased())
             {
@@ -538,7 +642,7 @@ namespace Acrux.Core
                 _secondaryPressed = null;
                 bool clicked = ReferenceEquals(secondaryPressed, hit);
                 if (secondaryPressed != null)
-                    secondaryPressed.SecondaryPointerReleased(pointer, clicked);
+                    secondaryPressed.SecondaryPointerReleased(ToElementPoint(secondaryPressed, pointer), clicked);
                 if (clicked)
                     OpenContextMenu(secondaryPressed, pointer);
             }
@@ -549,7 +653,7 @@ namespace Acrux.Core
             {
                 for (VisualElement current = hit; current != null; current = current.Parent)
                 {
-                    if (current.PointerScrolled(pointer, wheel))
+                    if (current.PointerScrolled(ToElementPoint(current, pointer), wheel))
                     {
                         wheelHandled = true;
                         break;
@@ -564,6 +668,29 @@ namespace Acrux.Core
             if (keyboard && ReferenceEquals(inputRoot, ResolveInputRoot()))
                 HandleKeyboardInput(input, overlay);
             return wheelHandled || modal || !ReferenceEquals(inputRoot, ResolveInputRoot());
+        }
+
+        // A press inside a non-modal owned window activates it; a press on the owner itself leaves none active.
+        static void ActivateWindowAt(Window owner, VisualElement hit)
+        {
+            if (owner == null || owner.OwnedWindows.Count == 0)
+                return;
+            for (VisualElement current = hit; current != null;
+                 current = current.Parent ?? current.OverlayOwner ?? (current is Window ? ((Window)current).Owner : null))
+            {
+                var window = current as Window;
+                if (window == null)
+                    continue;
+                if (ReferenceEquals(window, owner))
+                    break;
+                if (ReferenceEquals(window.Owner, owner) && !window.IsModal)
+                {
+                    if (!window.IsActive || !ReferenceEquals(owner.OwnedWindows[owner.OwnedWindows.Count - 1], window))
+                        window.Activate();
+                    return;
+                }
+            }
+            owner.SetActiveWindow(null);
         }
 
         void ResolvePointerCursor(VisualElement element, Vector2 point)

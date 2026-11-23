@@ -2117,16 +2117,22 @@ member Acrux.Controls.UserControl.ctor() : System.Func<object>
 member Acrux.Controls.UserControl.ctor()#remote : System.Func<object, object>
 member Acrux.Controls.UserControl.get_Content : System.Func<object, object>
 member Acrux.Controls.UserControl.set_Content : System.Action<object, object>
+member Acrux.Controls.Window.Activate`0() : System.Action<object>
 member Acrux.Controls.Window.BindOpen`0(byte) : System.Func<object, byte, object>
 member Acrux.Controls.Window.Close`0() : System.Action<object>
 member Acrux.Controls.Window.OpenModal`0(object) : System.Action<object, object>
 member Acrux.Controls.Window.Open`0() : System.Action<object>
+member Acrux.Controls.Window.SetActiveWindow`0(object) : System.Action<object, object>
 member Acrux.Controls.Window.SetPlatformResource`0(string,object) : System.Action<object, string, object>
 member Acrux.Controls.Window.SetRenderScaling`0(float) : System.Action<object, float>
 member Acrux.Controls.Window.Show`0(object) : System.Action<object, object>
 member Acrux.Controls.Window.UnbindOpen`0(byte) : System.Func<object, byte, bool>
+member Acrux.Controls.Window.add_Activated : System.Action<object, System.Action>
 member Acrux.Controls.Window.add_Closed : System.Action<object, System.Action>
+member Acrux.Controls.Window.add_Deactivated : System.Action<object, System.Action>
 member Acrux.Controls.Window.add_Opened : System.Action<object, System.Action>
+member Acrux.Controls.Window.add_PositionChanged : System.Action<object, System.Action>
+member Acrux.Controls.Window.add_Resized : System.Action<object, System.Action>
 member Acrux.Controls.Window.ctor() : System.Func<object>
 member Acrux.Controls.Window.ctor()#remote : System.Func<object, object>
 member Acrux.Controls.Window.field_BackgroundProperty : System.Func<object>
@@ -2134,11 +2140,15 @@ member Acrux.Controls.Window.field_BorderBrushProperty : System.Func<object>
 member Acrux.Controls.Window.field_BorderThicknessProperty : System.Func<object>
 member Acrux.Controls.Window.field_CanMaximizeProperty : System.Func<object>
 member Acrux.Controls.Window.field_CanMinimizeProperty : System.Func<object>
+member Acrux.Controls.Window.field_CanResizeProperty : System.Func<object>
 member Acrux.Controls.Window.field_CornerRadiusProperty : System.Func<object>
 member Acrux.Controls.Window.field_ExtendClientAreaTitleBarHeightHintProperty : System.Func<object>
 member Acrux.Controls.Window.field_ExtendClientAreaToDecorationsHintProperty : System.Func<object>
+member Acrux.Controls.Window.field_IsActiveProperty : System.Func<object>
+member Acrux.Controls.Window.field_ShowActivatedProperty : System.Func<object>
 member Acrux.Controls.Window.field_SizeToContentProperty : System.Func<object>
 member Acrux.Controls.Window.field_TitleProperty : System.Func<object>
+member Acrux.Controls.Window.field_TopmostProperty : System.Func<object>
 member Acrux.Controls.Window.field_WindowDecorationsProperty : System.Func<object>
 member Acrux.Controls.Window.field_WindowStateProperty : System.Func<object>
 member Acrux.Controls.Window.get_ActiveModalWindow : System.Func<object, object>
@@ -2147,19 +2157,24 @@ member Acrux.Controls.Window.get_BorderBrush : System.Func<object, VRageMath.Col
 member Acrux.Controls.Window.get_BorderThickness : System.Func<object, VRageMath.Vector4>
 member Acrux.Controls.Window.get_CanMaximize : System.Func<object, bool>
 member Acrux.Controls.Window.get_CanMinimize : System.Func<object, bool>
+member Acrux.Controls.Window.get_CanResize : System.Func<object, bool>
 member Acrux.Controls.Window.get_CloseOnEscape : System.Func<object, bool>
 member Acrux.Controls.Window.get_CornerRadius : System.Func<object, VRageMath.Vector4>
 member Acrux.Controls.Window.get_ExtendClientAreaTitleBarHeightHint : System.Func<object, float>
 member Acrux.Controls.Window.get_ExtendClientAreaToDecorationsHint : System.Func<object, bool>
 member Acrux.Controls.Window.get_FrameBounds : System.Func<object, VRageMath.RectangleF>
+member Acrux.Controls.Window.get_IsActive : System.Func<object, bool>
 member Acrux.Controls.Window.get_IsModal : System.Func<object, bool>
 member Acrux.Controls.Window.get_IsOpen : System.Func<object, bool>
 member Acrux.Controls.Window.get_OwnedWindows : System.Func<object, object>
 member Acrux.Controls.Window.get_Owner : System.Func<object, object>
 member Acrux.Controls.Window.get_Platform : System.Func<object, object>
+member Acrux.Controls.Window.get_Position : System.Func<object, VRageMath.Vector2>
 member Acrux.Controls.Window.get_RenderScaling : System.Func<object, double>
+member Acrux.Controls.Window.get_ShowActivated : System.Func<object, bool>
 member Acrux.Controls.Window.get_SizeToContent : System.Func<object, int>
 member Acrux.Controls.Window.get_Title : System.Func<object, string>
+member Acrux.Controls.Window.get_Topmost : System.Func<object, bool>
 member Acrux.Controls.Window.get_WindowDecorations : System.Func<object, int>
 member Acrux.Controls.Window.get_WindowState : System.Func<object, int>
 member Acrux.Controls.Window.set_Background : System.Action<object, object>
@@ -2167,13 +2182,17 @@ member Acrux.Controls.Window.set_BorderBrush : System.Action<object, VRageMath.C
 member Acrux.Controls.Window.set_BorderThickness : System.Action<object, VRageMath.Vector4>
 member Acrux.Controls.Window.set_CanMaximize : System.Action<object, bool>
 member Acrux.Controls.Window.set_CanMinimize : System.Action<object, bool>
+member Acrux.Controls.Window.set_CanResize : System.Action<object, bool>
 member Acrux.Controls.Window.set_CloseOnEscape : System.Action<object, bool>
 member Acrux.Controls.Window.set_CornerRadius : System.Action<object, VRageMath.Vector4>
 member Acrux.Controls.Window.set_ExtendClientAreaTitleBarHeightHint : System.Action<object, float>
 member Acrux.Controls.Window.set_ExtendClientAreaToDecorationsHint : System.Action<object, bool>
 member Acrux.Controls.Window.set_Platform : System.Action<object, object>
+member Acrux.Controls.Window.set_Position : System.Action<object, VRageMath.Vector2>
+member Acrux.Controls.Window.set_ShowActivated : System.Action<object, bool>
 member Acrux.Controls.Window.set_SizeToContent : System.Action<object, int>
 member Acrux.Controls.Window.set_Title : System.Action<object, string>
+member Acrux.Controls.Window.set_Topmost : System.Action<object, bool>
 member Acrux.Controls.Window.set_WindowDecorations : System.Action<object, int>
 member Acrux.Controls.Window.set_WindowState : System.Action<object, int>
 member Acrux.Controls.WindowPlatforms.get_CaptionButtons : System.Func<int>
@@ -2347,6 +2366,7 @@ member Acrux.Core.VisualElement.PointerMoved`0(global::VRageMath.Vector2,global:
 member Acrux.Core.VisualElement.PointerPressed`0(global::VRageMath.Vector2) : System.Action<object, VRageMath.Vector2>
 member Acrux.Core.VisualElement.PointerReleased`0(global::VRageMath.Vector2,bool) : System.Action<object, VRageMath.Vector2, bool>
 member Acrux.Core.VisualElement.PointerScrolled`0(global::VRageMath.Vector2,int) : System.Func<object, VRageMath.Vector2, int, bool>
+member Acrux.Core.VisualElement.PushChildTransform`0(object) : System.Func<object, object, System.IDisposable>
 member Acrux.Core.VisualElement.RemoveChild`0(object) : System.Func<object, object, bool>
 member Acrux.Core.VisualElement.SecondaryPointerMoved`0(global::VRageMath.Vector2,global::VRageMath.Vector2) : System.Action<object, VRageMath.Vector2, VRageMath.Vector2>
 member Acrux.Core.VisualElement.SecondaryPointerPressed`0(global::VRageMath.Vector2) : System.Action<object, VRageMath.Vector2>
@@ -2403,6 +2423,7 @@ member Acrux.Core.VisualElement.hook.PointerMoved(global::VRageMath.Vector2,glob
 member Acrux.Core.VisualElement.hook.PointerPressed(global::VRageMath.Vector2) : System.Action<System.Action<object, VRageMath.Vector2>>
 member Acrux.Core.VisualElement.hook.PointerReleased(global::VRageMath.Vector2,bool) : System.Action<System.Action<object, VRageMath.Vector2, bool>>
 member Acrux.Core.VisualElement.hook.PointerScrolled(global::VRageMath.Vector2,int) : System.Action<System.Func<object, VRageMath.Vector2, int, bool>>
+member Acrux.Core.VisualElement.hook.PushChildTransform(object) : System.Action<System.Func<object, object, System.IDisposable>>
 member Acrux.Core.VisualElement.hook.RemoveChild(object) : System.Action<System.Func<object, object, bool>>
 member Acrux.Core.VisualElement.hook.SecondaryPointerMoved(global::VRageMath.Vector2,global::VRageMath.Vector2) : System.Action<System.Action<object, VRageMath.Vector2, VRageMath.Vector2>>
 member Acrux.Core.VisualElement.hook.SecondaryPointerPressed(global::VRageMath.Vector2) : System.Action<System.Action<object, VRageMath.Vector2>>
@@ -2691,6 +2712,10 @@ member Acrux.Layout.Grid.ctor(int,int) : System.Func<int, int, object>
 member Acrux.Layout.Grid.ctor(object,int,int) : System.Func<object, int, int, object>
 member Acrux.Layout.Grid.get_Columns : System.Func<object, float[]>
 member Acrux.Layout.Grid.get_Rows : System.Func<object, float[]>
+member Acrux.Layout.LayoutTransformControl.ctor() : System.Func<object>
+member Acrux.Layout.LayoutTransformControl.field_LayoutTransformProperty : System.Func<object>
+member Acrux.Layout.LayoutTransformControl.get_LayoutTransform : System.Func<object, object>
+member Acrux.Layout.LayoutTransformControl.set_LayoutTransform : System.Action<object, object>
 member Acrux.Layout.Panel.DrawBackground`0(object) : System.Action<object, object>
 member Acrux.Layout.Panel.ctor() : System.Func<object>
 member Acrux.Layout.Panel.ctor()#remote : System.Func<object, object>
